@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="c#,爬虫," />
 
 
 
@@ -94,17 +94,18 @@
 
 
 
-<meta name="description" content="老夫聊发少年狂">
-<meta property="og:type" content="website">
-<meta property="og:title" content="message">
-<meta property="og:url" content="http://yoursite.com/message/index.html">
+<meta name="description" content="准备第三方插件HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用 代码步骤从指定网站把网页的html获得 WebRequest request = WebRequest.Create(&amp;quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&amp;quot;);             WebResp">
+<meta name="keywords" content="c#,爬虫">
+<meta property="og:type" content="article">
+<meta property="og:title" content=".net爬虫">
+<meta property="og:url" content="http://yoursite.com/2017/08/16/c#爬虫/index.html">
 <meta property="og:site_name" content="敲代码的小铁匠">
-<meta property="og:description" content="老夫聊发少年狂">
+<meta property="og:description" content="准备第三方插件HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用 代码步骤从指定网站把网页的html获得 WebRequest request = WebRequest.Create(&amp;quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&amp;quot;);             WebResp">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-14T23:57:04.489Z">
+<meta property="og:updated_time" content="2017-08-16T08:35:48.555Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="message">
-<meta name="twitter:description" content="老夫聊发少年狂">
+<meta name="twitter:title" content=".net爬虫">
+<meta name="twitter:description" content="准备第三方插件HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用 代码步骤从指定网站把网页的html获得 WebRequest request = WebRequest.Create(&amp;quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&amp;quot;);             WebResp">
 
 
 
@@ -133,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/message/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/08/16/c#爬虫/"/>
 
 
 
 
 
-  <title>message | 敲代码的小铁匠</title>
+  <title>.net爬虫 | 敲代码的小铁匠</title>
   
 
 
@@ -284,33 +285,205 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/16/c#爬虫/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HE yuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/0.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="敲代码的小铁匠">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">message</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
+          <h1 class="post-title" itemprop="name headline">.net爬虫</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-16T00:00:00+08:00">
+                2017-08-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-        
-      </div>
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/net/" itemprop="url" rel="index">
+                    <span itemprop="name">.net</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <h4 id="准备第三方插件"><a href="#准备第三方插件" class="headerlink" title="准备第三方插件"></a>准备第三方插件</h4><p>HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用</p>
+<h4 id="代码步骤"><a href="#代码步骤" class="headerlink" title="代码步骤"></a>代码步骤</h4><p>从指定网站把网页的html获得</p>
+<p><code>WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&quot;);
+            WebResponse response = request.GetResponse();
+            StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(&quot;gb2312&quot;));
+            string s = reader.ReadToEnd();</code><br>将获得的html字符串传入 这个插件的具体使用可以参考<a href="http://www.cnblogs.com/GmrBrian/p/6201237.html" target="_blank" rel="external">http://www.cnblogs.com/GmrBrian/p/6201237.html</a><br><code>HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(s);
+            HtmlNode div = doc.DocumentNode.SelectSingleNode(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
+            HtmlNodeCollection hrefList = doc.DocumentNode.SelectNodes(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
+            List&lt;string&gt; list = new List&lt;string&gt;();</code></p>
+
       
     </div>
     
     
     
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>666打赏走一波</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/ali.jpg" alt="HE yuke Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/c/" rel="tag"># c#</a>
+          
+            <a href="/tags/爬虫/" rel="tag"># 爬虫</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/16/c#连接oracle数据库/" rel="next" title="c#连接oracle数据库">
+                <i class="fa fa-chevron-left"></i> c#连接oracle数据库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/16/sql 找出相同记录里最近时间的一条/" rel="prev" title="找出相同记录里最近时间的一条">
+                找出相同记录里最近时间的一条 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -343,8 +516,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/0.png"
@@ -452,6 +634,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#准备第三方插件"><span class="nav-number">1.</span> <span class="nav-text">准备第三方插件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#代码步骤"><span class="nav-number">2.</span> <span class="nav-text">代码步骤</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -575,10 +773,10 @@
   
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 
