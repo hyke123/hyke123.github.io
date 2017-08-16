@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="一个用来测试当前站点的Markdown样式的Demo  1234567891011121314151617181920Attentions (放在开头)：1,markdown的解析遇到一个空行作为一次解析，所以上下两个语法需要有一个空行做间隔。  比如：  # H1  ## H2  只能解析H1，##H2被解析为&amp;lt;p&amp;gt;  要正确被解析，应该在两个解析间插入空行2,markdown语法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Markdown Demo">
+<meta property="og:url" content="http://yoursite.com/2017/08/14/2016-8-24-markdown_demo/index.html">
+<meta property="og:site_name" content="敲代码的小铁匠">
+<meta property="og:description" content="一个用来测试当前站点的Markdown样式的Demo  1234567891011121314151617181920Attentions (放在开头)：1,markdown的解析遇到一个空行作为一次解析，所以上下两个语法需要有一个空行做间隔。  比如：  # H1  ## H2  只能解析H1，##H2被解析为&amp;lt;p&amp;gt;  要正确被解析，应该在两个解析间插入空行2,markdown语法">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/w3c/images/avator.jpg">
+<meta property="og:image" content="http://yoursite.com/w3c/images/avator.jpg">
+<meta property="og:updated_time" content="2017-08-16T01:09:38.361Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Markdown Demo">
+<meta name="twitter:description" content="一个用来测试当前站点的Markdown样式的Demo  1234567891011121314151617181920Attentions (放在开头)：1,markdown的解析遇到一个空行作为一次解析，所以上下两个语法需要有一个空行做间隔。  比如：  # H1  ## H2  只能解析H1，##H2被解析为&amp;lt;p&amp;gt;  要正确被解析，应该在两个解析间插入空行2,markdown语法">
+<meta name="twitter:image" content="http://yoursite.com/w3c/images/avator.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/14/2016-8-24-markdown_demo/"/>
+
+
+
+
+
+  <title>Markdown Demo | 敲代码的小铁匠</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">敲代码的小铁匠</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">点滴</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-message">
+          <a href="/message" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-external-link"></i> <br />
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/14/2016-8-24-markdown_demo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HE yuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/0.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="敲代码的小铁匠">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Markdown Demo</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-14T12:38:11+08:00">
+                2017-08-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/markdown/" itemprop="url" rel="index">
+                    <span itemprop="name">markdown</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>一个用来测试当前站点的Markdown样式的Demo</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">Attentions (放在开头)：</div><div class="line"></div><div class="line">1,markdown的解析遇到一个空行作为一次解析，所以上下两个语法需要有一个空行做间隔。</div><div class="line">  比如：</div><div class="line">  # H1</div><div class="line">  ## H2</div><div class="line">  只能解析H1，##H2被解析为&lt;p&gt;</div><div class="line"></div><div class="line">  要正确被解析，应该在两个解析间插入空行</div><div class="line"></div><div class="line">2,markdown语法关键字与内容一般都要留个空格。</div><div class="line">  比如： # 空格 H1</div><div class="line"></div><div class="line">3,代码块内不能再使用markdown关键字，因为代码块是&lt;pre&gt;。</div><div class="line"></div><div class="line">4,本demo开启了kramdown的hard_wrap: true自动将换行符转换为&lt;br&gt;。</div><div class="line"></div><div class="line">5,本demo展示了本站点的样式(css)，如果不喜欢，可以通过此demo修改。</div><div class="line"></div><div class="line">6,本demo还包含了markdown的基本语法（红块）。</div></pre></td></tr></table></figure>
+<p>:smile:本Demo的<a href="https://raw.githubusercontent.com/jokinkuang/stepbystep/master/_posts/2016-8-24-markdown_demo.md" target="_blank" rel="external">Markdown源码</a></p>
+<p>目录：<br>{:use_numbered_headers =&gt; true}</p>
+<ul>
+<li>auto-gen TOC:<br>{:toc}</li>
+</ul>
+<h1 id="Kramdown-Markdown-Syntax"><a href="#Kramdown-Markdown-Syntax" class="headerlink" title="Kramdown Markdown Syntax"></a>Kramdown Markdown Syntax</h1><h1 id="H1"><a href="#H1" class="headerlink" title="H1"></a>H1</h1><h2 id="H2"><a href="#H2" class="headerlink" title="H2"></a>H2</h2><h3 id="H3"><a href="#H3" class="headerlink" title="H3"></a>H3</h3><h4 id="H4"><a href="#H4" class="headerlink" title="H4"></a>H4</h4><h6 id="H5"><a href="#H5" class="headerlink" title="H5"></a>H5</h6><blockquote>
+<p># 空格 TEXT or<br>- - - -<br>TEXT<br>\=====  or -—-</p>
+</blockquote>
+<h2 id="TOC"><a href="#TOC" class="headerlink" title="TOC"></a>TOC</h2><p>If you create a list, and then set the toc attribute, when rendering Maruku will create an auto-generated table of contents(TOC). TOC was supported by Maruku, and Kramdown implements the Maruku so it also support TOC!</p>
+<blockquote>
+<p>add following to the post</p>
+<p>* 空格(or 1. 空格) This is a list and would become a table of contents(TOC) and this text will be scraped that you cannot see(it doesn’t matter what you write here)!<br>{:toc}</p>
+</blockquote>
+<h2 id="blockquote"><a href="#blockquote" class="headerlink" title="blockquote"></a>blockquote</h2><blockquote>
+<p>This is a blockquote.</p>
+<p>This is the second paragraph in the blockquote.</p>
+<p>> 空格 TEXT<br>> 空格 TEXT<br>> 空格 TEXT</p>
+</blockquote>
+<h2 id="italic"><a href="#italic" class="headerlink" title="italic"></a>italic</h2><p>Some of these words <em>are emphasized</em>.<br>Some of these words <em>are emphasized also</em>.</p>
+<blockquote>
+<p>*TEXT*  or _TEXT_</p>
+</blockquote>
+<h2 id="emphasis"><a href="#emphasis" class="headerlink" title="emphasis"></a>emphasis</h2><p>Use two asterisks for <strong>strong emphasis</strong>.<br>Or, if you prefer, <strong>use two underscores instead</strong>.</p>
+<blockquote>
+<p>*<em>TEXT*</em>  or __TEXT__</p>
+</blockquote>
+<h2 id="inline-code"><a href="#inline-code" class="headerlink" title="inline code"></a>inline code</h2><p>inline <code>code</code></p>
+<blockquote>
+<p>`TEXT`</p>
+</blockquote>
+<h2 id="unordered-list"><a href="#unordered-list" class="headerlink" title="unordered list"></a>unordered list</h2><ul>
+<li>Candy.</li>
+<li>Gum.</li>
+<li>Booze.</li>
+</ul>
+<ul>
+<li>Candy.</li>
+<li>Gum.</li>
+<li>Booze.</li>
+</ul>
+<ul>
+<li>Candy.</li>
+<li>Gum.</li>
+<li>Booze.</li>
+</ul>
+<blockquote>
+<p>* 空格 TEXT  or<br>- - - -<br>+ 空格 TEXT  or<br>- - - -<br>- 空格 TEXT</p>
+</blockquote>
+<h2 id="ordered-list"><a href="#ordered-list" class="headerlink" title="ordered list"></a>ordered list</h2><ol>
+<li>Red</li>
+<li>Green</li>
+<li>Blue</li>
+</ol>
+<blockquote>
+<ol>
+<li>空格 TEXT<br>数字有没有序是没关系的</li>
+</ol>
+</blockquote>
+<ul>
+<li><p>A list item.<br>With multiple paragraphs.</p>
+</li>
+<li><p>Another item in the list.</p>
+</li>
+</ul>
+<blockquote>
+<p>* 空格 TEXT</p>
+</blockquote>
+<h2 id="link"><a href="#link" class="headerlink" title="link"></a>link</h2><p>This is an <a href="http://example.com/" target="_blank" rel="external">example link</a>.<br>This is an <a href="http://example.com/" title="With a Title" target="_blank" rel="external">example link</a>.<br>I get 10 times more traffic from <a href="http://google.com/" title="Google" target="_blank" rel="external">Google</a> than from<br><a href="http://search.yahoo.com/" title="Yahoo Search" target="_blank" rel="external">Yahoo</a> or <a href="http://search.msn.com/" title="MSN Search" target="_blank" rel="external">MSN</a>.</p>
+<p>I start my morning with a cup of coffee and<br><a href="http://www.nytimes.com/" target="_blank" rel="external">The New York Times</a>.</p>
+<blockquote>
+<p>[example link](<a href="http://example.com/" target="_blank" rel="external">http://example.com/</a> “With a Title”)  or</p>
+<hr>
+<p>[example link][id]<br>空行<br>[id]: <a href="http://example.com/" target="_blank" rel="external">http://example.com/</a> “With a Title”</p>
+</blockquote>
+<h2 id="image"><a href="#image" class="headerlink" title="image"></a>image</h2><p><img src="/w3c/images/avator.jpg" alt="alt text" title="Title"><br><img src="/w3c/images/avator.jpg" alt="alt text" title="Title"></p>
+<blockquote>
+<p>The same as Link<br>But start with  <code>!</code></p>
+</blockquote>
+<p>How to make the image to show center？</p>
+<ol>
+<li>CSS           cannot</li>
+<li>javascript    can</li>
+<li>use img in markdown text instead</li>
+</ol>
+<blockquote>
+<p>NOTE kmarkdown 转换图片是直接转换成 \</p><p>\<img></p>，因为css3也没有选择父的选择器（比如没有选择器可以选择含有\<img>的\<p>），所以从css角度无法实现图片居中。</p>
+</blockquote>
+<h1 id="GFM-Syntax"><a href="#GFM-Syntax" class="headerlink" title="GFM Syntax"></a>GFM Syntax</h1><figure class="highlight c"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">	<span class="built_in">printf</span>(<span class="string">"hello world!"</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>```language<br>  // code here<br>```</p>
+</blockquote>
+<h2 id="Task-Lists"><a href="#Task-Lists" class="headerlink" title="Task Lists"></a>Task Lists</h2><ul>
+<li style="list-style: none"><input type="checkbox" checked> @mentions, #refs, <a href="">links</a>, <strong>formatting</strong>, and <del>tags</del> supported</li>
+<li style="list-style: none"><input type="checkbox" checked> list syntax required (any unordered or ordered list supported)</li>
+<li style="list-style: none"><input type="checkbox" checked> this is a complete item</li>
+<li style="list-style: none"><input type="checkbox"> this is an incomplete item</li>
+</ul>
+<h2 id="Tables"><a href="#Tables" class="headerlink" title="Tables"></a>Tables</h2><table>
+<thead>
+<tr>
+<th>First Header</th>
+<th>Second Header</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Content from cell 1</td>
+<td>Content from cell 2</td>
+</tr>
+<tr>
+<td>Content in the first column</td>
+<td>Content in the second column</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>表格<br>cell1 | cell2  （ | 两边要空格）</p>
+</blockquote>
+<h2 id="SHA-references"><a href="#SHA-references" class="headerlink" title="SHA references"></a>SHA references</h2><p>Any reference to a commit’s SHA-1 hash will be automatically converted into a link to that commit on GitHub.</p>
+<p>16c999e8c71134401a78d4d46435517b2271d6ac<br>mojombo@16c999e8c71134401a78d4d46435517b2271d6ac<br>mojombo/github-flavored-markdown@16c999e8c71134401a78d4d46435517b2271d6ac<br>Issue references within a repository</p>
+<p>Any number that refers to an Issue or Pull Request will be automatically converted into a link.</p>
+<p>#1<br>mojombo#1<br>mojombo/github-flavored-markdown#1<br>Username @mentions</p>
+<p>Typing an @ symbol, followed by a username, will notify that person to come and view the comment. This is called an “@mention”, because you’re mentioning the individual. You can also @mention teams within an organization.</p>
+<h2 id="Automatic-linking-for-URLs"><a href="#Automatic-linking-for-URLs" class="headerlink" title="Automatic linking for URLs"></a>Automatic linking for URLs</h2><p>Any URL (like <a href="http://www.github.com/" target="_blank" rel="external">http://www.github.com/</a>) will be automatically converted into a clickable link.</p>
+<blockquote>
+<p>自动链接，必须以http开头<br>\<a href="http://example.com" target="_blank" rel="external">http://example.com</a></p>
+</blockquote>
+<h2 id="Strikethrough"><a href="#Strikethrough" class="headerlink" title="Strikethrough"></a>Strikethrough</h2><p>Any word wrapped with two tildes (like <del>this</del>) will appear crossed out.</p>
+<blockquote>
+<p>划掉线<br>~~关键字~~</p>
+</blockquote>
+<h2 id="Emoji"><a href="#Emoji" class="headerlink" title="Emoji"></a>Emoji</h2><p>GitHub supports emoji! :sparkles: :camel: :boom:</p>
+<p>To see a list of every image we support, check out the Emoji Cheat Sheet.<br><a href="http://www.webpagefx.com/tools/emoji-cheat-sheet/" target="_blank" rel="external">http://www.webpagefx.com/tools/emoji-cheat-sheet/</a></p>
+<blockquote>
+<p>表情<br>空格:emoji:</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>666打赏走一波</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/ali.jpg" alt="HE yuke Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/14/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/0.png"
+               alt="HE yuke" />
+          <p class="site-author-name" itemprop="name">HE yuke</p>
+           
+              <p class="site-description motion-element" itemprop="description">老夫聊发少年狂</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/your-user-name" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/your-user-name" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/your-user-name" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      微博
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Kramdown-Markdown-Syntax"><span class="nav-number">1.</span> <span class="nav-text">Kramdown Markdown Syntax</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#H1"><span class="nav-number">2.</span> <span class="nav-text">H1</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#H2"><span class="nav-number">2.1.</span> <span class="nav-text">H2</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#H3"><span class="nav-number">2.1.1.</span> <span class="nav-text">H3</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#H4"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">H4</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#H5"><span class="nav-number">2.1.1.1.0.1.</span> <span class="nav-text">H5</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TOC"><span class="nav-number">2.2.</span> <span class="nav-text">TOC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#blockquote"><span class="nav-number">2.3.</span> <span class="nav-text">blockquote</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#italic"><span class="nav-number">2.4.</span> <span class="nav-text">italic</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#emphasis"><span class="nav-number">2.5.</span> <span class="nav-text">emphasis</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#inline-code"><span class="nav-number">2.6.</span> <span class="nav-text">inline code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#unordered-list"><span class="nav-number">2.7.</span> <span class="nav-text">unordered list</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ordered-list"><span class="nav-number">2.8.</span> <span class="nav-text">ordered list</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#link"><span class="nav-number">2.9.</span> <span class="nav-text">link</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#image"><span class="nav-number">2.10.</span> <span class="nav-text">image</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GFM-Syntax"><span class="nav-number">3.</span> <span class="nav-text">GFM Syntax</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Task-Lists"><span class="nav-number">3.1.</span> <span class="nav-text">Task Lists</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Tables"><span class="nav-number">3.2.</span> <span class="nav-text">Tables</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SHA-references"><span class="nav-number">3.3.</span> <span class="nav-text">SHA references</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Automatic-linking-for-URLs"><span class="nav-number">3.4.</span> <span class="nav-text">Automatic linking for URLs</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Strikethrough"><span class="nav-number">3.5.</span> <span class="nav-text">Strikethrough</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Emoji"><span class="nav-number">3.6.</span> <span class="nav-text">Emoji</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HE yuke</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    主题 &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Muse
+    </a>
+  </div>
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
