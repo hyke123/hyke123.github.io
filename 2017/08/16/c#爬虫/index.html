@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="敲代码的小铁匠">
 <meta property="og:description" content="准备第三方插件HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用 代码步骤从指定网站把网页的html获得 WebRequest request = WebRequest.Create(&amp;quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&amp;quot;);             WebResp">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-16T08:35:48.555Z">
+<meta property="og:updated_time" content="2017-08-16T23:57:40.283Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content=".net爬虫">
 <meta name="twitter:description" content="准备第三方插件HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用 代码步骤从指定网站把网页的html获得 WebRequest request = WebRequest.Create(&amp;quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&amp;quot;);             WebResp">
@@ -391,7 +391,9 @@
 <p><code>WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&quot;);
             WebResponse response = request.GetResponse();
             StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(&quot;gb2312&quot;));
-            string s = reader.ReadToEnd();</code><br>将获得的html字符串传入 这个插件的具体使用可以参考<a href="http://www.cnblogs.com/GmrBrian/p/6201237.html" target="_blank" rel="external">http://www.cnblogs.com/GmrBrian/p/6201237.html</a><br><code>HtmlDocument doc = new HtmlDocument();
+            string s = reader.ReadToEnd();</code></p>
+<p>将获得的html字符串传入 这个插件的具体使用可以参考<a href="http://www.cnblogs.com/GmrBrian/p/6201237.html" target="_blank" rel="external">http://www.cnblogs.com/GmrBrian/p/6201237.html</a></p>
+<p><code>HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(s);
             HtmlNode div = doc.DocumentNode.SelectSingleNode(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
             HtmlNodeCollection hrefList = doc.DocumentNode.SelectNodes(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
@@ -452,8 +454,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/16/c#连接oracle数据库/" rel="next" title="c#连接oracle数据库">
-                <i class="fa fa-chevron-left"></i> c#连接oracle数据库
+              <a href="/2017/08/16/js-在当前日期往前推N天（除去工作日）/" rel="next" title="js 在当前日期往前推N天（除去工作日）">
+                <i class="fa fa-chevron-left"></i> js 在当前日期往前推N天（除去工作日）
               </a>
             
           </div>
