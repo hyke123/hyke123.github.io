@@ -76,7 +76,7 @@
     
     <entry>
       <title><![CDATA[c#连接oracle数据库]]></title>
-      <url>/2017/08/16/c#%E8%BF%9E%E6%8E%A5oracle%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+      <url>/2017/08/16/csharp%E8%BF%9E%E6%8E%A5oracle%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
       <content type="html"><![CDATA[<p>c#连接oracle数据库</p>
 <blockquote>
 <p>准备工作：</p>
@@ -105,7 +105,7 @@
     
     <entry>
       <title><![CDATA[.net爬虫]]></title>
-      <url>/2017/08/16/c#%E7%88%AC%E8%99%AB/</url>
+      <url>/2017/08/16/csharp%E7%88%AC%E8%99%AB/</url>
       <content type="html"><![CDATA[<h4 id="准备第三方插件"><a href="#准备第三方插件" class="headerlink" title="准备第三方插件"></a>准备第三方插件</h4><p>HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用</p>
 <h4 id="代码步骤"><a href="#代码步骤" class="headerlink" title="代码步骤"></a>代码步骤</h4><p>从指定网站把网页的html获得</p>
 <p><code>WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&quot;);
