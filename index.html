@@ -390,15 +390,27 @@
       
         
           
-          非相关子查询和相关子查询执行过程前段时间有一个相关子查询的SQL语句，看不太懂他是如何执行的，为什么
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/08/17/相关子查询和非相关子查询/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h3 id="非相关子查询和相关子查询执行过程"><a href="#非相关子查询和相关子查询执行过程" class="headerlink" title="非相关子查询和相关子查询执行过程"></a><a href="http://blog.csdn.net/mascf/article/details/50288199" target="_blank" rel="external">非相关子查询和相关子查询执行过程</a></h3><p>前段时间有一个相关子查询的SQL语句，看不太懂他是如何执行的，为什么会出现那个结果。着实纠结了一把。下面来讲一下非相关子查询和相关子查询的执行过程是怎样的。</p>
+<h4 id="非相关子查询"><a href="#非相关子查询" class="headerlink" title="非相关子查询"></a>非相关子查询</h4><hr>
+<p>先看一个非相关子查询到sql语句。</p>
+<p>需求：查询学生表student和学生成绩表grade中成绩为70分的学生的基本信息。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> t.sno,t.sname,t.sage,t.sgentle,t.sbirth,t.sdept <span class="keyword">from</span> student t <span class="keyword">where</span> t.sno <span class="keyword">in</span> (<span class="keyword">select</span> f.sno <span class="keyword">from</span> garde f <span class="keyword">where</span> f.score=<span class="number">70</span>)</div></pre></td></tr></table></figure>
+<p>这个sql语句的执行时是简单的，</p>
+<p>1、在grade表中找出成绩为70的学生学号sno,再将该学号返回到父查询作为where子句的条件。</p>
+<p>2、在student表中找到该学号学生的其他基本信息。</p>
+<h4 id="相关子查询"><a href="#相关子查询" class="headerlink" title="相关子查询"></a>相关子查询</h4><hr>
+<p>所谓相关子查询，是指求解相关子查询不能像求解普通子查询那样，一次将子查询求解出来，然后求解父查询。相关子查询的内层查询由于与外层查询有关，因此必须反复求值。</p>
+<p>下面看相关子查询的sql语句。</p>
+<p>需求：在学生表student和学生成绩表grade找出参加了“计算机基础”课程并且分数在80分以上的所有学生信息。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> t.sno,t.sname,t.sage,t.sgentle,t.sbirth,sdept <span class="keyword">from</span> student t <span class="keyword">where</span> <span class="number">80</span>&lt;=(<span class="keyword">select</span> f.score <span class="keyword">from</span> grade f <span class="keyword">where</span> f.sno=t.sno <span class="keyword">and</span> f.cname=<span class="string">'计算机基础'</span>)</div></pre></td></tr></table></figure>
+<p>该子查询的执行流程：</p>
+<p>1、 先从父查询的student表中取出第一条记录的sno值，进入子查询中，比较其where子句的条件“where f.sno=t.sno and f.cname=’计算机基础’”，符合则返回score成绩。</p>
+<p>2、 返回父查询，判断父查询的where子句条件80&lt;=返回的score,如果条件为true，则返回第1条记录。</p>
+<p>3、 从父查询的student表中取出第2条数据，重复上述操作，直到所有父查询中的表中记录取完为止。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><hr>
+<p>对比这两个查询的sql执行过程可以看出，相关子查询和非相关子查询的不同点在于，相关子查询依赖于父查询，父查询和子查询是有联系的，尤其在子查询的where语句中更是如此。明白了他们的执行过程，再去看相关子查询的代码，一下子就明白了。</p>
+
+          
         
       
     </div>
@@ -538,17 +550,17 @@
       
         
           
-          sql 找出相同记录里最近时间的一条样例表如下
-sub_dh date Gname
-A1001 20
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/08/16/sql 找出相同记录里最近时间的一条/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h3 id="sql-找出相同记录里最近时间的一条"><a href="#sql-找出相同记录里最近时间的一条" class="headerlink" title="sql 找出相同记录里最近时间的一条"></a>sql 找出相同记录里最近时间的一条</h3><p>样例表如下</p>
+<p>sub_dh date Gname</p>
+<p>A1001 2015/4/25 B清单</p>
+<p>A1002 2015/6/27 C清单</p>
+<p>A1001 2015/8/23 C清单</p>
+<p>A1003 2015/5/28 A清单</p>
+<p>第一条记录和第三条记录编号一样，要查询出最近时间的一条记录</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">test</span> A  <span class="keyword">where</span> <span class="built_in">date</span>=(<span class="keyword">select</span> <span class="keyword">max</span>(<span class="built_in">date</span>) <span class="keyword">from</span> <span class="keyword">test</span> B <span class="keyword">where</span> A.sub_dh=B.sub_dh)</div></pre></td></tr></table></figure>
+<p>首先将表根据订单号自行自连接，然后查询出表里所有的记录其时间等于连接表里最近时间的。具体执行过程可参照 <strong>非相关子查询</strong> 里面的内容，这是一个非相关子查询。</p>
+
+          
         
       
     </div>
@@ -688,18 +700,15 @@ A1001 20
       
         
           
-          c#连接oracle数据库
+            <p>c#连接oracle数据库</p>
+<blockquote>
+<p>准备工作：</p>
+<p>下载并引用Oracle.ManagedDataAccess.Client </p>
+</blockquote>
+<h4 id="控制台测试程序"><a href="#控制台测试程序" class="headerlink" title="控制台测试程序"></a>控制台测试程序</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">class Program</div><div class="line">   &#123;</div><div class="line">       static void Main(string[] args)</div><div class="line">       &#123;</div><div class="line">           string constr = @&quot;User Id=zftest;Password=123456;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.16.84)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=orcl)))&quot;;</div><div class="line">           DataSet ds = OracleHelper.ExecuteDataset(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line">           DataTable dt = ds.Tables[0];</div><div class="line">           for (int i = 0; i &lt; dt.Rows.Count; i++)</div><div class="line">           &#123;</div><div class="line"></div><div class="line">               for (int j = 0; j &lt; dt.Columns.Count; j++)</div><div class="line">               &#123;</div><div class="line">                   Console.WriteLine(dt.Rows[i][j]);</div><div class="line">               &#125;</div><div class="line">               Console.WriteLine(&quot;\n&quot;);</div><div class="line">           &#125;</div><div class="line">           //int a=  OracleHelper.ExecuteNonQuery(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line"></div><div class="line">           int b = 0;</div><div class="line"></div><div class="line"></div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h4 id="下面是OracleHelper-程序，参数是连接字符串和sql语句。"><a href="#下面是OracleHelper-程序，参数是连接字符串和sql语句。" class="headerlink" title="下面是OracleHelper 程序，参数是连接字符串和sql语句。"></a>下面是OracleHelper 程序，参数是连接字符串和sql语句。</h4><p><a href="http://www.cnblogs.com/jimcsharp/p/5590076.html" target="_blank" rel="external">http://www.cnblogs.com/jimcsharp/p/5590076.html</a></p>
 
-准备工作：
-下载并引用Oracle.ManagedDataAccess
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/08/16/c#连接oracle数据库/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -839,16 +848,20 @@ A1001 20
       
         
           
-          准备第三方插件HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用
-代码步
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/08/16/c#爬虫/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <h4 id="准备第三方插件"><a href="#准备第三方插件" class="headerlink" title="准备第三方插件"></a>准备第三方插件</h4><p>HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用</p>
+<h4 id="代码步骤"><a href="#代码步骤" class="headerlink" title="代码步骤"></a>代码步骤</h4><p>从指定网站把网页的html获得</p>
+<p><code>WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&quot;);
+            WebResponse response = request.GetResponse();
+            StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(&quot;gb2312&quot;));
+            string s = reader.ReadToEnd();</code></p>
+<p>将获得的html字符串传入 这个插件的具体使用可以参考<a href="http://www.cnblogs.com/GmrBrian/p/6201237.html" target="_blank" rel="external">http://www.cnblogs.com/GmrBrian/p/6201237.html</a></p>
+<p><code>HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(s);
+            HtmlNode div = doc.DocumentNode.SelectSingleNode(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
+            HtmlNodeCollection hrefList = doc.DocumentNode.SelectNodes(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
+            List&lt;string&gt; list = new List&lt;string&gt;();</code></p>
+
+          
         
       
     </div>
@@ -988,18 +1001,13 @@ A1001 20
       
         
           
-          
-代码如下：
+            <blockquote>
+<p>代码如下：</p>
+</blockquote>
+<p>JavaScript将日期往前推n天，思路是先判断当前的日期是否是工作日，是的话就继续往前推，不是的话就把这一天给过滤掉，用count计数。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"datePicker/WdatePicker.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"jquery-1.7.1.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">        //判断是否为工作日</span></div><div class="line"><span class="undefined">     function isWorkday(date) &#123;</span></div><div class="line"><span class="undefined">    //var date = !date ? new Date() : new Date(date);</span></div><div class="line"><span class="undefined">    var date=new Date(date);</span></div><div class="line"><span class="undefined">    var getday = date.getDay();</span></div><div class="line"><span class="undefined">    if (getday == 0 || getday == 6) &#123;</span></div><div class="line"><span class="undefined">        return false; //不是返回False</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">    else &#123;</span></div><div class="line"><span class="undefined">        return true;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">&#125;</span></div><div class="line"><span class="undefined">        //获取Date对象的年月日xxxx-xx-xx</span></div><div class="line"><span class="undefined">    function dateToyymmdd(d)&#123;</span></div><div class="line"><span class="undefined">        var month=d.getMonth()+1;</span></div><div class="line"><span class="undefined">        var day = d.getDate();</span></div><div class="line"><span class="undefined">        if(month&lt;10)&#123;</span></div><div class="line"><span class="undefined">        month = "0"+month;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">        if(day&lt;10)&#123;</span></div><div class="line"><span class="undefined">        day = "0"+day;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">        var val = d.getFullYear()+"-"+month+"-"+day;</span></div><div class="line"><span class="undefined">        return val;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">      //往前推5天除去工作日</span></div><div class="line"><span class="undefined">    function back(date)&#123;</span></div><div class="line"><span class="undefined">    var i=0;</span></div><div class="line"><span class="undefined">    var d=new Date(date);//获取传入的时间</span></div><div class="line"><span class="undefined">    while(i&lt;5)</span></div><div class="line"><span class="undefined">    &#123;</span></div><div class="line"><span class="undefined">        d.setDate(d.getDate()-1);//获取前一天时间</span></div><div class="line"><span class="undefined">        var val=dateToyymmdd(d);</span></div><div class="line"><span class="undefined">        //alert(isWorkday("2017-7-30")) ;</span></div><div class="line"><span class="undefined">        //alert(val+""+isWorkday(val));</span></div><div class="line"><span class="undefined">        if(isWorkday(val))</span></div><div class="line"><span class="undefined">        &#123;</span></div><div class="line"><span class="undefined">            i++;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">         continue;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">    var val = dateToyymmdd(d);</span></div><div class="line"><span class="undefined">    return val;</span></div><div class="line"><span class="undefined">  &#125;</span></div><div class="line"><span class="undefined">  window.onload=function()&#123;</span></div><div class="line"><span class="undefined">    $("#btn").blur(function()&#123;</span></div><div class="line"><span class="undefined">        var v=$("#btn").val();</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">            $("#label1").html(back(v));</span></div><div class="line"><span class="undefined">    &#125;)</span></div><div class="line"><span class="undefined">  &#125;</span></div><div class="line"><span class="undefined">   //alert(back('2017-08-02'));</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"btn"</span> <span class="attr">id</span>=<span class="string">"btn"</span> <span class="attr">onclick</span>=<span class="string">"WdatePicker()"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">label</span> <span class="attr">id</span>=<span class="string">"label1"</span> &gt;</span><span class="tag">&lt;/<span class="name">label</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
 
-JavaScript将日期往前推n天，思路是先判断当前的日期是否是工作日，是的话就继
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/08/16/js-在当前日期往前推N天（除去工作日）/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+          
         
       
     </div>
@@ -1117,15 +1125,17 @@ JavaScript将日期往前推n天，思路是先判断当前的日期是否是工
       
         
           
-          Welcome to Hexo! This is your very first post. Che
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/08/14/hello-world/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+
+          
         
       
     </div>
