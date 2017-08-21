@@ -3,6 +3,35 @@
   
     
     <entry>
+      <title><![CDATA[程序代码块]]></title>
+      <url>/2017/08/21/%E7%A8%8B%E5%BA%8F%E4%BB%A3%E7%A0%81%E5%9D%97/</url>
+      <content type="html"><![CDATA[<p>一些常见的代码，写下来以后记不清的时候查阅。</p>
+<h4 id="生成guid代码"><a href="#生成guid代码" class="headerlink" title="生成guid代码"></a>生成guid代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var a=Guid.NewGuid().ToString();</div></pre></td></tr></table></figure>
+<h4 id="序列化json字符串"><a href="#序列化json字符串" class="headerlink" title="序列化json字符串"></a>序列化json字符串</h4><p>序列化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">string json = JsonConvert.SerializeObject(s);//s为要序列化的对象</div></pre></td></tr></table></figure>
+<p>反序列化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var a = JsonConvert.DeserializeObject(json);</div></pre></td></tr></table></figure>
+<h4 id="数组声明方式"><a href="#数组声明方式" class="headerlink" title="数组声明方式"></a>数组声明方式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int[] intArray = new int[] &#123;1,2,3&#125;;</div><div class="line">int[] intArray = new int[10];</div></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> c# </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> net </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[非相关子查询和相关子查询执行过程详解]]></title>
       <url>/2017/08/17/%E7%9B%B8%E5%85%B3%E5%AD%90%E6%9F%A5%E8%AF%A2%E5%92%8C%E9%9D%9E%E7%9B%B8%E5%85%B3%E5%AD%90%E6%9F%A5%E8%AF%A2/</url>
       <content type="html"><![CDATA[<h3 id="非相关子查询和相关子查询执行过程"><a href="#非相关子查询和相关子查询执行过程" class="headerlink" title="非相关子查询和相关子查询执行过程"></a><a href="http://blog.csdn.net/mascf/article/details/50288199" target="_blank" rel="external">非相关子查询和相关子查询执行过程</a></h3><p>前段时间有一个相关子查询的SQL语句，看不太懂他是如何执行的，为什么会出现那个结果。着实纠结了一把。下面来讲一下非相关子查询和相关子查询的执行过程是怎样的。</p>
