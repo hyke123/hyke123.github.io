@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="c#,反射," />
 
 
 
@@ -94,17 +94,18 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="description" content=".net反射 目前想到的反射利用场景是前台页面使用ajax调用后台方法时，在一般处理程序中，根据请求的方法名动态（自动）地来调用相对应的方法。  下面是关于反射的一些基本介绍： 反射单个程序集：1、Load 方法：极力推荐的一种方法，Load 方法带有一个程序集标志并载入它，Load 将引起CLR把策略应用到程序集上，先后在全局程序集缓冲区，应用程序基目录和私有路径下面查找该程序集，如果找不到该程">
+<meta name="keywords" content="c#,反射">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2017/08/14/hello-world/index.html">
+<meta property="og:title" content=".net反射">
+<meta property="og:url" content="http://yoursite.com/2017/10/16/csharp反射/index.html">
 <meta property="og:site_name" content="敲代码的小铁匠">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content=".net反射 目前想到的反射利用场景是前台页面使用ajax调用后台方法时，在一般处理程序中，根据请求的方法名动态（自动）地来调用相对应的方法。  下面是关于反射的一些基本介绍： 反射单个程序集：1、Load 方法：极力推荐的一种方法，Load 方法带有一个程序集标志并载入它，Load 将引起CLR把策略应用到程序集上，先后在全局程序集缓冲区，应用程序基目录和私有路径下面查找该程序集，如果找不到该程">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-08-14T09:57:27.110Z">
+<meta property="og:updated_time" content="2017-10-16T01:28:15.208Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content=".net反射">
+<meta name="twitter:description" content=".net反射 目前想到的反射利用场景是前台页面使用ajax调用后台方法时，在一般处理程序中，根据请求的方法名动态（自动）地来调用相对应的方法。  下面是关于反射的一些基本介绍： 反射单个程序集：1、Load 方法：极力推荐的一种方法，Load 方法带有一个程序集标志并载入它，Load 将引起CLR把策略应用到程序集上，先后在全局程序集缓冲区，应用程序基目录和私有路径下面查找该程序集，如果找不到该程">
 
 
 
@@ -133,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/08/14/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/16/csharp反射/"/>
 
 
 
 
 
-  <title>Hello World | 敲代码的小铁匠</title>
+  <title>.net反射 | 敲代码的小铁匠</title>
   
 
 
@@ -296,7 +297,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/14/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/16/csharp反射/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="HE yuke">
@@ -313,7 +314,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">.net反射</h1>
         
 
         <div class="post-meta">
@@ -325,8 +326,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-14T17:57:27+08:00">
-                2017-08-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-16T00:00:00+08:00">
+                2017-10-16
               </time>
             
 
@@ -335,6 +336,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/net/" itemprop="url" rel="index">
+                    <span itemprop="name">.net</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -363,15 +386,18 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <h3 id="net反射"><a href="#net反射" class="headerlink" title=".net反射"></a>.net反射</h3><blockquote>
+<p>目前想到的反射利用场景是前台页面使用ajax调用后台方法时，在一般处理程序中，根据请求的方法名动态（自动）地来调用相对应的方法。</p>
+</blockquote>
+<p>下面是关于反射的一些基本介绍：</p>
+<h4 id="反射单个程序集："><a href="#反射单个程序集：" class="headerlink" title="反射单个程序集："></a>反射单个程序集：</h4><p>1、Load 方法：极力推荐的一种方法，Load 方法带有一个程序集标志并载入它，Load 将引起CLR把策略应用到程序集上，先后在全局程序集缓冲区，应用程序基目录和私有路径下面查找该程序集，如果找不到该程序集系统抛出异常<br>2、LoadFrom 方法：传递一个程序集文件的路径名（包括扩展名），CLR会载入您指定的这个程序集，传递的这个参数不能包含任何关于版本号的信息，区域性，和公钥信息，如果在指定路径找不到程序集抛出异常。</p>
+<h4 id="设置反射类型成员"><a href="#设置反射类型成员" class="headerlink" title="设置反射类型成员"></a>设置反射类型成员</h4><p>反射类型的成员就是反射层次模型中最下面的一层数据。我们可以通过type对象的GetMembers 方法取得一个类型的成员。如果我们使用的是不带参数的GetMembers，它只返回该类型的公共定义的静态变量和实例成员，我们也可以通过使用带参数的 GetMembers通过参数设置来返回指定的类型成员。具体参数参考msdn 中system.reflection.bindingflags 枚举类型的详细说明。</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//设置需要返回的类型的成员内容</div><div class="line">bindingFlags bf=bingdingFlags.DeclaredOnly|bingdingFlags.Nonpublic|BingdingFlags.Public;</div><div class="line">foreach (MemberInfo mi int t.getmembers(bf))</div><div class="line">&#123;</div><div class="line">       writeline(mi.membertype)    //输出指定的类型成员</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="通过反射创建类型的实例："><a href="#通过反射创建类型的实例：" class="headerlink" title="通过反射创建类型的实例："></a>通过反射创建类型的实例：</h4><p>通过反射可以获取程序集的类型，我们就可以根据获得的程序集类型来创建该类型新的实例，这也是前面提到的在运行时创建对象实现晚绑定的功能<br>我们可以通过下面的几个方法实现：<br>1、System.Activator 的CreateInstance方法。该方法返回新对象的引用。具体使用方法参见msdn<br>2、System.Activator 的createInstanceFrom 与上一个方法类似，不过需要指定类型及其程序集<br>3、System.Appdomain 的方法：createInstance,CreateInstanceAndUnwrap,CreateInstranceFrom和CreateInstraceFromAndUnwrap<br>4、System.type的InvokeMember实例方法：这个方法返回一个与传入参数相符的构造函数，并构造该类型。<br>5、System.reflection.constructinfo 的Invoke实例方法</p>
+<h4 id="反射的性能"><a href="#反射的性能" class="headerlink" title="反射的性能"></a>反射的性能</h4><p>使用反射来调用类型或者触发方法，或者访问一个字段或者属性时clr 需要做更多的工作：校验参数，检查权限等等，所以速度是非常慢的。所以尽量不要使用反射进行编程，对于打算编写一个动态构造类型（晚绑定）的应用程序，可以采取以下的几种方式进行代替：<br>1、通过类的继承关系。让该类型从一个编译时可知的基础类型派生出来，在运行时生成该类型的一个实例，将对其的引用放到其基础类型的一个变量中，然后调用该基础类型的虚方法。<br>2、通过接口实现。在运行时，构建该类型的一个实例，将对其的引用放到其接口类型的一个变量中，然后调用该接口定义的虚方法。<br>3、通过委托实现。让该类型实现一个方法，其名称和原型都与一个在编译时就已知的委托相符。在运行时先构造该类型的实例，然后在用该方法的对象及名称构造出该委托的实例，接着通过委托调用你想要的方法。这个方法相对与前面两个方法所作的工作要多一些，效率更低一些。</p>
+<hr>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">System.Reflection.Assembly ass = Assembly.LoadFrom(Server.MapPath(&quot;bin/swordyang.dll&quot;)); //加载DLL</div><div class="line">System.Type t = ass.GetType(&quot;cn.SwordYang.TextClass&quot;);//获得类型</div><div class="line">object o = System.Activator.CreateInstance(t);//创建实例</div><div class="line">System.Reflection.MethodInfo mi = t.GetMethod(&quot;RunJs&quot;);//获得方法</div><div class="line">mi.Invoke(o, new object[] &#123; this.Page,&quot;alert(&apos;测试反射机制&apos;)&quot;&#125;);//调用方法</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -411,6 +437,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/c/" rel="tag"># c#</a>
+          
+            <a href="/tags/反射/" rel="tag"># 反射</a>
+          
+        </div>
+      
 
       
       
@@ -420,15 +454,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/10/16/csharp 多线程/" rel="next" title=".net多线程">
+                <i class="fa fa-chevron-left"></i> .net多线程
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/08/16/js-在当前日期往前推N天（除去工作日）/" rel="prev" title="js 在当前日期往前推N天（除去工作日）">
-                js 在当前日期往前推N天（除去工作日） <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -608,7 +642,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#net反射"><span class="nav-number">1.</span> <span class="nav-text">.net反射</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#反射单个程序集："><span class="nav-number">1.1.</span> <span class="nav-text">反射单个程序集：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#设置反射类型成员"><span class="nav-number">1.2.</span> <span class="nav-text">设置反射类型成员</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过反射创建类型的实例："><span class="nav-number">1.3.</span> <span class="nav-text">通过反射创建类型的实例：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#反射的性能"><span class="nav-number">1.4.</span> <span class="nav-text">反射的性能</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#示例代码"><span class="nav-number">1.5.</span> <span class="nav-text">示例代码</span></a></li></ol></li></ol></div>
             
 
           </div>
