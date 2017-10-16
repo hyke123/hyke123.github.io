@@ -449,8 +449,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/16/csharp爬虫/" rel="next" title=".net爬虫">
-                <i class="fa fa-chevron-left"></i> .net爬虫
+              <a href="/2017/08/16/js-在当前日期往前推N天（除去工作日）/" rel="next" title="js 在当前日期往前推N天（除去工作日）">
+                <i class="fa fa-chevron-left"></i> js 在当前日期往前推N天（除去工作日）
               </a>
             
           </div>
@@ -459,8 +459,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/08/16/sql 找出相同记录里最近时间的一条/" rel="prev" title="找出相同记录里最近时间的一条">
-                找出相同记录里最近时间的一条 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/08/16/csharp爬虫/" rel="prev" title=".net爬虫">
+                .net爬虫 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -685,9 +685,17 @@
     <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
       NexT.Mist
     </a>
+	<span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+	<span id="showDays"></span>
   </div>
 
-
+<script>
+	var birthDay = new Date('14/8/2017');
+	var now = new Date();
+	var duration = now.getTime() - birthDay.getTime();
+	var total= Math.floor(duration / (1000 * 60 * 60 * 24));
+	document.getElementById('showDays').innerHTML='本站已运行' + total + '天';
+</script>
         
 
 

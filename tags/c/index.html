@@ -412,9 +412,9 @@
 
       <h2 class="post-title">
         
-            <a class="post-title-link" href="/2017/08/16/csharp连接oracle数据库/" itemprop="url">
+            <a class="post-title-link" href="/2017/08/16/csharp爬虫/" itemprop="url">
               
-                <span itemprop="name">c#连接oracle数据库</span>
+                <span itemprop="name">.net爬虫</span>
               
             </a>
         
@@ -440,9 +440,9 @@
 
       <h2 class="post-title">
         
-            <a class="post-title-link" href="/2017/08/16/csharp爬虫/" itemprop="url">
+            <a class="post-title-link" href="/2017/08/16/csharp连接oracle数据库/" itemprop="url">
               
-                <span itemprop="name">.net爬虫</span>
+                <span itemprop="name">c#连接oracle数据库</span>
               
             </a>
         
@@ -643,9 +643,17 @@
     <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
       NexT.Mist
     </a>
+	<span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+	<span id="showDays"></span>
   </div>
 
-
+<script>
+	var birthDay = new Date('14/8/2017');
+	var now = new Date();
+	var duration = now.getTime() - birthDay.getTime();
+	var total= Math.floor(duration / (1000 * 60 * 60 * 24));
+	document.getElementById('showDays').innerHTML='本站已运行' + total + '天';
+</script>
         
 
 

@@ -464,6 +464,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2017/10/16/hello-world/" rel="prev" title="Hello World">
+                Hello World <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -686,9 +690,17 @@
     <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
       NexT.Mist
     </a>
+	<span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+	<span id="showDays"></span>
   </div>
 
-
+<script>
+	var birthDay = new Date('14/8/2017');
+	var now = new Date();
+	var duration = now.getTime() - birthDay.getTime();
+	var total= Math.floor(duration / (1000 * 60 * 60 * 24));
+	document.getElementById('showDays').innerHTML='本站已运行' + total + '天';
+</script>
         
 
 
