@@ -20,73 +20,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[.net多线程]]></title>
-      <url>/2017/10/16/csharp%20%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
-      <content type="html"><![CDATA[<h3 id="net-多线程"><a href="#net-多线程" class="headerlink" title=".net 多线程"></a>.net 多线程</h3><blockquote>
-<p>线程牵涉的东西很多，自己只是用到了一点，学习了一点，现在把用到的学到的一点记录下来。</p>
-</blockquote>
-<h4 id="多线程使用场景-winform"><a href="#多线程使用场景-winform" class="headerlink" title="多线程使用场景-winform"></a>多线程使用场景-winform</h4><p>在winform中如果使用死循环就会导致窗体线程假死，从而导致不能操作窗体上控件的现象，这个问题可以使用多线程来解决。</p>
-<p>线程函数通过委托传递，可以不带参数，也可以带参数（只能有一个参数且为object类型，传递的方法没有返回值），可以用一个类或结构体封装参数。</p>
-<p>话不多说，直接上代码。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">namespace Test</div><div class="line">&#123;</div><div class="line">    class Program</div><div class="line">    &#123;</div><div class="line">        static void Main(string[] args)</div><div class="line">        &#123;</div><div class="line">            Thread t1 = new Thread(new ThreadStart(TestMethod));</div><div class="line">            Thread t2 = new Thread(new ParameterizedThreadStart(TestMethod));</div><div class="line">            t1.IsBackground = true;</div><div class="line">            t2.IsBackground = true;</div><div class="line">            t1.Start();</div><div class="line">            t2.Start(&quot;hello&quot;);</div><div class="line">            Console.ReadKey();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod()</div><div class="line">        &#123;</div><div class="line">            Console.WriteLine(&quot;不带参数的线程函数&quot;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod(object data)</div><div class="line">        &#123;</div><div class="line">            string datastr = data as string;</div><div class="line">            Console.WriteLine(&quot;带参数的线程函数，参数为：&#123;0&#125;&quot;, datastr);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">      //使用兰姆达表达式来简化代码</div><div class="line">        Thread th = new Thread(() =&gt;</div><div class="line">        &#123;</div><div class="line">                while(true)</div><div class="line">               &#123;</div><div class="line">                                     </div><div class="line">                &#125;</div><div class="line">        &#125;</div><div class="line">        th.IsBackground = true;//会随着主线程的关闭关闭这个子线程</div><div class="line">        th.Priority = ThreadPriority.Highest;</div><div class="line">        th.Start();            </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="跨线程访问"><a href="#跨线程访问" class="headerlink" title="跨线程访问"></a>跨线程访问</h4><p>一旦在winform 中使用了多线程，就会存在跨线程访问控件的问题，解决方案如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void UpdateWindowInfo(FormMode model)</div><div class="line">        &#123;</div><div class="line">            this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</div><div class="line">            &#123;</div><div class="line">                //lblCarType.Text = &quot;集卡车&quot;;</div><div class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</div><div class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</div><div class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</div><div class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</div><div class="line">                model.TradeMessge = &quot;&quot;;</div><div class="line">            &#125;), model);</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
-<hr>
-<p>关于多线程的内容很多，还有线程池，线程的同步异步调用以及锁 task等内容，这些东西看了一些，但是没怎么看懂，所以就不写了。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> 多线程 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[.net反射]]></title>
-      <url>/2017/10/16/csharp%E5%8F%8D%E5%B0%84/</url>
-      <content type="html"><![CDATA[<h3 id="net反射"><a href="#net反射" class="headerlink" title=".net反射"></a>.net反射</h3><blockquote>
-<p>目前想到的反射利用场景是前台页面使用ajax调用后台方法时，在一般处理程序中，根据请求的方法名动态（自动）地来调用相对应的方法。</p>
-</blockquote>
-<p>下面是关于反射的一些基本介绍：</p>
-<h4 id="反射单个程序集："><a href="#反射单个程序集：" class="headerlink" title="反射单个程序集："></a>反射单个程序集：</h4><p>1、Load 方法：极力推荐的一种方法，Load 方法带有一个程序集标志并载入它，Load 将引起CLR把策略应用到程序集上，先后在全局程序集缓冲区，应用程序基目录和私有路径下面查找该程序集，如果找不到该程序集系统抛出异常<br>2、LoadFrom 方法：传递一个程序集文件的路径名（包括扩展名），CLR会载入您指定的这个程序集，传递的这个参数不能包含任何关于版本号的信息，区域性，和公钥信息，如果在指定路径找不到程序集抛出异常。</p>
-<h4 id="设置反射类型成员"><a href="#设置反射类型成员" class="headerlink" title="设置反射类型成员"></a>设置反射类型成员</h4><p>反射类型的成员就是反射层次模型中最下面的一层数据。我们可以通过type对象的GetMembers 方法取得一个类型的成员。如果我们使用的是不带参数的GetMembers，它只返回该类型的公共定义的静态变量和实例成员，我们也可以通过使用带参数的 GetMembers通过参数设置来返回指定的类型成员。具体参数参考msdn 中system.reflection.bindingflags 枚举类型的详细说明。</p>
-<p>例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//设置需要返回的类型的成员内容</div><div class="line">bindingFlags bf=bingdingFlags.DeclaredOnly|bingdingFlags.Nonpublic|BingdingFlags.Public;</div><div class="line">foreach (MemberInfo mi int t.getmembers(bf))</div><div class="line">&#123;</div><div class="line">       writeline(mi.membertype)    //输出指定的类型成员</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="通过反射创建类型的实例："><a href="#通过反射创建类型的实例：" class="headerlink" title="通过反射创建类型的实例："></a>通过反射创建类型的实例：</h4><p>通过反射可以获取程序集的类型，我们就可以根据获得的程序集类型来创建该类型新的实例，这也是前面提到的在运行时创建对象实现晚绑定的功能<br>我们可以通过下面的几个方法实现：<br>1、System.Activator 的CreateInstance方法。该方法返回新对象的引用。具体使用方法参见msdn<br>2、System.Activator 的createInstanceFrom 与上一个方法类似，不过需要指定类型及其程序集<br>3、System.Appdomain 的方法：createInstance,CreateInstanceAndUnwrap,CreateInstranceFrom和CreateInstraceFromAndUnwrap<br>4、System.type的InvokeMember实例方法：这个方法返回一个与传入参数相符的构造函数，并构造该类型。<br>5、System.reflection.constructinfo 的Invoke实例方法</p>
-<h4 id="反射的性能"><a href="#反射的性能" class="headerlink" title="反射的性能"></a>反射的性能</h4><p>使用反射来调用类型或者触发方法，或者访问一个字段或者属性时clr 需要做更多的工作：校验参数，检查权限等等，所以速度是非常慢的。所以尽量不要使用反射进行编程，对于打算编写一个动态构造类型（晚绑定）的应用程序，可以采取以下的几种方式进行代替：<br>1、通过类的继承关系。让该类型从一个编译时可知的基础类型派生出来，在运行时生成该类型的一个实例，将对其的引用放到其基础类型的一个变量中，然后调用该基础类型的虚方法。<br>2、通过接口实现。在运行时，构建该类型的一个实例，将对其的引用放到其接口类型的一个变量中，然后调用该接口定义的虚方法。<br>3、通过委托实现。让该类型实现一个方法，其名称和原型都与一个在编译时就已知的委托相符。在运行时先构造该类型的实例，然后在用该方法的对象及名称构造出该委托的实例，接着通过委托调用你想要的方法。这个方法相对与前面两个方法所作的工作要多一些，效率更低一些。</p>
-<hr>
-<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">System.Reflection.Assembly ass = Assembly.LoadFrom(Server.MapPath(&quot;bin/swordyang.dll&quot;)); //加载DLL</div><div class="line">System.Type t = ass.GetType(&quot;cn.SwordYang.TextClass&quot;);//获得类型</div><div class="line">object o = System.Activator.CreateInstance(t);//创建实例</div><div class="line">System.Reflection.MethodInfo mi = t.GetMethod(&quot;RunJs&quot;);//获得方法</div><div class="line">mi.Invoke(o, new object[] &#123; this.Page,&quot;alert(&apos;测试反射机制&apos;)&quot;&#125;);//调用方法</div></pre></td></tr></table></figure>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> 反射 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[.net委托]]></title>
       <url>/2017/10/16/csharp%E5%A7%94%E6%89%98/</url>
       <content type="html"><![CDATA[<h3 id="net委托"><a href="#net委托" class="headerlink" title=".net委托"></a>.net委托</h3><p> 委托可以看成是对方法的封装，即一个指针，指向一个方法。这里主要说编程中用的比较多的三种系统内置委托。</p>
@@ -132,6 +65,73 @@
             <tag> c# </tag>
             
             <tag> 委托 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[.net反射]]></title>
+      <url>/2017/10/16/csharp%E5%8F%8D%E5%B0%84/</url>
+      <content type="html"><![CDATA[<h3 id="net反射"><a href="#net反射" class="headerlink" title=".net反射"></a>.net反射</h3><blockquote>
+<p>目前想到的反射利用场景是前台页面使用ajax调用后台方法时，在一般处理程序中，根据请求的方法名动态（自动）地来调用相对应的方法。</p>
+</blockquote>
+<p>下面是关于反射的一些基本介绍：</p>
+<h4 id="反射单个程序集："><a href="#反射单个程序集：" class="headerlink" title="反射单个程序集："></a>反射单个程序集：</h4><p>1、Load 方法：极力推荐的一种方法，Load 方法带有一个程序集标志并载入它，Load 将引起CLR把策略应用到程序集上，先后在全局程序集缓冲区，应用程序基目录和私有路径下面查找该程序集，如果找不到该程序集系统抛出异常<br>2、LoadFrom 方法：传递一个程序集文件的路径名（包括扩展名），CLR会载入您指定的这个程序集，传递的这个参数不能包含任何关于版本号的信息，区域性，和公钥信息，如果在指定路径找不到程序集抛出异常。</p>
+<h4 id="设置反射类型成员"><a href="#设置反射类型成员" class="headerlink" title="设置反射类型成员"></a>设置反射类型成员</h4><p>反射类型的成员就是反射层次模型中最下面的一层数据。我们可以通过type对象的GetMembers 方法取得一个类型的成员。如果我们使用的是不带参数的GetMembers，它只返回该类型的公共定义的静态变量和实例成员，我们也可以通过使用带参数的 GetMembers通过参数设置来返回指定的类型成员。具体参数参考msdn 中system.reflection.bindingflags 枚举类型的详细说明。</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//设置需要返回的类型的成员内容</div><div class="line">bindingFlags bf=bingdingFlags.DeclaredOnly|bingdingFlags.Nonpublic|BingdingFlags.Public;</div><div class="line">foreach (MemberInfo mi int t.getmembers(bf))</div><div class="line">&#123;</div><div class="line">       writeline(mi.membertype)    //输出指定的类型成员</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="通过反射创建类型的实例："><a href="#通过反射创建类型的实例：" class="headerlink" title="通过反射创建类型的实例："></a>通过反射创建类型的实例：</h4><p>通过反射可以获取程序集的类型，我们就可以根据获得的程序集类型来创建该类型新的实例，这也是前面提到的在运行时创建对象实现晚绑定的功能<br>我们可以通过下面的几个方法实现：<br>1、System.Activator 的CreateInstance方法。该方法返回新对象的引用。具体使用方法参见msdn<br>2、System.Activator 的createInstanceFrom 与上一个方法类似，不过需要指定类型及其程序集<br>3、System.Appdomain 的方法：createInstance,CreateInstanceAndUnwrap,CreateInstranceFrom和CreateInstraceFromAndUnwrap<br>4、System.type的InvokeMember实例方法：这个方法返回一个与传入参数相符的构造函数，并构造该类型。<br>5、System.reflection.constructinfo 的Invoke实例方法</p>
+<h4 id="反射的性能"><a href="#反射的性能" class="headerlink" title="反射的性能"></a>反射的性能</h4><p>使用反射来调用类型或者触发方法，或者访问一个字段或者属性时clr 需要做更多的工作：校验参数，检查权限等等，所以速度是非常慢的。所以尽量不要使用反射进行编程，对于打算编写一个动态构造类型（晚绑定）的应用程序，可以采取以下的几种方式进行代替：<br>1、通过类的继承关系。让该类型从一个编译时可知的基础类型派生出来，在运行时生成该类型的一个实例，将对其的引用放到其基础类型的一个变量中，然后调用该基础类型的虚方法。<br>2、通过接口实现。在运行时，构建该类型的一个实例，将对其的引用放到其接口类型的一个变量中，然后调用该接口定义的虚方法。<br>3、通过委托实现。让该类型实现一个方法，其名称和原型都与一个在编译时就已知的委托相符。在运行时先构造该类型的实例，然后在用该方法的对象及名称构造出该委托的实例，接着通过委托调用你想要的方法。这个方法相对与前面两个方法所作的工作要多一些，效率更低一些。</p>
+<hr>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">System.Reflection.Assembly ass = Assembly.LoadFrom(Server.MapPath(&quot;bin/swordyang.dll&quot;)); //加载DLL</div><div class="line">System.Type t = ass.GetType(&quot;cn.SwordYang.TextClass&quot;);//获得类型</div><div class="line">object o = System.Activator.CreateInstance(t);//创建实例</div><div class="line">System.Reflection.MethodInfo mi = t.GetMethod(&quot;RunJs&quot;);//获得方法</div><div class="line">mi.Invoke(o, new object[] &#123; this.Page,&quot;alert(&apos;测试反射机制&apos;)&quot;&#125;);//调用方法</div></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 反射 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[.net多线程]]></title>
+      <url>/2017/10/16/csharp%20%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
+      <content type="html"><![CDATA[<h3 id="net-多线程"><a href="#net-多线程" class="headerlink" title=".net 多线程"></a>.net 多线程</h3><blockquote>
+<p>线程牵涉的东西很多，自己只是用到了一点，学习了一点，现在把用到的学到的一点记录下来。</p>
+</blockquote>
+<h4 id="多线程使用场景-winform"><a href="#多线程使用场景-winform" class="headerlink" title="多线程使用场景-winform"></a>多线程使用场景-winform</h4><p>在winform中如果使用死循环就会导致窗体线程假死，从而导致不能操作窗体上控件的现象，这个问题可以使用多线程来解决。</p>
+<p>线程函数通过委托传递，可以不带参数，也可以带参数（只能有一个参数且为object类型，传递的方法没有返回值），可以用一个类或结构体封装参数。</p>
+<p>话不多说，直接上代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">namespace Test</div><div class="line">&#123;</div><div class="line">    class Program</div><div class="line">    &#123;</div><div class="line">        static void Main(string[] args)</div><div class="line">        &#123;</div><div class="line">            Thread t1 = new Thread(new ThreadStart(TestMethod));</div><div class="line">            Thread t2 = new Thread(new ParameterizedThreadStart(TestMethod));</div><div class="line">            t1.IsBackground = true;</div><div class="line">            t2.IsBackground = true;</div><div class="line">            t1.Start();</div><div class="line">            t2.Start(&quot;hello&quot;);</div><div class="line">            Console.ReadKey();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod()</div><div class="line">        &#123;</div><div class="line">            Console.WriteLine(&quot;不带参数的线程函数&quot;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod(object data)</div><div class="line">        &#123;</div><div class="line">            string datastr = data as string;</div><div class="line">            Console.WriteLine(&quot;带参数的线程函数，参数为：&#123;0&#125;&quot;, datastr);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">      //使用兰姆达表达式来简化代码</div><div class="line">        Thread th = new Thread(() =&gt;</div><div class="line">        &#123;</div><div class="line">                while(true)</div><div class="line">               &#123;</div><div class="line">                                     </div><div class="line">                &#125;</div><div class="line">        &#125;</div><div class="line">        th.IsBackground = true;//会随着主线程的关闭关闭这个子线程</div><div class="line">        th.Priority = ThreadPriority.Highest;</div><div class="line">        th.Start();            </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="跨线程访问"><a href="#跨线程访问" class="headerlink" title="跨线程访问"></a>跨线程访问</h4><p>一旦在winform 中使用了多线程，就会存在跨线程访问控件的问题，解决方案如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void UpdateWindowInfo(FormMode model)</div><div class="line">        &#123;</div><div class="line">            this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</div><div class="line">            &#123;</div><div class="line">                //lblCarType.Text = &quot;集卡车&quot;;</div><div class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</div><div class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</div><div class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</div><div class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</div><div class="line">                model.TradeMessge = &quot;&quot;;</div><div class="line">            &#125;), model);</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<hr>
+<p>关于多线程的内容很多，还有线程池，线程的同步异步调用以及锁 task等内容，这些东西看了一些，但是没怎么看懂，所以就不写了。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 多线程 </tag>
             
         </tags>
         
