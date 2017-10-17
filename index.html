@@ -979,7 +979,7 @@ Action
 序列化json字符串序列化
 1string json = JsonConvert.SerializeObject(s);//s为要序列化的对象
 反序列化
-1var a =
+123var a
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -1339,7 +1339,7 @@ A1003 2015/5/28 A清单
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/16/csharp爬虫/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/16/js-在当前日期往前推N天（除去工作日）/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="HE yuke">
@@ -1358,7 +1358,7 @@ A1003 2015/5/28 A清单
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/08/16/csharp爬虫/" itemprop="url">.net爬虫</a></h1>
+                <a class="post-title-link" href="/2017/08/16/js-在当前日期往前推N天（除去工作日）/" itemprop="url">js 在当前日期往前推N天（除去工作日）</a></h1>
         
 
         <div class="post-meta">
@@ -1393,8 +1393,8 @@ A1003 2015/5/28 A清单
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/net/" itemprop="url" rel="index">
-                    <span itemprop="name">.net</span>
+                  <a href="/categories/js/" itemprop="url" rel="index">
+                    <span itemprop="name">js</span>
                   </a>
                 </span>
 
@@ -1432,13 +1432,15 @@ A1003 2015/5/28 A清单
       
         
           
-          准备第三方插件HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用
-代码步骤从指定网站把网页的html获得
-WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/c
+          
+代码如下：
+
+JavaScript将日期往前推n天，思路是先判断当前的日期是否是工作日，是的话就继续往前推，不是的话就把这一天给过滤掉，用count计数。
+12345678910111213141516171819202122232425262728293031323334353637383940
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/08/16/csharp爬虫/#more" rel="contents">
+            <a class="btn" href="/2017/08/16/js-在当前日期往前推N天（除去工作日）/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1642,7 +1644,7 @@ WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgx
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/16/js-在当前日期往前推N天（除去工作日）/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/16/csharp爬虫/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="HE yuke">
@@ -1661,7 +1663,7 @@ WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgx
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/08/16/js-在当前日期往前推N天（除去工作日）/" itemprop="url">js 在当前日期往前推N天（除去工作日）</a></h1>
+                <a class="post-title-link" href="/2017/08/16/csharp爬虫/" itemprop="url">.net爬虫</a></h1>
         
 
         <div class="post-meta">
@@ -1696,8 +1698,8 @@ WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgx
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/js/" itemprop="url" rel="index">
-                    <span itemprop="name">js</span>
+                  <a href="/categories/net/" itemprop="url" rel="index">
+                    <span itemprop="name">.net</span>
                   </a>
                 </span>
 
@@ -1735,15 +1737,13 @@ WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgx
       
         
           
-          
-代码如下：
-
-JavaScript将日期往前推n天，思路是先判断当前的日期是否是工作日，是的话就继续往前推，不是的话就把这一天给过滤掉，用count计数。
-12345678910111213141516171819202122232425262728293031323334353637383940
+          准备第三方插件HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用
+代码步骤从指定网站把网页的html获得
+WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/c
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/08/16/js-在当前日期往前推N天（除去工作日）/#more" rel="contents">
+            <a class="btn" href="/2017/08/16/csharp爬虫/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
