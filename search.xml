@@ -3,6 +3,42 @@
   
     
     <entry>
+      <title><![CDATA[.net Socket编程（服务端）]]></title>
+      <url>/2017/10/27/csharp%20Socket%E7%BC%96%E7%A8%8B/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>Socket 编程 里面牵涉到了多线程以及异步编程的一些相关知识，在这记录一下，看下自己的理解 </p>
+</blockquote>
+<p>先说服务端流程：</p>
+<ol>
+<li>先创建一个socket对象，参数未创建的对象的连接协议，传输方式等。</li>
+<li>然后指明服务端的ip地址以及端口，将端口和ip封装成相应的对象作为参数传入刚socket.bind()函数，表示socket绑定端口开始监听（<em>调用socket.listen（）</em>）。（至此客户端已经可以进行连接服务端了）</li>
+<li>监听函数的编写，主要是做个死循环，调用socket.accept（）函数监听，调用函数后到的是一个socket对象conSocket，用这个conSocket对象开始进行于客户端的数据传输。</li>
+<li>传输函数的编写，也是做个死循环，调用conSocket.receive()接收数据。这里需要注意的是<strong>假如客户端关闭则调用这个函数会抛出异常</strong>，所以我们可以以此来判断客户端是否掉线。</li>
+<li>函数之间是线程调用的，先创建一个监听线程封装监听函数，再在监听线程里面创建一个通信线程，用来传输数据。注意传输线程是一个带参的线程</li>
+</ol>
+<hr>
+<p>代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div></pre></td><td class="code"><pre><div class="line">using System;</div><div class="line">using System.Collections.Generic;</div><div class="line">using System.Linq;</div><div class="line">using System.Net;</div><div class="line">using System.Net.Sockets;</div><div class="line">using System.Text;</div><div class="line">using System.Threading;</div><div class="line"></div><div class="line">namespace SocketPractice</div><div class="line">&#123;</div><div class="line">    class Program</div><div class="line">    &#123;</div><div class="line">        private static Socket socketSer;</div><div class="line">        static void Main(string[] args)</div><div class="line">        &#123;</div><div class="line">            CreateSerInfo();</div><div class="line">            Console.ReadKey();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void CreateSerInfo()</div><div class="line">        &#123;</div><div class="line">            socketSer = new Socket(AddressFamily.InterNetwork,SocketType.Stream,ProtocolType.Tcp);</div><div class="line">            IPAddress scIp =IPAddress.Parse(&quot;192.168.16.217&quot;);</div><div class="line">            IPEndPoint scPort = new IPEndPoint(scIp,8090);</div><div class="line"></div><div class="line">            socketSer.Bind(scPort);//创建的socket监听此端口</div><div class="line">            socketSer.Listen(20);//最大等待的连接数</div><div class="line"></div><div class="line">            Thread scWatchThread=new Thread(SerWatching);</div><div class="line">            scWatchThread.Start();</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void SerWatching()</div><div class="line">        &#123;</div><div class="line">            while (true)</div><div class="line">            &#123;</div><div class="line">                Socket connectSocket=null;//声明一个用于客户端的socket</div><div class="line">                try</div><div class="line">                &#123;</div><div class="line">                    connectSocket = socketSer.Accept();//循环监听客户端这个套接字的请求</div><div class="line">                &#125;</div><div class="line">                catch (Exception e)</div><div class="line">                &#123;</div><div class="line">                    Console.WriteLine(e);</div><div class="line">                   </div><div class="line">                &#125;</div><div class="line">               //获取监听到的这个套接字的一些信息</div><div class="line">                IPEndPoint clientIpEndPoint = connectSocket?.RemoteEndPoint as IPEndPoint;</div><div class="line">                string clientIp = clientIpEndPoint?.Address.ToString();</div><div class="line">                string clientPort = clientIpEndPoint?.Port.ToString();</div><div class="line">                Console.WriteLine(clientIp);</div><div class="line">                //构造一个带参数的线程，将监听到的这个套接字作为参数传过去</div><div class="line">                Thread transferThread = new Thread(new ParameterizedThreadStart(Rev)) &#123; IsBackground = true &#125;;</div><div class="line">                transferThread.Start(connectSocket);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void Rev(object socket)</div><div class="line">        &#123;</div><div class="line">            Socket conSocket= socket as Socket;</div><div class="line">            while (true)</div><div class="line">            &#123;</div><div class="line">                if(conSocket == null) return;</div><div class="line">                try</div><div class="line">                &#123;</div><div class="line">                    byte[] buffer = new byte[1024 * 1024];//声明一个缓冲区</div><div class="line">                    int bufferLength = conSocket.Receive(buffer);</div><div class="line">                    string strMsg = Encoding.UTF8.GetString(buffer, 0, bufferLength);//将收到的BYTE流转化成字符串</div><div class="line">                    if (!string.IsNullOrEmpty(strMsg))</div><div class="line">                    &#123;</div><div class="line">                        string sendMsg = &quot;我收到你的信息了&quot;;</div><div class="line">                        conSocket.Send(Encoding.UTF8.GetBytes(sendMsg));</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">                catch (Exception e)</div><div class="line">                &#123;</div><div class="line">                    Console.WriteLine(e);</div><div class="line">                    return;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> Socket </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[Hello World]]></title>
       <url>/2017/10/16/hello-world/</url>
       <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
@@ -16,6 +52,39 @@
 <p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
 ]]></content>
       
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[.net多线程]]></title>
+      <url>/2017/10/16/csharp%20%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
+      <content type="html"><![CDATA[<h3 id="net-多线程"><a href="#net-多线程" class="headerlink" title=".net 多线程"></a>.net 多线程</h3><blockquote>
+<p>线程牵涉的东西很多，自己只是用到了一点，学习了一点，现在把用到的学到的一点记录下来。</p>
+</blockquote>
+<h4 id="多线程使用场景-winform"><a href="#多线程使用场景-winform" class="headerlink" title="多线程使用场景-winform"></a>多线程使用场景-winform</h4><p>在winform中如果使用死循环就会导致窗体线程假死，从而导致不能操作窗体上控件的现象，这个问题可以使用多线程来解决。</p>
+<p>线程函数通过委托传递，可以不带参数，也可以带参数（只能有一个参数且为object类型，传递的方法没有返回值），可以用一个类或结构体封装参数。</p>
+<p>话不多说，直接上代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">namespace Test</div><div class="line">&#123;</div><div class="line">    class Program</div><div class="line">    &#123;</div><div class="line">        static void Main(string[] args)</div><div class="line">        &#123;</div><div class="line">            Thread t1 = new Thread(new ThreadStart(TestMethod));</div><div class="line">            Thread t2 = new Thread(new ParameterizedThreadStart(TestMethod));</div><div class="line">            t1.IsBackground = true;</div><div class="line">            t2.IsBackground = true;</div><div class="line">            t1.Start();</div><div class="line">            t2.Start(&quot;hello&quot;);</div><div class="line">            Console.ReadKey();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod()</div><div class="line">        &#123;</div><div class="line">            Console.WriteLine(&quot;不带参数的线程函数&quot;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod(object data)</div><div class="line">        &#123;</div><div class="line">            string datastr = data as string;</div><div class="line">            Console.WriteLine(&quot;带参数的线程函数，参数为：&#123;0&#125;&quot;, datastr);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">      //使用兰姆达表达式来简化代码</div><div class="line">        Thread th = new Thread(() =&gt;</div><div class="line">        &#123;</div><div class="line">                while(true)</div><div class="line">               &#123;</div><div class="line">                                     </div><div class="line">                &#125;</div><div class="line">        &#125;</div><div class="line">        th.IsBackground = true;//会随着主线程的关闭关闭这个子线程</div><div class="line">        th.Priority = ThreadPriority.Highest;</div><div class="line">        th.Start();            </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="跨线程访问"><a href="#跨线程访问" class="headerlink" title="跨线程访问"></a>跨线程访问</h4><p>一旦在winform 中使用了多线程，就会存在跨线程访问控件的问题，解决方案如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void UpdateWindowInfo(FormMode model)</div><div class="line">        &#123;</div><div class="line">            this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</div><div class="line">            &#123;</div><div class="line">                //lblCarType.Text = &quot;集卡车&quot;;</div><div class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</div><div class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</div><div class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</div><div class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</div><div class="line">                model.TradeMessge = &quot;&quot;;</div><div class="line">            &#125;), model);</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<hr>
+<p>关于多线程的内容很多，还有线程池，线程的同步异步调用以及锁 task等内容，这些东西看了一些，但是没怎么看懂，所以就不写了。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 多线程 </tag>
+            
+        </tags>
         
     </entry>
     
@@ -99,39 +168,6 @@
             <tag> c# </tag>
             
             <tag> 反射 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[.net多线程]]></title>
-      <url>/2017/10/16/csharp%20%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
-      <content type="html"><![CDATA[<h3 id="net-多线程"><a href="#net-多线程" class="headerlink" title=".net 多线程"></a>.net 多线程</h3><blockquote>
-<p>线程牵涉的东西很多，自己只是用到了一点，学习了一点，现在把用到的学到的一点记录下来。</p>
-</blockquote>
-<h4 id="多线程使用场景-winform"><a href="#多线程使用场景-winform" class="headerlink" title="多线程使用场景-winform"></a>多线程使用场景-winform</h4><p>在winform中如果使用死循环就会导致窗体线程假死，从而导致不能操作窗体上控件的现象，这个问题可以使用多线程来解决。</p>
-<p>线程函数通过委托传递，可以不带参数，也可以带参数（只能有一个参数且为object类型，传递的方法没有返回值），可以用一个类或结构体封装参数。</p>
-<p>话不多说，直接上代码。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">namespace Test</div><div class="line">&#123;</div><div class="line">    class Program</div><div class="line">    &#123;</div><div class="line">        static void Main(string[] args)</div><div class="line">        &#123;</div><div class="line">            Thread t1 = new Thread(new ThreadStart(TestMethod));</div><div class="line">            Thread t2 = new Thread(new ParameterizedThreadStart(TestMethod));</div><div class="line">            t1.IsBackground = true;</div><div class="line">            t2.IsBackground = true;</div><div class="line">            t1.Start();</div><div class="line">            t2.Start(&quot;hello&quot;);</div><div class="line">            Console.ReadKey();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod()</div><div class="line">        &#123;</div><div class="line">            Console.WriteLine(&quot;不带参数的线程函数&quot;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod(object data)</div><div class="line">        &#123;</div><div class="line">            string datastr = data as string;</div><div class="line">            Console.WriteLine(&quot;带参数的线程函数，参数为：&#123;0&#125;&quot;, datastr);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">      //使用兰姆达表达式来简化代码</div><div class="line">        Thread th = new Thread(() =&gt;</div><div class="line">        &#123;</div><div class="line">                while(true)</div><div class="line">               &#123;</div><div class="line">                                     </div><div class="line">                &#125;</div><div class="line">        &#125;</div><div class="line">        th.IsBackground = true;//会随着主线程的关闭关闭这个子线程</div><div class="line">        th.Priority = ThreadPriority.Highest;</div><div class="line">        th.Start();            </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="跨线程访问"><a href="#跨线程访问" class="headerlink" title="跨线程访问"></a>跨线程访问</h4><p>一旦在winform 中使用了多线程，就会存在跨线程访问控件的问题，解决方案如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void UpdateWindowInfo(FormMode model)</div><div class="line">        &#123;</div><div class="line">            this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</div><div class="line">            &#123;</div><div class="line">                //lblCarType.Text = &quot;集卡车&quot;;</div><div class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</div><div class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</div><div class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</div><div class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</div><div class="line">                model.TradeMessge = &quot;&quot;;</div><div class="line">            &#125;), model);</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
-<hr>
-<p>关于多线程的内容很多，还有线程池，线程的同步异步调用以及锁 task等内容，这些东西看了一些，但是没怎么看懂，所以就不写了。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> 多线程 </tag>
             
         </tags>
         
