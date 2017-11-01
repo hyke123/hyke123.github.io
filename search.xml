@@ -3,6 +3,82 @@
   
     
     <entry>
+      <title><![CDATA[.net 异步委托]]></title>
+      <url>/2017/11/01/csharp%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>这里讲一下自己对异步的理解，以及相关的实现及应用</p>
+</blockquote>
+<h4 id="什么是异步"><a href="#什么是异步" class="headerlink" title="什么是异步"></a>什么是异步</h4><p>当按照正常的代码顺序一行一行执行的时候我们可以看作是同步执行，当然有时候并不是按照代码的行数顺序执行，我们可以在这一行调用函数，这样可能从第十行一下跳到第二十行，但是这依旧是符合我们正常的代码逻辑的。</p>
+<hr>
+<p>现在比方说：程序要对一台服务器发起请求，我想当请求 成功以后再给服务器发送下一条信息，如果是同步执行，我们可能就是发起请求，然后一直等待，等待服务器响应后我们下面的发送信息代码才能执行，那么在连接服务器的这个过程中，我们的主线程是阻塞了的（cpu也闲置了，只进行IO操作），这样可能造成界面<strong>假死</strong>或者其他不好的影响。</p>
+<p>我们希望是在对服务器发出请求 的同时，cpu可以继续处理其他事物。这就要用到异步。</p>
+<p>异步委托其实就是，当委托异步调用的时候，再创建了一个线程去执行委托执向的方法。下面介绍两种具体实现方法：</p>
+<p><strong>coding:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Console.WriteLine(&quot; Main Thread:&quot; + Thread.CurrentThread.ManagedThreadId);//当前线程</div><div class="line">//定义委托并用兰姆达实现</div><div class="line">Func&lt;int, int, string&gt; delFunc = (a, b) =&gt;</div><div class="line"> &#123;</div><div class="line">      Console.WriteLine(&quot; Delegate Thread:&quot; + Thread.CurrentThread.ManagedThreadId);</div><div class="line">      Thread.Sleep(2000);</div><div class="line">      return (a + b).ToString();</div><div class="line"> &#125;;</div><div class="line">string str = delFunc(3, 4);</div></pre></td></tr></table></figure>
+<p>上面是普通的定义委托并调用委托的方式</p>
+<hr>
+<p><strong>coding:</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">//异步调用委托</div><div class="line">//内部原理就是：使用了一个线程池的线程去执行了委托指向的方法。</div><div class="line">//拿到异步委托的结果</div><div class="line">IAsyncResult result = delFunc.BeginInvoke(3, 4, null, null);</div><div class="line">if (!result.IsCompleted)</div><div class="line"> &#123;</div><div class="line">	//通过 IAsyncResult,可以获得该委托的相关信息,</div><div class="line">    //并验证该委托是否完成了任务,这是IsCompleted属性的功劳。</div><div class="line">  </div><div class="line">    //doSomeThingInMainThread();在主线程里做</div><div class="line">  &#125;</div><div class="line">//EndoInvoke方法会阻塞当前的线程，直到异步委托指向完成之后，才能继续往下执行。</div><div class="line">string str1 = delFunc.EndInvoke(result); </div><div class="line">Console.WriteLine(str1);</div></pre></td></tr></table></figure>
+<p>上面这一种是通过轮询</p>
+<hr>
+<p><strong>coding</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">delFunc.BeginInvoke(5, 6, MyAsyncCallback, &quot;123&quot;);</div><div class="line">//对于BeginInvoke方法的第四个参数，可以传递任意对象，以便从回调方法中方为使用它，通过IAsyncResult的AsyncState属性来访问它。 </div><div class="line">delFunc.BeginInvoke(5, 6, MyAsyncCallback, delFunc);</div><div class="line">public static void MyAsyncCallback(IAsyncResult ar)</div><div class="line">&#123;</div><div class="line">     var del = (Func&lt;int, int, string&gt;)ar.AsyncState;</div><div class="line">     string str = del.EndInvoke(ar);</div><div class="line">     ////1、拿到异步委托执行的结果</div><div class="line">     //AsyncResult result = (AsyncResult)ar;</div><div class="line">     //var del = (Func&lt;int, int, string&gt;)result.AsyncDelegate;</div><div class="line">     //string returnValue = del.EndInvoke(result);</div><div class="line">     //Console.WriteLine(&quot;返回值是：&quot;+returnValue);</div><div class="line">     ////2、拿到给回调函数的参数。</div><div class="line">     //Console.WriteLine(&quot;传给异步回调函数的参数：&quot;+result.AsyncState);</div><div class="line">     Console.WriteLine(&quot;回调函数的线程 的id是：&quot; + Thread.CurrentThread.ManagedThreadId);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面这是回调函数的方式。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 异步 </tag>
+            
+            <tag> 委托 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[.net Socket编程（服务端）]]></title>
+      <url>/2017/11/01/csharp%20Socket%E6%96%AD%E7%BA%BF%E5%88%A4%E6%96%AD/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>Socket 编程 里面怎么才能判断其中一方是否断开连接。</p>
+</blockquote>
+<ol>
+<li><p>当断开连接的时候我饿们调用<em>receive()</em>函数从缓冲区里读数据的时候，这个时候会抛出一个异常，我们只需在捕捉这个异常，并在<em>catch</em>里面进行处理就行，然后关闭对应的socket。</p>
+</li>
+<li><p>还有一种方式是通过：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static bool IsSocketConnected(Socket s)</div><div class="line">&#123;</div><div class="line">           return !((s.Poll(1000, SelectMode.SelectRead) &amp;&amp; (s.Available == 0)) || 		             !s.Connected);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>​    这里主要说明<em>socket.Poll()</em>这个函数，第一个参数是超时时间，单位是微秒，第二个参数是判断可以读取的正常的socket。通过这三个条件一起进行判断，如果只判断Available或者Connected是不行的。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> Socket </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[.net Socket编程（服务端）]]></title>
       <url>/2017/10/27/csharp%20Socket%E7%BC%96%E7%A8%8B/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -56,19 +132,20 @@
     </entry>
     
     <entry>
-      <title><![CDATA[.net多线程]]></title>
-      <url>/2017/10/16/csharp%20%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
-      <content type="html"><![CDATA[<h3 id="net-多线程"><a href="#net-多线程" class="headerlink" title=".net 多线程"></a>.net 多线程</h3><blockquote>
-<p>线程牵涉的东西很多，自己只是用到了一点，学习了一点，现在把用到的学到的一点记录下来。</p>
+      <title><![CDATA[.net反射]]></title>
+      <url>/2017/10/16/csharp%E5%8F%8D%E5%B0%84/</url>
+      <content type="html"><![CDATA[<h3 id="net反射"><a href="#net反射" class="headerlink" title=".net反射"></a>.net反射</h3><blockquote>
+<p>目前想到的反射利用场景是前台页面使用ajax调用后台方法时，在一般处理程序中，根据请求的方法名动态（自动）地来调用相对应的方法。</p>
 </blockquote>
-<h4 id="多线程使用场景-winform"><a href="#多线程使用场景-winform" class="headerlink" title="多线程使用场景-winform"></a>多线程使用场景-winform</h4><p>在winform中如果使用死循环就会导致窗体线程假死，从而导致不能操作窗体上控件的现象，这个问题可以使用多线程来解决。</p>
-<p>线程函数通过委托传递，可以不带参数，也可以带参数（只能有一个参数且为object类型，传递的方法没有返回值），可以用一个类或结构体封装参数。</p>
-<p>话不多说，直接上代码。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">namespace Test</div><div class="line">&#123;</div><div class="line">    class Program</div><div class="line">    &#123;</div><div class="line">        static void Main(string[] args)</div><div class="line">        &#123;</div><div class="line">            Thread t1 = new Thread(new ThreadStart(TestMethod));</div><div class="line">            Thread t2 = new Thread(new ParameterizedThreadStart(TestMethod));</div><div class="line">            t1.IsBackground = true;</div><div class="line">            t2.IsBackground = true;</div><div class="line">            t1.Start();</div><div class="line">            t2.Start(&quot;hello&quot;);</div><div class="line">            Console.ReadKey();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod()</div><div class="line">        &#123;</div><div class="line">            Console.WriteLine(&quot;不带参数的线程函数&quot;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod(object data)</div><div class="line">        &#123;</div><div class="line">            string datastr = data as string;</div><div class="line">            Console.WriteLine(&quot;带参数的线程函数，参数为：&#123;0&#125;&quot;, datastr);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">      //使用兰姆达表达式来简化代码</div><div class="line">        Thread th = new Thread(() =&gt;</div><div class="line">        &#123;</div><div class="line">                while(true)</div><div class="line">               &#123;</div><div class="line">                                     </div><div class="line">                &#125;</div><div class="line">        &#125;</div><div class="line">        th.IsBackground = true;//会随着主线程的关闭关闭这个子线程</div><div class="line">        th.Priority = ThreadPriority.Highest;</div><div class="line">        th.Start();            </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="跨线程访问"><a href="#跨线程访问" class="headerlink" title="跨线程访问"></a>跨线程访问</h4><p>一旦在winform 中使用了多线程，就会存在跨线程访问控件的问题，解决方案如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void UpdateWindowInfo(FormMode model)</div><div class="line">        &#123;</div><div class="line">            this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</div><div class="line">            &#123;</div><div class="line">                //lblCarType.Text = &quot;集卡车&quot;;</div><div class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</div><div class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</div><div class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</div><div class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</div><div class="line">                model.TradeMessge = &quot;&quot;;</div><div class="line">            &#125;), model);</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<p>下面是关于反射的一些基本介绍：</p>
+<h4 id="反射单个程序集："><a href="#反射单个程序集：" class="headerlink" title="反射单个程序集："></a>反射单个程序集：</h4><p>1、Load 方法：极力推荐的一种方法，Load 方法带有一个程序集标志并载入它，Load 将引起CLR把策略应用到程序集上，先后在全局程序集缓冲区，应用程序基目录和私有路径下面查找该程序集，如果找不到该程序集系统抛出异常<br>2、LoadFrom 方法：传递一个程序集文件的路径名（包括扩展名），CLR会载入您指定的这个程序集，传递的这个参数不能包含任何关于版本号的信息，区域性，和公钥信息，如果在指定路径找不到程序集抛出异常。</p>
+<h4 id="设置反射类型成员"><a href="#设置反射类型成员" class="headerlink" title="设置反射类型成员"></a>设置反射类型成员</h4><p>反射类型的成员就是反射层次模型中最下面的一层数据。我们可以通过type对象的GetMembers 方法取得一个类型的成员。如果我们使用的是不带参数的GetMembers，它只返回该类型的公共定义的静态变量和实例成员，我们也可以通过使用带参数的 GetMembers通过参数设置来返回指定的类型成员。具体参数参考msdn 中system.reflection.bindingflags 枚举类型的详细说明。</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//设置需要返回的类型的成员内容</div><div class="line">bindingFlags bf=bingdingFlags.DeclaredOnly|bingdingFlags.Nonpublic|BingdingFlags.Public;</div><div class="line">foreach (MemberInfo mi int t.getmembers(bf))</div><div class="line">&#123;</div><div class="line">       writeline(mi.membertype)    //输出指定的类型成员</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="通过反射创建类型的实例："><a href="#通过反射创建类型的实例：" class="headerlink" title="通过反射创建类型的实例："></a>通过反射创建类型的实例：</h4><p>通过反射可以获取程序集的类型，我们就可以根据获得的程序集类型来创建该类型新的实例，这也是前面提到的在运行时创建对象实现晚绑定的功能<br>我们可以通过下面的几个方法实现：<br>1、System.Activator 的CreateInstance方法。该方法返回新对象的引用。具体使用方法参见msdn<br>2、System.Activator 的createInstanceFrom 与上一个方法类似，不过需要指定类型及其程序集<br>3、System.Appdomain 的方法：createInstance,CreateInstanceAndUnwrap,CreateInstranceFrom和CreateInstraceFromAndUnwrap<br>4、System.type的InvokeMember实例方法：这个方法返回一个与传入参数相符的构造函数，并构造该类型。<br>5、System.reflection.constructinfo 的Invoke实例方法</p>
+<h4 id="反射的性能"><a href="#反射的性能" class="headerlink" title="反射的性能"></a>反射的性能</h4><p>使用反射来调用类型或者触发方法，或者访问一个字段或者属性时clr 需要做更多的工作：校验参数，检查权限等等，所以速度是非常慢的。所以尽量不要使用反射进行编程，对于打算编写一个动态构造类型（晚绑定）的应用程序，可以采取以下的几种方式进行代替：<br>1、通过类的继承关系。让该类型从一个编译时可知的基础类型派生出来，在运行时生成该类型的一个实例，将对其的引用放到其基础类型的一个变量中，然后调用该基础类型的虚方法。<br>2、通过接口实现。在运行时，构建该类型的一个实例，将对其的引用放到其接口类型的一个变量中，然后调用该接口定义的虚方法。<br>3、通过委托实现。让该类型实现一个方法，其名称和原型都与一个在编译时就已知的委托相符。在运行时先构造该类型的实例，然后在用该方法的对象及名称构造出该委托的实例，接着通过委托调用你想要的方法。这个方法相对与前面两个方法所作的工作要多一些，效率更低一些。</p>
 <hr>
-<p>关于多线程的内容很多，还有线程池，线程的同步异步调用以及锁 task等内容，这些东西看了一些，但是没怎么看懂，所以就不写了。</p>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">System.Reflection.Assembly ass = Assembly.LoadFrom(Server.MapPath(&quot;bin/swordyang.dll&quot;)); //加载DLL</div><div class="line">System.Type t = ass.GetType(&quot;cn.SwordYang.TextClass&quot;);//获得类型</div><div class="line">object o = System.Activator.CreateInstance(t);//创建实例</div><div class="line">System.Reflection.MethodInfo mi = t.GetMethod(&quot;RunJs&quot;);//获得方法</div><div class="line">mi.Invoke(o, new object[] &#123; this.Page,&quot;alert(&apos;测试反射机制&apos;)&quot;&#125;);//调用方法</div></pre></td></tr></table></figure>
 ]]></content>
       
         <categories>
@@ -82,7 +159,7 @@
             
             <tag> c# </tag>
             
-            <tag> 多线程 </tag>
+            <tag> 反射 </tag>
             
         </tags>
         
@@ -140,20 +217,19 @@
     </entry>
     
     <entry>
-      <title><![CDATA[.net反射]]></title>
-      <url>/2017/10/16/csharp%E5%8F%8D%E5%B0%84/</url>
-      <content type="html"><![CDATA[<h3 id="net反射"><a href="#net反射" class="headerlink" title=".net反射"></a>.net反射</h3><blockquote>
-<p>目前想到的反射利用场景是前台页面使用ajax调用后台方法时，在一般处理程序中，根据请求的方法名动态（自动）地来调用相对应的方法。</p>
+      <title><![CDATA[.net多线程]]></title>
+      <url>/2017/10/16/csharp%20%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
+      <content type="html"><![CDATA[<h3 id="net-多线程"><a href="#net-多线程" class="headerlink" title=".net 多线程"></a>.net 多线程</h3><blockquote>
+<p>线程牵涉的东西很多，自己只是用到了一点，学习了一点，现在把用到的学到的一点记录下来。</p>
 </blockquote>
-<p>下面是关于反射的一些基本介绍：</p>
-<h4 id="反射单个程序集："><a href="#反射单个程序集：" class="headerlink" title="反射单个程序集："></a>反射单个程序集：</h4><p>1、Load 方法：极力推荐的一种方法，Load 方法带有一个程序集标志并载入它，Load 将引起CLR把策略应用到程序集上，先后在全局程序集缓冲区，应用程序基目录和私有路径下面查找该程序集，如果找不到该程序集系统抛出异常<br>2、LoadFrom 方法：传递一个程序集文件的路径名（包括扩展名），CLR会载入您指定的这个程序集，传递的这个参数不能包含任何关于版本号的信息，区域性，和公钥信息，如果在指定路径找不到程序集抛出异常。</p>
-<h4 id="设置反射类型成员"><a href="#设置反射类型成员" class="headerlink" title="设置反射类型成员"></a>设置反射类型成员</h4><p>反射类型的成员就是反射层次模型中最下面的一层数据。我们可以通过type对象的GetMembers 方法取得一个类型的成员。如果我们使用的是不带参数的GetMembers，它只返回该类型的公共定义的静态变量和实例成员，我们也可以通过使用带参数的 GetMembers通过参数设置来返回指定的类型成员。具体参数参考msdn 中system.reflection.bindingflags 枚举类型的详细说明。</p>
-<p>例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//设置需要返回的类型的成员内容</div><div class="line">bindingFlags bf=bingdingFlags.DeclaredOnly|bingdingFlags.Nonpublic|BingdingFlags.Public;</div><div class="line">foreach (MemberInfo mi int t.getmembers(bf))</div><div class="line">&#123;</div><div class="line">       writeline(mi.membertype)    //输出指定的类型成员</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="通过反射创建类型的实例："><a href="#通过反射创建类型的实例：" class="headerlink" title="通过反射创建类型的实例："></a>通过反射创建类型的实例：</h4><p>通过反射可以获取程序集的类型，我们就可以根据获得的程序集类型来创建该类型新的实例，这也是前面提到的在运行时创建对象实现晚绑定的功能<br>我们可以通过下面的几个方法实现：<br>1、System.Activator 的CreateInstance方法。该方法返回新对象的引用。具体使用方法参见msdn<br>2、System.Activator 的createInstanceFrom 与上一个方法类似，不过需要指定类型及其程序集<br>3、System.Appdomain 的方法：createInstance,CreateInstanceAndUnwrap,CreateInstranceFrom和CreateInstraceFromAndUnwrap<br>4、System.type的InvokeMember实例方法：这个方法返回一个与传入参数相符的构造函数，并构造该类型。<br>5、System.reflection.constructinfo 的Invoke实例方法</p>
-<h4 id="反射的性能"><a href="#反射的性能" class="headerlink" title="反射的性能"></a>反射的性能</h4><p>使用反射来调用类型或者触发方法，或者访问一个字段或者属性时clr 需要做更多的工作：校验参数，检查权限等等，所以速度是非常慢的。所以尽量不要使用反射进行编程，对于打算编写一个动态构造类型（晚绑定）的应用程序，可以采取以下的几种方式进行代替：<br>1、通过类的继承关系。让该类型从一个编译时可知的基础类型派生出来，在运行时生成该类型的一个实例，将对其的引用放到其基础类型的一个变量中，然后调用该基础类型的虚方法。<br>2、通过接口实现。在运行时，构建该类型的一个实例，将对其的引用放到其接口类型的一个变量中，然后调用该接口定义的虚方法。<br>3、通过委托实现。让该类型实现一个方法，其名称和原型都与一个在编译时就已知的委托相符。在运行时先构造该类型的实例，然后在用该方法的对象及名称构造出该委托的实例，接着通过委托调用你想要的方法。这个方法相对与前面两个方法所作的工作要多一些，效率更低一些。</p>
+<h4 id="多线程使用场景-winform"><a href="#多线程使用场景-winform" class="headerlink" title="多线程使用场景-winform"></a>多线程使用场景-winform</h4><p>在winform中如果使用死循环就会导致窗体线程假死，从而导致不能操作窗体上控件的现象，这个问题可以使用多线程来解决。</p>
+<p>线程函数通过委托传递，可以不带参数，也可以带参数（只能有一个参数且为object类型，传递的方法没有返回值），可以用一个类或结构体封装参数。</p>
+<p>话不多说，直接上代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">namespace Test</div><div class="line">&#123;</div><div class="line">    class Program</div><div class="line">    &#123;</div><div class="line">        static void Main(string[] args)</div><div class="line">        &#123;</div><div class="line">            Thread t1 = new Thread(new ThreadStart(TestMethod));</div><div class="line">            Thread t2 = new Thread(new ParameterizedThreadStart(TestMethod));</div><div class="line">            t1.IsBackground = true;</div><div class="line">            t2.IsBackground = true;</div><div class="line">            t1.Start();</div><div class="line">            t2.Start(&quot;hello&quot;);</div><div class="line">            Console.ReadKey();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod()</div><div class="line">        &#123;</div><div class="line">            Console.WriteLine(&quot;不带参数的线程函数&quot;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod(object data)</div><div class="line">        &#123;</div><div class="line">            string datastr = data as string;</div><div class="line">            Console.WriteLine(&quot;带参数的线程函数，参数为：&#123;0&#125;&quot;, datastr);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">      //使用兰姆达表达式来简化代码</div><div class="line">        Thread th = new Thread(() =&gt;</div><div class="line">        &#123;</div><div class="line">                while(true)</div><div class="line">               &#123;</div><div class="line">                                     </div><div class="line">                &#125;</div><div class="line">        &#125;</div><div class="line">        th.IsBackground = true;//会随着主线程的关闭关闭这个子线程</div><div class="line">        th.Priority = ThreadPriority.Highest;</div><div class="line">        th.Start();            </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="跨线程访问"><a href="#跨线程访问" class="headerlink" title="跨线程访问"></a>跨线程访问</h4><p>一旦在winform 中使用了多线程，就会存在跨线程访问控件的问题，解决方案如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void UpdateWindowInfo(FormMode model)</div><div class="line">        &#123;</div><div class="line">            this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</div><div class="line">            &#123;</div><div class="line">                //lblCarType.Text = &quot;集卡车&quot;;</div><div class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</div><div class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</div><div class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</div><div class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</div><div class="line">                model.TradeMessge = &quot;&quot;;</div><div class="line">            &#125;), model);</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
 <hr>
-<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">System.Reflection.Assembly ass = Assembly.LoadFrom(Server.MapPath(&quot;bin/swordyang.dll&quot;)); //加载DLL</div><div class="line">System.Type t = ass.GetType(&quot;cn.SwordYang.TextClass&quot;);//获得类型</div><div class="line">object o = System.Activator.CreateInstance(t);//创建实例</div><div class="line">System.Reflection.MethodInfo mi = t.GetMethod(&quot;RunJs&quot;);//获得方法</div><div class="line">mi.Invoke(o, new object[] &#123; this.Page,&quot;alert(&apos;测试反射机制&apos;)&quot;&#125;);//调用方法</div></pre></td></tr></table></figure>
+<p>关于多线程的内容很多，还有线程池，线程的同步异步调用以及锁 task等内容，这些东西看了一些，但是没怎么看懂，所以就不写了。</p>
 ]]></content>
       
         <categories>
@@ -167,7 +243,7 @@
             
             <tag> c# </tag>
             
-            <tag> 反射 </tag>
+            <tag> 多线程 </tag>
             
         </tags>
         
@@ -276,27 +352,34 @@
     </entry>
     
     <entry>
-      <title><![CDATA[js 在当前日期往前推N天（除去工作日）]]></title>
-      <url>/2017/08/16/js-%E5%9C%A8%E5%BD%93%E5%89%8D%E6%97%A5%E6%9C%9F%E5%BE%80%E5%89%8D%E6%8E%A8N%E5%A4%A9%EF%BC%88%E9%99%A4%E5%8E%BB%E5%B7%A5%E4%BD%9C%E6%97%A5%EF%BC%89/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>代码如下：</p>
-</blockquote>
-<p>JavaScript将日期往前推n天，思路是先判断当前的日期是否是工作日，是的话就继续往前推，不是的话就把这一天给过滤掉，用count计数。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"datePicker/WdatePicker.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"jquery-1.7.1.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">        //判断是否为工作日</span></div><div class="line"><span class="undefined">     function isWorkday(date) &#123;</span></div><div class="line"><span class="undefined">    //var date = !date ? new Date() : new Date(date);</span></div><div class="line"><span class="undefined">    var date=new Date(date);</span></div><div class="line"><span class="undefined">    var getday = date.getDay();</span></div><div class="line"><span class="undefined">    if (getday == 0 || getday == 6) &#123;</span></div><div class="line"><span class="undefined">        return false; //不是返回False</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">    else &#123;</span></div><div class="line"><span class="undefined">        return true;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">&#125;</span></div><div class="line"><span class="undefined">        //获取Date对象的年月日xxxx-xx-xx</span></div><div class="line"><span class="undefined">    function dateToyymmdd(d)&#123;</span></div><div class="line"><span class="undefined">        var month=d.getMonth()+1;</span></div><div class="line"><span class="undefined">        var day = d.getDate();</span></div><div class="line"><span class="undefined">        if(month&lt;10)&#123;</span></div><div class="line"><span class="undefined">        month = "0"+month;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">        if(day&lt;10)&#123;</span></div><div class="line"><span class="undefined">        day = "0"+day;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">        var val = d.getFullYear()+"-"+month+"-"+day;</span></div><div class="line"><span class="undefined">        return val;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">      //往前推5天除去工作日</span></div><div class="line"><span class="undefined">    function back(date)&#123;</span></div><div class="line"><span class="undefined">    var i=0;</span></div><div class="line"><span class="undefined">    var d=new Date(date);//获取传入的时间</span></div><div class="line"><span class="undefined">    while(i&lt;5)</span></div><div class="line"><span class="undefined">    &#123;</span></div><div class="line"><span class="undefined">        d.setDate(d.getDate()-1);//获取前一天时间</span></div><div class="line"><span class="undefined">        var val=dateToyymmdd(d);</span></div><div class="line"><span class="undefined">        //alert(isWorkday("2017-7-30")) ;</span></div><div class="line"><span class="undefined">        //alert(val+""+isWorkday(val));</span></div><div class="line"><span class="undefined">        if(isWorkday(val))</span></div><div class="line"><span class="undefined">        &#123;</span></div><div class="line"><span class="undefined">            i++;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">         continue;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">    var val = dateToyymmdd(d);</span></div><div class="line"><span class="undefined">    return val;</span></div><div class="line"><span class="undefined">  &#125;</span></div><div class="line"><span class="undefined">  window.onload=function()&#123;</span></div><div class="line"><span class="undefined">    $("#btn").blur(function()&#123;</span></div><div class="line"><span class="undefined">        var v=$("#btn").val();</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">            $("#label1").html(back(v));</span></div><div class="line"><span class="undefined">    &#125;)</span></div><div class="line"><span class="undefined">  &#125;</span></div><div class="line"><span class="undefined">   //alert(back('2017-08-02'));</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"btn"</span> <span class="attr">id</span>=<span class="string">"btn"</span> <span class="attr">onclick</span>=<span class="string">"WdatePicker()"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">label</span> <span class="attr">id</span>=<span class="string">"label1"</span> &gt;</span><span class="tag">&lt;/<span class="name">label</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+      <title><![CDATA[.net爬虫]]></title>
+      <url>/2017/08/16/csharp%E7%88%AC%E8%99%AB/</url>
+      <content type="html"><![CDATA[<h4 id="准备第三方插件"><a href="#准备第三方插件" class="headerlink" title="准备第三方插件"></a>准备第三方插件</h4><p>HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用</p>
+<h4 id="代码步骤"><a href="#代码步骤" class="headerlink" title="代码步骤"></a>代码步骤</h4><p>从指定网站把网页的html获得</p>
+<p><code>WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&quot;);
+            WebResponse response = request.GetResponse();
+            StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(&quot;gb2312&quot;));
+            string s = reader.ReadToEnd();</code></p>
+<p>将获得的html字符串传入 这个插件的具体使用可以参考<a href="http://www.cnblogs.com/GmrBrian/p/6201237.html" target="_blank" rel="external">http://www.cnblogs.com/GmrBrian/p/6201237.html</a></p>
+<p><code>HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(s);
+            HtmlNode div = doc.DocumentNode.SelectSingleNode(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
+            HtmlNodeCollection hrefList = doc.DocumentNode.SelectNodes(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
+            List&lt;string&gt; list = new List&lt;string&gt;();</code></p>
 ]]></content>
       
         <categories>
             
-            <category> js </category>
+            <category> .net </category>
             
         </categories>
         
         
         <tags>
             
-            <tag> js </tag>
+            <tag> c# </tag>
             
-            <tag> 时间 </tag>
+            <tag> 爬虫 </tag>
             
         </tags>
         
@@ -332,34 +415,27 @@
     </entry>
     
     <entry>
-      <title><![CDATA[.net爬虫]]></title>
-      <url>/2017/08/16/csharp%E7%88%AC%E8%99%AB/</url>
-      <content type="html"><![CDATA[<h4 id="准备第三方插件"><a href="#准备第三方插件" class="headerlink" title="准备第三方插件"></a>准备第三方插件</h4><p>HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用</p>
-<h4 id="代码步骤"><a href="#代码步骤" class="headerlink" title="代码步骤"></a>代码步骤</h4><p>从指定网站把网页的html获得</p>
-<p><code>WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&quot;);
-            WebResponse response = request.GetResponse();
-            StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(&quot;gb2312&quot;));
-            string s = reader.ReadToEnd();</code></p>
-<p>将获得的html字符串传入 这个插件的具体使用可以参考<a href="http://www.cnblogs.com/GmrBrian/p/6201237.html" target="_blank" rel="external">http://www.cnblogs.com/GmrBrian/p/6201237.html</a></p>
-<p><code>HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(s);
-            HtmlNode div = doc.DocumentNode.SelectSingleNode(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
-            HtmlNodeCollection hrefList = doc.DocumentNode.SelectNodes(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
-            List&lt;string&gt; list = new List&lt;string&gt;();</code></p>
+      <title><![CDATA[js 在当前日期往前推N天（除去工作日）]]></title>
+      <url>/2017/08/16/js-%E5%9C%A8%E5%BD%93%E5%89%8D%E6%97%A5%E6%9C%9F%E5%BE%80%E5%89%8D%E6%8E%A8N%E5%A4%A9%EF%BC%88%E9%99%A4%E5%8E%BB%E5%B7%A5%E4%BD%9C%E6%97%A5%EF%BC%89/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>代码如下：</p>
+</blockquote>
+<p>JavaScript将日期往前推n天，思路是先判断当前的日期是否是工作日，是的话就继续往前推，不是的话就把这一天给过滤掉，用count计数。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"datePicker/WdatePicker.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"jquery-1.7.1.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">        //判断是否为工作日</span></div><div class="line"><span class="undefined">     function isWorkday(date) &#123;</span></div><div class="line"><span class="undefined">    //var date = !date ? new Date() : new Date(date);</span></div><div class="line"><span class="undefined">    var date=new Date(date);</span></div><div class="line"><span class="undefined">    var getday = date.getDay();</span></div><div class="line"><span class="undefined">    if (getday == 0 || getday == 6) &#123;</span></div><div class="line"><span class="undefined">        return false; //不是返回False</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">    else &#123;</span></div><div class="line"><span class="undefined">        return true;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">&#125;</span></div><div class="line"><span class="undefined">        //获取Date对象的年月日xxxx-xx-xx</span></div><div class="line"><span class="undefined">    function dateToyymmdd(d)&#123;</span></div><div class="line"><span class="undefined">        var month=d.getMonth()+1;</span></div><div class="line"><span class="undefined">        var day = d.getDate();</span></div><div class="line"><span class="undefined">        if(month&lt;10)&#123;</span></div><div class="line"><span class="undefined">        month = "0"+month;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">        if(day&lt;10)&#123;</span></div><div class="line"><span class="undefined">        day = "0"+day;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">        var val = d.getFullYear()+"-"+month+"-"+day;</span></div><div class="line"><span class="undefined">        return val;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">      //往前推5天除去工作日</span></div><div class="line"><span class="undefined">    function back(date)&#123;</span></div><div class="line"><span class="undefined">    var i=0;</span></div><div class="line"><span class="undefined">    var d=new Date(date);//获取传入的时间</span></div><div class="line"><span class="undefined">    while(i&lt;5)</span></div><div class="line"><span class="undefined">    &#123;</span></div><div class="line"><span class="undefined">        d.setDate(d.getDate()-1);//获取前一天时间</span></div><div class="line"><span class="undefined">        var val=dateToyymmdd(d);</span></div><div class="line"><span class="undefined">        //alert(isWorkday("2017-7-30")) ;</span></div><div class="line"><span class="undefined">        //alert(val+""+isWorkday(val));</span></div><div class="line"><span class="undefined">        if(isWorkday(val))</span></div><div class="line"><span class="undefined">        &#123;</span></div><div class="line"><span class="undefined">            i++;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">         continue;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">    var val = dateToyymmdd(d);</span></div><div class="line"><span class="undefined">    return val;</span></div><div class="line"><span class="undefined">  &#125;</span></div><div class="line"><span class="undefined">  window.onload=function()&#123;</span></div><div class="line"><span class="undefined">    $("#btn").blur(function()&#123;</span></div><div class="line"><span class="undefined">        var v=$("#btn").val();</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">            $("#label1").html(back(v));</span></div><div class="line"><span class="undefined">    &#125;)</span></div><div class="line"><span class="undefined">  &#125;</span></div><div class="line"><span class="undefined">   //alert(back('2017-08-02'));</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"btn"</span> <span class="attr">id</span>=<span class="string">"btn"</span> <span class="attr">onclick</span>=<span class="string">"WdatePicker()"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">label</span> <span class="attr">id</span>=<span class="string">"label1"</span> &gt;</span><span class="tag">&lt;/<span class="name">label</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
 ]]></content>
       
         <categories>
             
-            <category> .net </category>
+            <category> js </category>
             
         </categories>
         
         
         <tags>
             
-            <tag> c# </tag>
+            <tag> js </tag>
             
-            <tag> 爬虫 </tag>
+            <tag> 时间 </tag>
             
         </tags>
         
