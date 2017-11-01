@@ -115,39 +115,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[.net多线程]]></title>
-      <url>/2017/10/16/csharp%20%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
-      <content type="html"><![CDATA[<h3 id="net-多线程"><a href="#net-多线程" class="headerlink" title=".net 多线程"></a>.net 多线程</h3><blockquote>
-<p>线程牵涉的东西很多，自己只是用到了一点，学习了一点，现在把用到的学到的一点记录下来。</p>
-</blockquote>
-<h4 id="多线程使用场景-winform"><a href="#多线程使用场景-winform" class="headerlink" title="多线程使用场景-winform"></a>多线程使用场景-winform</h4><p>在winform中如果使用死循环就会导致窗体线程假死，从而导致不能操作窗体上控件的现象，这个问题可以使用多线程来解决。</p>
-<p>线程函数通过委托传递，可以不带参数，也可以带参数（只能有一个参数且为object类型，传递的方法没有返回值），可以用一个类或结构体封装参数。</p>
-<p>话不多说，直接上代码。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">namespace Test</div><div class="line">&#123;</div><div class="line">    class Program</div><div class="line">    &#123;</div><div class="line">        static void Main(string[] args)</div><div class="line">        &#123;</div><div class="line">            Thread t1 = new Thread(new ThreadStart(TestMethod));</div><div class="line">            Thread t2 = new Thread(new ParameterizedThreadStart(TestMethod));</div><div class="line">            t1.IsBackground = true;</div><div class="line">            t2.IsBackground = true;</div><div class="line">            t1.Start();</div><div class="line">            t2.Start(&quot;hello&quot;);</div><div class="line">            Console.ReadKey();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod()</div><div class="line">        &#123;</div><div class="line">            Console.WriteLine(&quot;不带参数的线程函数&quot;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod(object data)</div><div class="line">        &#123;</div><div class="line">            string datastr = data as string;</div><div class="line">            Console.WriteLine(&quot;带参数的线程函数，参数为：&#123;0&#125;&quot;, datastr);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">      //使用兰姆达表达式来简化代码</div><div class="line">        Thread th = new Thread(() =&gt;</div><div class="line">        &#123;</div><div class="line">                while(true)</div><div class="line">               &#123;</div><div class="line">                                     </div><div class="line">                &#125;</div><div class="line">        &#125;</div><div class="line">        th.IsBackground = true;//会随着主线程的关闭关闭这个子线程</div><div class="line">        th.Priority = ThreadPriority.Highest;</div><div class="line">        th.Start();            </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="跨线程访问"><a href="#跨线程访问" class="headerlink" title="跨线程访问"></a>跨线程访问</h4><p>一旦在winform 中使用了多线程，就会存在跨线程访问控件的问题，解决方案如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void UpdateWindowInfo(FormMode model)</div><div class="line">        &#123;</div><div class="line">            this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</div><div class="line">            &#123;</div><div class="line">                //lblCarType.Text = &quot;集卡车&quot;;</div><div class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</div><div class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</div><div class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</div><div class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</div><div class="line">                model.TradeMessge = &quot;&quot;;</div><div class="line">            &#125;), model);</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
-<hr>
-<p>关于多线程的内容很多，还有线程池，线程的同步异步调用以及锁 task等内容，这些东西看了一些，但是没怎么看懂，所以就不写了。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> 多线程 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[.net反射]]></title>
       <url>/2017/10/16/csharp%E5%8F%8D%E5%B0%84/</url>
       <content type="html"><![CDATA[<h3 id="net反射"><a href="#net反射" class="headerlink" title=".net反射"></a>.net反射</h3><blockquote>
@@ -227,6 +194,39 @@
             <tag> c# </tag>
             
             <tag> 委托 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[.net多线程]]></title>
+      <url>/2017/10/16/csharp%20%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
+      <content type="html"><![CDATA[<h3 id="net-多线程"><a href="#net-多线程" class="headerlink" title=".net 多线程"></a>.net 多线程</h3><blockquote>
+<p>线程牵涉的东西很多，自己只是用到了一点，学习了一点，现在把用到的学到的一点记录下来。</p>
+</blockquote>
+<h4 id="多线程使用场景-winform"><a href="#多线程使用场景-winform" class="headerlink" title="多线程使用场景-winform"></a>多线程使用场景-winform</h4><p>在winform中如果使用死循环就会导致窗体线程假死，从而导致不能操作窗体上控件的现象，这个问题可以使用多线程来解决。</p>
+<p>线程函数通过委托传递，可以不带参数，也可以带参数（只能有一个参数且为object类型，传递的方法没有返回值），可以用一个类或结构体封装参数。</p>
+<p>话不多说，直接上代码。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line">namespace Test</div><div class="line">&#123;</div><div class="line">    class Program</div><div class="line">    &#123;</div><div class="line">        static void Main(string[] args)</div><div class="line">        &#123;</div><div class="line">            Thread t1 = new Thread(new ThreadStart(TestMethod));</div><div class="line">            Thread t2 = new Thread(new ParameterizedThreadStart(TestMethod));</div><div class="line">            t1.IsBackground = true;</div><div class="line">            t2.IsBackground = true;</div><div class="line">            t1.Start();</div><div class="line">            t2.Start(&quot;hello&quot;);</div><div class="line">            Console.ReadKey();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod()</div><div class="line">        &#123;</div><div class="line">            Console.WriteLine(&quot;不带参数的线程函数&quot;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        public static void TestMethod(object data)</div><div class="line">        &#123;</div><div class="line">            string datastr = data as string;</div><div class="line">            Console.WriteLine(&quot;带参数的线程函数，参数为：&#123;0&#125;&quot;, datastr);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">      //使用兰姆达表达式来简化代码</div><div class="line">        Thread th = new Thread(() =&gt;</div><div class="line">        &#123;</div><div class="line">                while(true)</div><div class="line">               &#123;</div><div class="line">                                     </div><div class="line">                &#125;</div><div class="line">        &#125;</div><div class="line">        th.IsBackground = true;//会随着主线程的关闭关闭这个子线程</div><div class="line">        th.Priority = ThreadPriority.Highest;</div><div class="line">        th.Start();            </div><div class="line">    &#125; </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="跨线程访问"><a href="#跨线程访问" class="headerlink" title="跨线程访问"></a>跨线程访问</h4><p>一旦在winform 中使用了多线程，就会存在跨线程访问控件的问题，解决方案如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public void UpdateWindowInfo(FormMode model)</div><div class="line">        &#123;</div><div class="line">            this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</div><div class="line">            &#123;</div><div class="line">                //lblCarType.Text = &quot;集卡车&quot;;</div><div class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</div><div class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</div><div class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</div><div class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</div><div class="line">                model.TradeMessge = &quot;&quot;;</div><div class="line">            &#125;), model);</div><div class="line">        &#125;</div></pre></td></tr></table></figure>
+<hr>
+<p>关于多线程的内容很多，还有线程池，线程的同步异步调用以及锁 task等内容，这些东西看了一些，但是没怎么看懂，所以就不写了。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 多线程 </tag>
             
         </tags>
         
