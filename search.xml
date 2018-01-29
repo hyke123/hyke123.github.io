@@ -3,33 +3,43 @@
   
     
     <entry>
-      <title><![CDATA[.net Socket连接断开判断]]></title>
-      <url>/2017/11/01/csharp%20Socket%E6%96%AD%E7%BA%BF%E5%88%A4%E6%96%AD/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>Socket 编程 里面怎么才能判断其中一方是否断开连接。</p>
-</blockquote>
-<ol>
-<li><p>当断开连接的时候我饿们调用<em>receive()</em>函数从缓冲区里读数据的时候，这个时候会抛出一个异常，我们只需在捕捉这个异常，并在<em>catch</em>里面进行处理就行，然后关闭对应的socket。</p>
+      <title><![CDATA[bootStrapTable 使用相关]]></title>
+      <url>/2018/01/29/bootStrapTable%20%E4%BD%BF%E7%94%A8%E7%9B%B8%E5%85%B3/</url>
+      <content type="html"><![CDATA[<h4 id="基础配置"><a href="#基础配置" class="headerlink" title="基础配置"></a>基础配置</h4><p>一般选项按照注释即可理解意思，主要是<strong>配字段</strong>—如何将ViewModel的属性显示成表格的字段。</p>
+<ul>
+<li><p>一般配置：  { title: ‘仓位号’, field: ‘OrderId’, align: ‘center’ }</p>
 </li>
-<li><p>还有一种方式是通过：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static bool IsSocketConnected(Socket s)</div><div class="line">&#123;</div><div class="line">           return !((s.Poll(1000, SelectMode.SelectRead) &amp;&amp; (s.Available == 0)) || 		             !s.Connected);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<li><p>列不可见：{ title: ‘id’, field: ‘Id’, visible: false }, visible: false。</p>
 </li>
-</ol>
-<p>​    这里主要说明<em>socket.Poll()</em>这个函数，第一个参数是超时时间，单位是微秒，第二个参数是判断可以读取的正常的socket。通过这三个条件一起进行判断，如果只判断Available或者Connected是不行的。</p>
+<li><p>格式化列： 主要是 formatter: function (value, row, index) {}函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;  <span class="attr">title</span>: <span class="string">'状态'</span>,<span class="attr">field</span>: <span class="string">'StatusType'</span>,<span class="attr">align</span>: <span class="string">'center'</span>,<span class="attr">formatter</span>: <span class="function"><span class="keyword">function</span> (<span class="params">value, row, index</span>) </span>&#123; <span class="keyword">if</span> (value == <span class="string">'待审核'</span>) &#123;&#125;&#125;,</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>详细的配置如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div></pre></td><td class="code"><pre><div class="line">$(<span class="string">'#tb_receiveInfo'</span>).bootstrapTable(&#123;</div><div class="line">           url: <span class="string">'/ReceiveGoods/ShowReceive'</span>,         <span class="comment">//请求后台的URL（*）</span></div><div class="line">           method: <span class="string">'post'</span>,                      <span class="comment">//请求方式（*）</span></div><div class="line">           toolbar: <span class="string">'#toolbar'</span>,                <span class="comment">//工具按钮用哪个容器</span></div><div class="line">           striped: <span class="literal">true</span>,                      <span class="comment">//是否显示行间隔色</span></div><div class="line">           cache: <span class="literal">false</span>,                       <span class="comment">//是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）</span></div><div class="line">           pagination: <span class="literal">true</span>,                   <span class="comment">//是否显示分页（*）</span></div><div class="line">           sortable: <span class="literal">true</span>,                     <span class="comment">//是否启用排序</span></div><div class="line">           sortOrder: <span class="string">"asc"</span>,                   <span class="comment">//排序方式</span></div><div class="line">           queryParams: oTableInit.queryParams,<span class="comment">//传递参数（*）</span></div><div class="line">           sidePagination: <span class="string">"client"</span>,           <span class="comment">//分页方式：client客户端分页，server服务端分页（*）</span></div><div class="line">           pageNumber: <span class="number">1</span>,                       <span class="comment">//初始化加载第一页，默认第一页</span></div><div class="line">           pageSize: <span class="number">10</span>,                       <span class="comment">//每页的记录行数（*）</span></div><div class="line">           pageList: [<span class="number">10</span>, <span class="number">25</span>, <span class="number">50</span>, <span class="number">100</span>],        <span class="comment">//可供选择的每页的行数（*）</span></div><div class="line">           search: <span class="literal">true</span>,                       <span class="comment">//是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大</span></div><div class="line">           strictSearch: <span class="literal">false</span>,</div><div class="line">           showColumns: <span class="literal">true</span>,                  <span class="comment">//是否显示所有的列</span></div><div class="line">           showRefresh: <span class="literal">false</span>,                  <span class="comment">//是否显示刷新按钮</span></div><div class="line">           minimumCountColumns: <span class="number">2</span>,             <span class="comment">//最少允许的列数</span></div><div class="line">           clickToSelect: <span class="literal">true</span>,                <span class="comment">//是否启用点击选中行</span></div><div class="line">          <span class="comment">// height: 500,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度</span></div><div class="line">           uniqueId: <span class="string">"ID"</span>,                     <span class="comment">//每一行的唯一标识，一般为主键列</span></div><div class="line">           showToggle: <span class="literal">false</span>,                    <span class="comment">//是否显示详细视图和列表视图的切换按钮</span></div><div class="line">           cardView: <span class="literal">false</span>,                    <span class="comment">//是否显示详细视图</span></div><div class="line">           detailView: <span class="literal">false</span>,                   <span class="comment">//是否显示父子表</span></div><div class="line">           columns: [&#123;</div><div class="line">               checkbox: <span class="literal">true</span></div><div class="line">           &#125;, &#123; <span class="attr">title</span>: <span class="string">'id'</span>, <span class="attr">field</span>: <span class="string">'Id'</span>, <span class="attr">visible</span>: <span class="literal">false</span> &#125;,</div><div class="line">           &#123; <span class="attr">title</span>: <span class="string">'仓位号'</span>, <span class="attr">field</span>: <span class="string">'OrderId'</span>, <span class="attr">align</span>: <span class="string">'center'</span> &#125;,</div><div class="line">           &#123; <span class="attr">title</span>: <span class="string">'接货编号'</span>, <span class="attr">field</span>: <span class="string">'ReceiveNum'</span>, <span class="attr">align</span>: <span class="string">'center'</span>&#125;,</div><div class="line">           &#123; <span class="attr">title</span>: <span class="string">'接货日期'</span>, <span class="attr">field</span>: <span class="string">'ReceiveDate'</span>, <span class="attr">align</span>: <span class="string">'center'</span> &#125;,</div><div class="line">           &#123; <span class="attr">title</span>: <span class="string">'班列日期'</span>, <span class="attr">field</span>: <span class="string">'TrainDate'</span>, <span class="attr">align</span>: <span class="string">'center'</span>&#125;,</div><div class="line">           &#123; <span class="attr">title</span>: <span class="string">'业务部门'</span>, <span class="attr">field</span>: <span class="string">'BusinessDepart'</span>, <span class="attr">align</span>: <span class="string">'center'</span> &#125;,</div><div class="line">           &#123; <span class="attr">title</span>: <span class="string">'货物名称'</span>, <span class="attr">field</span>: <span class="string">'GoodsName'</span>, <span class="attr">align</span>: <span class="string">'center'</span>&#125;,</div><div class="line">           &#123; <span class="attr">title</span>: <span class="string">'包装方式'</span>, <span class="attr">field</span>: <span class="string">'PackagingMethod'</span>, <span class="attr">align</span>: <span class="string">'center'</span>&#125;,</div><div class="line">           &#123; <span class="attr">title</span>: <span class="string">'数量'</span>, <span class="attr">field</span>: <span class="string">'GoodsNumber'</span>, <span class="attr">align</span>: <span class="string">'center'</span>&#125;,</div><div class="line">           &#123; <span class="attr">title</span>: <span class="string">'跟单员'</span>, <span class="attr">field</span>: <span class="string">'Merchandiser'</span>, <span class="attr">align</span>: <span class="string">'center'</span>&#125;,</div><div class="line">           &#123; <span class="attr">title</span>: <span class="string">'接货人'</span>, <span class="attr">field</span>: <span class="string">'ReceivePerson'</span>, <span class="attr">align</span>: <span class="string">'center'</span> &#125;,</div><div class="line">               &#123;</div><div class="line">                   field: <span class="string">'DriverSignature'</span>,</div><div class="line">                   title: <span class="string">'司机'</span>,</div><div class="line">                   align: <span class="string">'center'</span>,</div><div class="line">                   formatter: <span class="function"><span class="keyword">function</span> (<span class="params">value, row, index</span>) </span>&#123;</div><div class="line">                       <span class="keyword">return</span> <span class="string">'&lt;img  src="/ReceiveGoods/GetImg?Id='</span> + row.Id + <span class="string">'" width="30px" height="30px"  &gt;'</span>;</div><div class="line">                   &#125;</div><div class="line">               &#125;,</div><div class="line">               &#123; <span class="attr">title</span>: <span class="string">'叉车员'</span>, <span class="attr">field</span>: <span class="string">'Driver'</span>, <span class="attr">align</span>: <span class="string">'center'</span>&#125;,</div><div class="line">               &#123; <span class="attr">title</span>: <span class="string">'到货'</span>, <span class="attr">field</span>: <span class="string">'Remark'</span>, <span class="attr">align</span>: <span class="string">'center'</span>&#125;,</div><div class="line">               &#123;</div><div class="line">                   title: <span class="string">'状态'</span>,</div><div class="line">                   field: <span class="string">'StatusType'</span>,</div><div class="line">                   align: <span class="string">'center'</span>,</div><div class="line">                   formatter: <span class="function"><span class="keyword">function</span> (<span class="params">value, row, index</span>) </span>&#123;</div><div class="line">                       <span class="keyword">if</span> (value == <span class="string">'待审核'</span>) &#123;</div><div class="line">                           <span class="keyword">return</span> <span class="string">'&lt;button type="button" class="btn btn-success  btn-sm" onclick="Aduiting(\''</span> + row.Id + <span class="string">'\')" width="22px"&gt;审核&lt;/button&gt;'</span>;</div><div class="line">                       &#125; <span class="keyword">else</span> &#123;</div><div class="line">                           <span class="keyword">return</span> <span class="string">'&lt;button type="button" class="btn btn-success  btn-sm" disabled="true" width="22px"&gt;已审核&lt;/button&gt;'</span>;</div><div class="line">                       &#125;</div><div class="line">                   &#125;</div><div class="line">                   </div><div class="line">               &#125;,</div><div class="line">               &#123; <span class="attr">title</span>: <span class="string">'审核时间'</span>, <span class="attr">field</span>: <span class="string">'AuditingDate'</span>, <span class="attr">align</span>: <span class="string">'center'</span>&#125;,</div><div class="line">               <span class="comment">//&#123;</span></div><div class="line">               <span class="comment">//    field: 'action1', title: 'Action', width: 120, align: 'center',</span></div><div class="line">               <span class="comment">//    formatter: function (value, row, index) &#123;</span></div><div class="line">               <span class="comment">//        //这里应该传vlaue的值即id 但是传不过去 原因未知？</span></div><div class="line">               <span class="comment">//        //实际传递的参数是this，即点击的对象a标签</span></div><div class="line">               <span class="comment">//        //还有就是调用的函数要写在初始化函数外面 原因未知？</span></div><div class="line">               <span class="comment">//        var e = '&lt;a href="#" onclick="aduiting(this)"&gt;审核 &lt;/a&gt;';</span></div><div class="line">               <span class="comment">//        var d = '&lt;a class="print_btnA" href="#"onclick = "pinrt_info()"  &gt;打印 &lt;/a&gt;';</span></div><div class="line">               <span class="comment">//        var f = '&lt;a href="#" onclick="sendMail(this)"&gt;异常处理&lt;/a&gt;';</span></div><div class="line">               <span class="comment">//        return e + d + f;</span></div><div class="line">               <span class="comment">//    &#125;</span></div><div class="line">               <span class="comment">//&#125;</span></div><div class="line">           ]</div><div class="line">       &#125;);</div></pre></td></tr></table></figure>
+<h4 id="获得选中行"><a href="#获得选中行" class="headerlink" title="获得选中行"></a>获得选中行</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> tds = $(<span class="string">"#tb_receiveInfo"</span>).bootstrapTable(<span class="string">'getSelections'</span>);</div><div class="line">           <span class="keyword">if</span> (tds.length &gt; <span class="number">1</span>) &#123;</div><div class="line">               alert(<span class="string">'只能选择一行进行编辑'</span>)</div><div class="line">               <span class="comment">// toastr.warning('只能选择一行进行编辑');</span></div><div class="line">               <span class="keyword">return</span>;</div><div class="line">           &#125;</div><div class="line">           <span class="keyword">if</span> (tds.length &lt;= <span class="number">0</span>) &#123;</div><div class="line">               alert(<span class="string">'请选择有效数据'</span>)</div><div class="line">               <span class="comment">//toastr.warning('请选择有效数据');</span></div><div class="line">               <span class="keyword">return</span>;</div><div class="line">           &#125;</div><div class="line">           tds = tds[<span class="number">0</span>];</div></pre></td></tr></table></figure>
+<h4 id="刷新表格"><a href="#刷新表格" class="headerlink" title="刷新表格"></a>刷新表格</h4><p> $(“#tb_receiveInfo”).bootstrapTable(‘refresh’);</p>
+<h4 id="客户端分页和服务端分页"><a href="#客户端分页和服务端分页" class="headerlink" title="客户端分页和服务端分页"></a>客户端分页和服务端分页</h4><p>客户端分页和服务端分页，前台部分只需将<strong>sidePagination</strong>属性设置为client或者server即可，但是后台返回的数据格式还是稍微有点不一样。</p>
+<ul>
+<li>客户端分页返回的样式为{data:数据}；</li>
+<li>服务端分页返回的杨思为{total:总条数，rows:数据}；</li>
+</ul>
+<p>其中服务端分页也要注意前台到后台参数的传递，系统为我们提供两个参数，一个是<strong>limit</strong>代表页面显示条数，另一个是<strong>offset</strong>，代表偏移量。在前台利用这两个参数求出pageSize，pageIndex。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">pageSize: params.limit,   <span class="comment">//页面大小       </span></div><div class="line">pageIndex: params.offset / params.limit + <span class="number">1</span>,  <span class="comment">//页码</span></div></pre></td></tr></table></figure>
 ]]></content>
       
         <categories>
             
-            <category> .net </category>
+            <category> 前端 </category>
             
         </categories>
         
         
         <tags>
             
-            <tag> c# </tag>
+            <tag> js </tag>
             
-            <tag> Socket </tag>
+            <tag> bootstrapTabel </tag>
             
         </tags>
         
@@ -79,6 +89,39 @@
     </entry>
     
     <entry>
+      <title><![CDATA[.net Socket连接断开判断]]></title>
+      <url>/2017/11/01/csharp%20Socket%E6%96%AD%E7%BA%BF%E5%88%A4%E6%96%AD/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>Socket 编程 里面怎么才能判断其中一方是否断开连接。</p>
+</blockquote>
+<ol>
+<li><p>当断开连接的时候我饿们调用<em>receive()</em>函数从缓冲区里读数据的时候，这个时候会抛出一个异常，我们只需在捕捉这个异常，并在<em>catch</em>里面进行处理就行，然后关闭对应的socket。</p>
+</li>
+<li><p>还有一种方式是通过：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static bool IsSocketConnected(Socket s)</div><div class="line">&#123;</div><div class="line">           return !((s.Poll(1000, SelectMode.SelectRead) &amp;&amp; (s.Available == 0)) || 		             !s.Connected);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>​    这里主要说明<em>socket.Poll()</em>这个函数，第一个参数是超时时间，单位是微秒，第二个参数是判断可以读取的正常的socket。通过这三个条件一起进行判断，如果只判断Available或者Connected是不行的。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> Socket </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[.net Socket编程（服务端）]]></title>
       <url>/2017/10/27/csharp%20Socket%E7%BC%96%E7%A8%8B/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -109,6 +152,57 @@
             <tag> c# </tag>
             
             <tag> Socket </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[.net委托]]></title>
+      <url>/2017/10/16/csharp%E5%A7%94%E6%89%98/</url>
+      <content type="html"><![CDATA[<h3 id="net委托"><a href="#net委托" class="headerlink" title=".net委托"></a>.net委托</h3><p> 委托可以看成是对方法的封装，即一个指针，指向一个方法。这里主要说编程中用的比较多的三种系统内置委托。</p>
+<ol>
+<li>Action</li>
+</ol>
+<p>​         Action是无返回值的泛型委托。</p>
+<p>　　 Action 表示无参，无返回值的委托</p>
+<p>　　 Action<int,string> 表示有传入参数int,string无返回值的委托</int,string></p>
+<p> 　　Action<int,string,bool> 表示有传入参数int,string,bool无返回值的委托</int,string,bool></p>
+<p>​        Action<int,int,int,int> 表示有传入4个int型参数，无返回值的委托</int,int,int,int></p>
+<p>　　 Action至少0个参数，至多16个参数，无返回值。</p>
+<ol>
+<li>Func</li>
+</ol>
+<p>​         Func是有返回值的泛型委托</p>
+<p>　　 Func<int> 表示无参，返回值为int的委托</int></p>
+<p>　　 Func<object,string,int> 表示传入参数为object, string 返回值为int的委托</object,string,int></p>
+<p>　　 Func<object,string,int> 表示传入参数为object, string 返回值为int的委托</object,string,int></p>
+<p>　　 Func<t1,t2,,t3,int> 表示传入参数为T1,T2,,T3(泛型)返回值为int的委托</t1,t2,,t3,int></p>
+<p>　　 Func至少0个参数，至多16个参数，根据返回值泛型返回。必须有返回值，不可void</p>
+<ol>
+<li>predicate</li>
+</ol>
+<p>​        predicate 是返回bool型的泛型委托</p>
+<p>　　 predicate<int> 表示传入参数为int 返回bool的委托</int></p>
+<p>　　 Predicate有且只有一个参数，返回值固定为bool</p>
+<p>　　 例：public delegate bool Predicate<t> (T obj)</t></p>
+<hr>
+<h4 id="泛型委托相关的一些东西"><a href="#泛型委托相关的一些东西" class="headerlink" title="泛型委托相关的一些东西"></a>泛型委托相关的一些东西</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</div><div class="line">            &#123;</div><div class="line">                //lblCarType.Text = &quot;集卡车&quot;;</div><div class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</div><div class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</div><div class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</div><div class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</div><div class="line">            &#125;), model);</div></pre></td></tr></table></figure>
+<p>兰姆达表达式相当于一个匿名函数 =》之前的是参数，之后的是方法体。泛型委托的那个<t>其实就是函数的参数类型。</t></p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 委托 </tag>
             
         </tags>
         
@@ -176,57 +270,6 @@
             <tag> c# </tag>
             
             <tag> 反射 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[.net委托]]></title>
-      <url>/2017/10/16/csharp%E5%A7%94%E6%89%98/</url>
-      <content type="html"><![CDATA[<h3 id="net委托"><a href="#net委托" class="headerlink" title=".net委托"></a>.net委托</h3><p> 委托可以看成是对方法的封装，即一个指针，指向一个方法。这里主要说编程中用的比较多的三种系统内置委托。</p>
-<ol>
-<li>Action</li>
-</ol>
-<p>​         Action是无返回值的泛型委托。</p>
-<p>　　 Action 表示无参，无返回值的委托</p>
-<p>　　 Action<int,string> 表示有传入参数int,string无返回值的委托</int,string></p>
-<p> 　　Action<int,string,bool> 表示有传入参数int,string,bool无返回值的委托</int,string,bool></p>
-<p>​        Action<int,int,int,int> 表示有传入4个int型参数，无返回值的委托</int,int,int,int></p>
-<p>　　 Action至少0个参数，至多16个参数，无返回值。</p>
-<ol>
-<li>Func</li>
-</ol>
-<p>​         Func是有返回值的泛型委托</p>
-<p>　　 Func<int> 表示无参，返回值为int的委托</int></p>
-<p>　　 Func<object,string,int> 表示传入参数为object, string 返回值为int的委托</object,string,int></p>
-<p>　　 Func<object,string,int> 表示传入参数为object, string 返回值为int的委托</object,string,int></p>
-<p>　　 Func<t1,t2,,t3,int> 表示传入参数为T1,T2,,T3(泛型)返回值为int的委托</t1,t2,,t3,int></p>
-<p>　　 Func至少0个参数，至多16个参数，根据返回值泛型返回。必须有返回值，不可void</p>
-<ol>
-<li>predicate</li>
-</ol>
-<p>​        predicate 是返回bool型的泛型委托</p>
-<p>　　 predicate<int> 表示传入参数为int 返回bool的委托</int></p>
-<p>　　 Predicate有且只有一个参数，返回值固定为bool</p>
-<p>　　 例：public delegate bool Predicate<t> (T obj)</t></p>
-<hr>
-<h4 id="泛型委托相关的一些东西"><a href="#泛型委托相关的一些东西" class="headerlink" title="泛型委托相关的一些东西"></a>泛型委托相关的一些东西</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</div><div class="line">            &#123;</div><div class="line">                //lblCarType.Text = &quot;集卡车&quot;;</div><div class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</div><div class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</div><div class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</div><div class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</div><div class="line">            &#125;), model);</div></pre></td></tr></table></figure>
-<p>兰姆达表达式相当于一个匿名函数 =》之前的是参数，之后的是方法体。泛型委托的那个<t>其实就是函数的参数类型。</t></p>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> 委托 </tag>
             
         </tags>
         
@@ -335,42 +378,13 @@
     </entry>
     
     <entry>
-      <title><![CDATA[c#连接oracle数据库]]></title>
-      <url>/2017/08/16/csharp%E8%BF%9E%E6%8E%A5oracle%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-      <content type="html"><![CDATA[<p>c#连接oracle数据库</p>
-<blockquote>
-<p>准备工作：</p>
-<p>下载并引用Oracle.ManagedDataAccess.Client </p>
-</blockquote>
-<h4 id="控制台测试程序"><a href="#控制台测试程序" class="headerlink" title="控制台测试程序"></a>控制台测试程序</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">class Program</div><div class="line">   &#123;</div><div class="line">       static void Main(string[] args)</div><div class="line">       &#123;</div><div class="line">           string constr = @&quot;User Id=zftest;Password=123456;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.16.84)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=orcl)))&quot;;</div><div class="line">           DataSet ds = OracleHelper.ExecuteDataset(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line">           DataTable dt = ds.Tables[0];</div><div class="line">           for (int i = 0; i &lt; dt.Rows.Count; i++)</div><div class="line">           &#123;</div><div class="line"></div><div class="line">               for (int j = 0; j &lt; dt.Columns.Count; j++)</div><div class="line">               &#123;</div><div class="line">                   Console.WriteLine(dt.Rows[i][j]);</div><div class="line">               &#125;</div><div class="line">               Console.WriteLine(&quot;\n&quot;);</div><div class="line">           &#125;</div><div class="line">           //int a=  OracleHelper.ExecuteNonQuery(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line"></div><div class="line">           int b = 0;</div><div class="line"></div><div class="line"></div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<h4 id="下面是OracleHelper-程序，参数是连接字符串和sql语句。"><a href="#下面是OracleHelper-程序，参数是连接字符串和sql语句。" class="headerlink" title="下面是OracleHelper 程序，参数是连接字符串和sql语句。"></a>下面是OracleHelper 程序，参数是连接字符串和sql语句。</h4><p><a href="http://www.cnblogs.com/jimcsharp/p/5590076.html" target="_blank" rel="external">http://www.cnblogs.com/jimcsharp/p/5590076.html</a></p>
-]]></content>
-      
-        <categories>
-            
-            <category> 数据库 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> oracle </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[js 在当前日期往前推N天（除去工作日）]]></title>
       <url>/2017/08/16/js-%E5%9C%A8%E5%BD%93%E5%89%8D%E6%97%A5%E6%9C%9F%E5%BE%80%E5%89%8D%E6%8E%A8N%E5%A4%A9%EF%BC%88%E9%99%A4%E5%8E%BB%E5%B7%A5%E4%BD%9C%E6%97%A5%EF%BC%89/</url>
       <content type="html"><![CDATA[<blockquote>
 <p>代码如下：</p>
 </blockquote>
 <p>JavaScript将日期往前推n天，思路是先判断当前的日期是否是工作日，是的话就继续往前推，不是的话就把这一天给过滤掉，用count计数。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"datePicker/WdatePicker.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"jquery-1.7.1.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="undefined">        //判断是否为工作日</span></div><div class="line"><span class="undefined">     function isWorkday(date) &#123;</span></div><div class="line"><span class="undefined">    //var date = !date ? new Date() : new Date(date);</span></div><div class="line"><span class="undefined">    var date=new Date(date);</span></div><div class="line"><span class="undefined">    var getday = date.getDay();</span></div><div class="line"><span class="undefined">    if (getday == 0 || getday == 6) &#123;</span></div><div class="line"><span class="undefined">        return false; //不是返回False</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">    else &#123;</span></div><div class="line"><span class="undefined">        return true;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">&#125;</span></div><div class="line"><span class="undefined">        //获取Date对象的年月日xxxx-xx-xx</span></div><div class="line"><span class="undefined">    function dateToyymmdd(d)&#123;</span></div><div class="line"><span class="undefined">        var month=d.getMonth()+1;</span></div><div class="line"><span class="undefined">        var day = d.getDate();</span></div><div class="line"><span class="undefined">        if(month&lt;10)&#123;</span></div><div class="line"><span class="undefined">        month = "0"+month;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">        if(day&lt;10)&#123;</span></div><div class="line"><span class="undefined">        day = "0"+day;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">        var val = d.getFullYear()+"-"+month+"-"+day;</span></div><div class="line"><span class="undefined">        return val;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">      //往前推5天除去工作日</span></div><div class="line"><span class="undefined">    function back(date)&#123;</span></div><div class="line"><span class="undefined">    var i=0;</span></div><div class="line"><span class="undefined">    var d=new Date(date);//获取传入的时间</span></div><div class="line"><span class="undefined">    while(i&lt;5)</span></div><div class="line"><span class="undefined">    &#123;</span></div><div class="line"><span class="undefined">        d.setDate(d.getDate()-1);//获取前一天时间</span></div><div class="line"><span class="undefined">        var val=dateToyymmdd(d);</span></div><div class="line"><span class="undefined">        //alert(isWorkday("2017-7-30")) ;</span></div><div class="line"><span class="undefined">        //alert(val+""+isWorkday(val));</span></div><div class="line"><span class="undefined">        if(isWorkday(val))</span></div><div class="line"><span class="undefined">        &#123;</span></div><div class="line"><span class="undefined">            i++;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="undefined">         continue;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">    var val = dateToyymmdd(d);</span></div><div class="line"><span class="undefined">    return val;</span></div><div class="line"><span class="undefined">  &#125;</span></div><div class="line"><span class="undefined">  window.onload=function()&#123;</span></div><div class="line"><span class="undefined">    $("#btn").blur(function()&#123;</span></div><div class="line"><span class="undefined">        var v=$("#btn").val();</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="undefined">            $("#label1").html(back(v));</span></div><div class="line"><span class="undefined">    &#125;)</span></div><div class="line"><span class="undefined">  &#125;</span></div><div class="line"><span class="undefined">   //alert(back('2017-08-02'));</span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"btn"</span> <span class="attr">id</span>=<span class="string">"btn"</span> <span class="attr">onclick</span>=<span class="string">"WdatePicker()"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">label</span> <span class="attr">id</span>=<span class="string">"label1"</span> &gt;</span><span class="tag">&lt;/<span class="name">label</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"datePicker/WdatePicker.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"jquery-1.7.1.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line"><span class="javascript">        <span class="comment">//判断是否为工作日</span></span></div><div class="line"><span class="javascript">     <span class="function"><span class="keyword">function</span> <span class="title">isWorkday</span>(<span class="params">date</span>) </span>&#123;</span></div><div class="line"><span class="javascript">    <span class="comment">//var date = !date ? new Date() : new Date(date);</span></span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> date=<span class="keyword">new</span> <span class="built_in">Date</span>(date);</span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> getday = date.getDay();</span></div><div class="line"><span class="javascript">    <span class="keyword">if</span> (getday == <span class="number">0</span> || getday == <span class="number">6</span>) &#123;</span></div><div class="line"><span class="javascript">        <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">//不是返回False</span></span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="javascript">    <span class="keyword">else</span> &#123;</span></div><div class="line"><span class="javascript">        <span class="keyword">return</span> <span class="literal">true</span>;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined">&#125;</span></div><div class="line"><span class="javascript">        <span class="comment">//获取Date对象的年月日xxxx-xx-xx</span></span></div><div class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">dateToyymmdd</span>(<span class="params">d</span>)</span>&#123;</span></div><div class="line"><span class="javascript">        <span class="keyword">var</span> month=d.getMonth()+<span class="number">1</span>;</span></div><div class="line"><span class="javascript">        <span class="keyword">var</span> day = d.getDate();</span></div><div class="line"><span class="javascript">        <span class="keyword">if</span>(month&lt;<span class="number">10</span>)&#123;</span></div><div class="line"><span class="javascript">        month = <span class="string">"0"</span>+month;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="javascript">        <span class="keyword">if</span>(day&lt;<span class="number">10</span>)&#123;</span></div><div class="line"><span class="javascript">        day = <span class="string">"0"</span>+day;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="javascript">        <span class="keyword">var</span> val = d.getFullYear()+<span class="string">"-"</span>+month+<span class="string">"-"</span>+day;</span></div><div class="line"><span class="javascript">        <span class="keyword">return</span> val;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="javascript">      <span class="comment">//往前推5天除去工作日</span></span></div><div class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">back</span>(<span class="params">date</span>)</span>&#123;</span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> i=<span class="number">0</span>;</span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> d=<span class="keyword">new</span> <span class="built_in">Date</span>(date);<span class="comment">//获取传入的时间</span></span></div><div class="line"><span class="javascript">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span></div><div class="line"><span class="undefined">    &#123;</span></div><div class="line"><span class="javascript">        d.setDate(d.getDate()<span class="number">-1</span>);<span class="comment">//获取前一天时间</span></span></div><div class="line"><span class="javascript">        <span class="keyword">var</span> val=dateToyymmdd(d);</span></div><div class="line"><span class="javascript">        <span class="comment">//alert(isWorkday("2017-7-30")) ;</span></span></div><div class="line"><span class="javascript">        <span class="comment">//alert(val+""+isWorkday(val));</span></span></div><div class="line"><span class="javascript">        <span class="keyword">if</span>(isWorkday(val))</span></div><div class="line"><span class="undefined">        &#123;</span></div><div class="line"><span class="undefined">            i++;</span></div><div class="line"><span class="undefined">        &#125;</span></div><div class="line"><span class="javascript">         <span class="keyword">continue</span>;</span></div><div class="line"><span class="undefined">    &#125;</span></div><div class="line"><span class="javascript">    <span class="keyword">var</span> val = dateToyymmdd(d);</span></div><div class="line"><span class="javascript">    <span class="keyword">return</span> val;</span></div><div class="line"><span class="undefined">  &#125;</span></div><div class="line"><span class="javascript">  <span class="built_in">window</span>.onload=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></div><div class="line"><span class="javascript">    $(<span class="string">"#btn"</span>).blur(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></div><div class="line"><span class="javascript">        <span class="keyword">var</span> v=$(<span class="string">"#btn"</span>).val();</span></div><div class="line"><span class="undefined"></span></div><div class="line"><span class="javascript">            $(<span class="string">"#label1"</span>).html(back(v));</span></div><div class="line"><span class="undefined">    &#125;)</span></div><div class="line"><span class="undefined">  &#125;</span></div><div class="line"><span class="javascript">   <span class="comment">//alert(back('2017-08-02'));</span></span></div><div class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"btn"</span> <span class="attr">id</span>=<span class="string">"btn"</span> <span class="attr">onclick</span>=<span class="string">"WdatePicker()"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">label</span> <span class="attr">id</span>=<span class="string">"label1"</span> &gt;</span><span class="tag">&lt;/<span class="name">label</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
 ]]></content>
       
         <categories>
@@ -419,6 +433,35 @@
             <tag> c# </tag>
             
             <tag> 爬虫 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[c#连接oracle数据库]]></title>
+      <url>/2017/08/16/csharp%E8%BF%9E%E6%8E%A5oracle%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+      <content type="html"><![CDATA[<p>c#连接oracle数据库</p>
+<blockquote>
+<p>准备工作：</p>
+<p>下载并引用Oracle.ManagedDataAccess.Client </p>
+</blockquote>
+<h4 id="控制台测试程序"><a href="#控制台测试程序" class="headerlink" title="控制台测试程序"></a>控制台测试程序</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">class Program</div><div class="line">   &#123;</div><div class="line">       static void Main(string[] args)</div><div class="line">       &#123;</div><div class="line">           string constr = @&quot;User Id=zftest;Password=123456;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.16.84)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=orcl)))&quot;;</div><div class="line">           DataSet ds = OracleHelper.ExecuteDataset(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line">           DataTable dt = ds.Tables[0];</div><div class="line">           for (int i = 0; i &lt; dt.Rows.Count; i++)</div><div class="line">           &#123;</div><div class="line"></div><div class="line">               for (int j = 0; j &lt; dt.Columns.Count; j++)</div><div class="line">               &#123;</div><div class="line">                   Console.WriteLine(dt.Rows[i][j]);</div><div class="line">               &#125;</div><div class="line">               Console.WriteLine(&quot;\n&quot;);</div><div class="line">           &#125;</div><div class="line">           //int a=  OracleHelper.ExecuteNonQuery(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line"></div><div class="line">           int b = 0;</div><div class="line"></div><div class="line"></div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h4 id="下面是OracleHelper-程序，参数是连接字符串和sql语句。"><a href="#下面是OracleHelper-程序，参数是连接字符串和sql语句。" class="headerlink" title="下面是OracleHelper 程序，参数是连接字符串和sql语句。"></a>下面是OracleHelper 程序，参数是连接字符串和sql语句。</h4><p><a href="http://www.cnblogs.com/jimcsharp/p/5590076.html" target="_blank" rel="external">http://www.cnblogs.com/jimcsharp/p/5590076.html</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> 数据库 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> oracle </tag>
             
         </tags>
         
