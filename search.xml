@@ -5,7 +5,7 @@
     <entry>
       <title><![CDATA[敲代码的小铁匠的简历]]></title>
       <url>/2018/06/08/csharp%20%E7%AE%80%E5%8E%86/</url>
-      <content type="html"><![CDATA[<h1 id="c-程序员求职简历"><a href="#c-程序员求职简历" class="headerlink" title="c#程序员求职简历"></a>c#程序员求职简历</h1><hr>
+      <content type="html"><![CDATA[<hr>
 <h1 id="个人信息"><a href="#个人信息" class="headerlink" title="个人信息"></a>个人信息</h1><ul>
 <li>何玉珂/男/1994 </li>
 <li>本科/洛阳理工学院/计算机科学与技术 </li>
@@ -27,7 +27,7 @@
 <li>掌握ADO.NET，了解Entity Framework、ORM、 Linq To SQL</li>
 <li>掌握SQL Server数据库，掌握关系型数据库的设计，掌握T-SQL语句</li>
 <li>掌握前端相关技术（HTML、JavaScript、Ajax、Mvvm），能使用JQuery和相关UI插件，了解vue.js。</li>
-<li>了解并且能够使用三层架构搭建项目。</li>
+<li>对单例、工厂等设计模式有了解。</li>
 </ul>
 <h2 id="参考技能关键字"><a href="#参考技能关键字" class="headerlink" title="参考技能关键字"></a>参考技能关键字</h2><ul>
 <li>ASP.NET MVC</li>
@@ -101,6 +101,39 @@
     </entry>
     
     <entry>
+      <title><![CDATA[.net Socket连接断开判断]]></title>
+      <url>/2017/11/01/csharp%20Socket%E6%96%AD%E7%BA%BF%E5%88%A4%E6%96%AD/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>Socket 编程 里面怎么才能判断其中一方是否断开连接。</p>
+</blockquote>
+<ol>
+<li><p>当断开连接的时候我饿们调用<em>receive()</em>函数从缓冲区里读数据的时候，这个时候会抛出一个异常，我们只需在捕捉这个异常，并在<em>catch</em>里面进行处理就行，然后关闭对应的socket。</p>
+</li>
+<li><p>还有一种方式是通过：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static bool IsSocketConnected(Socket s)</div><div class="line">&#123;</div><div class="line">           return !((s.Poll(1000, SelectMode.SelectRead) &amp;&amp; (s.Available == 0)) || 		             !s.Connected);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>​    这里主要说明<em>socket.Poll()</em>这个函数，第一个参数是超时时间，单位是微秒，第二个参数是判断可以读取的正常的socket。通过这三个条件一起进行判断，如果只判断Available或者Connected是不行的。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> Socket </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[.net 异步委托]]></title>
       <url>/2017/11/01/csharp%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -138,39 +171,6 @@
             <tag> 异步 </tag>
             
             <tag> 委托 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[.net Socket连接断开判断]]></title>
-      <url>/2017/11/01/csharp%20Socket%E6%96%AD%E7%BA%BF%E5%88%A4%E6%96%AD/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>Socket 编程 里面怎么才能判断其中一方是否断开连接。</p>
-</blockquote>
-<ol>
-<li><p>当断开连接的时候我饿们调用<em>receive()</em>函数从缓冲区里读数据的时候，这个时候会抛出一个异常，我们只需在捕捉这个异常，并在<em>catch</em>里面进行处理就行，然后关闭对应的socket。</p>
-</li>
-<li><p>还有一种方式是通过：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static bool IsSocketConnected(Socket s)</div><div class="line">&#123;</div><div class="line">           return !((s.Poll(1000, SelectMode.SelectRead) &amp;&amp; (s.Available == 0)) || 		             !s.Connected);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>​    这里主要说明<em>socket.Poll()</em>这个函数，第一个参数是超时时间，单位是微秒，第二个参数是判断可以读取的正常的socket。通过这三个条件一起进行判断，如果只判断Available或者Connected是不行的。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> Socket </tag>
             
         </tags>
         
@@ -246,6 +246,40 @@
     </entry>
     
     <entry>
+      <title><![CDATA[.net反射]]></title>
+      <url>/2017/10/16/csharp%E5%8F%8D%E5%B0%84/</url>
+      <content type="html"><![CDATA[<h3 id="net反射"><a href="#net反射" class="headerlink" title=".net反射"></a>.net反射</h3><blockquote>
+<p>目前想到的反射利用场景是前台页面使用ajax调用后台方法时，在一般处理程序中，根据请求的方法名动态（自动）地来调用相对应的方法。</p>
+</blockquote>
+<p>下面是关于反射的一些基本介绍：</p>
+<h4 id="反射单个程序集："><a href="#反射单个程序集：" class="headerlink" title="反射单个程序集："></a>反射单个程序集：</h4><p>1、Load 方法：极力推荐的一种方法，Load 方法带有一个程序集标志并载入它，Load 将引起CLR把策略应用到程序集上，先后在全局程序集缓冲区，应用程序基目录和私有路径下面查找该程序集，如果找不到该程序集系统抛出异常<br>2、LoadFrom 方法：传递一个程序集文件的路径名（包括扩展名），CLR会载入您指定的这个程序集，传递的这个参数不能包含任何关于版本号的信息，区域性，和公钥信息，如果在指定路径找不到程序集抛出异常。</p>
+<h4 id="设置反射类型成员"><a href="#设置反射类型成员" class="headerlink" title="设置反射类型成员"></a>设置反射类型成员</h4><p>反射类型的成员就是反射层次模型中最下面的一层数据。我们可以通过type对象的GetMembers 方法取得一个类型的成员。如果我们使用的是不带参数的GetMembers，它只返回该类型的公共定义的静态变量和实例成员，我们也可以通过使用带参数的 GetMembers通过参数设置来返回指定的类型成员。具体参数参考msdn 中system.reflection.bindingflags 枚举类型的详细说明。</p>
+<p>例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//设置需要返回的类型的成员内容</div><div class="line">bindingFlags bf=bingdingFlags.DeclaredOnly|bingdingFlags.Nonpublic|BingdingFlags.Public;</div><div class="line">foreach (MemberInfo mi int t.getmembers(bf))</div><div class="line">&#123;</div><div class="line">       writeline(mi.membertype)    //输出指定的类型成员</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="通过反射创建类型的实例："><a href="#通过反射创建类型的实例：" class="headerlink" title="通过反射创建类型的实例："></a>通过反射创建类型的实例：</h4><p>通过反射可以获取程序集的类型，我们就可以根据获得的程序集类型来创建该类型新的实例，这也是前面提到的在运行时创建对象实现晚绑定的功能<br>我们可以通过下面的几个方法实现：<br>1、System.Activator 的CreateInstance方法。该方法返回新对象的引用。具体使用方法参见msdn<br>2、System.Activator 的createInstanceFrom 与上一个方法类似，不过需要指定类型及其程序集<br>3、System.Appdomain 的方法：createInstance,CreateInstanceAndUnwrap,CreateInstranceFrom和CreateInstraceFromAndUnwrap<br>4、System.type的InvokeMember实例方法：这个方法返回一个与传入参数相符的构造函数，并构造该类型。<br>5、System.reflection.constructinfo 的Invoke实例方法</p>
+<h4 id="反射的性能"><a href="#反射的性能" class="headerlink" title="反射的性能"></a>反射的性能</h4><p>使用反射来调用类型或者触发方法，或者访问一个字段或者属性时clr 需要做更多的工作：校验参数，检查权限等等，所以速度是非常慢的。所以尽量不要使用反射进行编程，对于打算编写一个动态构造类型（晚绑定）的应用程序，可以采取以下的几种方式进行代替：<br>1、通过类的继承关系。让该类型从一个编译时可知的基础类型派生出来，在运行时生成该类型的一个实例，将对其的引用放到其基础类型的一个变量中，然后调用该基础类型的虚方法。<br>2、通过接口实现。在运行时，构建该类型的一个实例，将对其的引用放到其接口类型的一个变量中，然后调用该接口定义的虚方法。<br>3、通过委托实现。让该类型实现一个方法，其名称和原型都与一个在编译时就已知的委托相符。在运行时先构造该类型的实例，然后在用该方法的对象及名称构造出该委托的实例，接着通过委托调用你想要的方法。这个方法相对与前面两个方法所作的工作要多一些，效率更低一些。</p>
+<hr>
+<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">System.Reflection.Assembly ass = Assembly.LoadFrom(Server.MapPath(&quot;bin/swordyang.dll&quot;)); //加载DLL</div><div class="line">System.Type t = ass.GetType(&quot;cn.SwordYang.TextClass&quot;);//获得类型</div><div class="line">object o = System.Activator.CreateInstance(t);//创建实例</div><div class="line">System.Reflection.MethodInfo mi = t.GetMethod(&quot;RunJs&quot;);//获得方法</div><div class="line">mi.Invoke(o, new object[] &#123; this.Page,&quot;alert(&apos;测试反射机制&apos;)&quot;&#125;);//调用方法</div></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 反射 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[.net委托]]></title>
       <url>/2017/10/16/csharp%E5%A7%94%E6%89%98/</url>
       <content type="html"><![CDATA[<h3 id="net委托"><a href="#net委托" class="headerlink" title=".net委托"></a>.net委托</h3><p> 委托可以看成是对方法的封装，即一个指针，指向一个方法。这里主要说编程中用的比较多的三种系统内置委托。</p>
@@ -291,40 +325,6 @@
             <tag> c# </tag>
             
             <tag> 委托 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[.net反射]]></title>
-      <url>/2017/10/16/csharp%E5%8F%8D%E5%B0%84/</url>
-      <content type="html"><![CDATA[<h3 id="net反射"><a href="#net反射" class="headerlink" title=".net反射"></a>.net反射</h3><blockquote>
-<p>目前想到的反射利用场景是前台页面使用ajax调用后台方法时，在一般处理程序中，根据请求的方法名动态（自动）地来调用相对应的方法。</p>
-</blockquote>
-<p>下面是关于反射的一些基本介绍：</p>
-<h4 id="反射单个程序集："><a href="#反射单个程序集：" class="headerlink" title="反射单个程序集："></a>反射单个程序集：</h4><p>1、Load 方法：极力推荐的一种方法，Load 方法带有一个程序集标志并载入它，Load 将引起CLR把策略应用到程序集上，先后在全局程序集缓冲区，应用程序基目录和私有路径下面查找该程序集，如果找不到该程序集系统抛出异常<br>2、LoadFrom 方法：传递一个程序集文件的路径名（包括扩展名），CLR会载入您指定的这个程序集，传递的这个参数不能包含任何关于版本号的信息，区域性，和公钥信息，如果在指定路径找不到程序集抛出异常。</p>
-<h4 id="设置反射类型成员"><a href="#设置反射类型成员" class="headerlink" title="设置反射类型成员"></a>设置反射类型成员</h4><p>反射类型的成员就是反射层次模型中最下面的一层数据。我们可以通过type对象的GetMembers 方法取得一个类型的成员。如果我们使用的是不带参数的GetMembers，它只返回该类型的公共定义的静态变量和实例成员，我们也可以通过使用带参数的 GetMembers通过参数设置来返回指定的类型成员。具体参数参考msdn 中system.reflection.bindingflags 枚举类型的详细说明。</p>
-<p>例如：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">//设置需要返回的类型的成员内容</div><div class="line">bindingFlags bf=bingdingFlags.DeclaredOnly|bingdingFlags.Nonpublic|BingdingFlags.Public;</div><div class="line">foreach (MemberInfo mi int t.getmembers(bf))</div><div class="line">&#123;</div><div class="line">       writeline(mi.membertype)    //输出指定的类型成员</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h4 id="通过反射创建类型的实例："><a href="#通过反射创建类型的实例：" class="headerlink" title="通过反射创建类型的实例："></a>通过反射创建类型的实例：</h4><p>通过反射可以获取程序集的类型，我们就可以根据获得的程序集类型来创建该类型新的实例，这也是前面提到的在运行时创建对象实现晚绑定的功能<br>我们可以通过下面的几个方法实现：<br>1、System.Activator 的CreateInstance方法。该方法返回新对象的引用。具体使用方法参见msdn<br>2、System.Activator 的createInstanceFrom 与上一个方法类似，不过需要指定类型及其程序集<br>3、System.Appdomain 的方法：createInstance,CreateInstanceAndUnwrap,CreateInstranceFrom和CreateInstraceFromAndUnwrap<br>4、System.type的InvokeMember实例方法：这个方法返回一个与传入参数相符的构造函数，并构造该类型。<br>5、System.reflection.constructinfo 的Invoke实例方法</p>
-<h4 id="反射的性能"><a href="#反射的性能" class="headerlink" title="反射的性能"></a>反射的性能</h4><p>使用反射来调用类型或者触发方法，或者访问一个字段或者属性时clr 需要做更多的工作：校验参数，检查权限等等，所以速度是非常慢的。所以尽量不要使用反射进行编程，对于打算编写一个动态构造类型（晚绑定）的应用程序，可以采取以下的几种方式进行代替：<br>1、通过类的继承关系。让该类型从一个编译时可知的基础类型派生出来，在运行时生成该类型的一个实例，将对其的引用放到其基础类型的一个变量中，然后调用该基础类型的虚方法。<br>2、通过接口实现。在运行时，构建该类型的一个实例，将对其的引用放到其接口类型的一个变量中，然后调用该接口定义的虚方法。<br>3、通过委托实现。让该类型实现一个方法，其名称和原型都与一个在编译时就已知的委托相符。在运行时先构造该类型的实例，然后在用该方法的对象及名称构造出该委托的实例，接着通过委托调用你想要的方法。这个方法相对与前面两个方法所作的工作要多一些，效率更低一些。</p>
-<hr>
-<h4 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">System.Reflection.Assembly ass = Assembly.LoadFrom(Server.MapPath(&quot;bin/swordyang.dll&quot;)); //加载DLL</div><div class="line">System.Type t = ass.GetType(&quot;cn.SwordYang.TextClass&quot;);//获得类型</div><div class="line">object o = System.Activator.CreateInstance(t);//创建实例</div><div class="line">System.Reflection.MethodInfo mi = t.GetMethod(&quot;RunJs&quot;);//获得方法</div><div class="line">mi.Invoke(o, new object[] &#123; this.Page,&quot;alert(&apos;测试反射机制&apos;)&quot;&#125;);//调用方法</div></pre></td></tr></table></figure>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> 反射 </tag>
             
         </tags>
         
@@ -468,6 +468,40 @@
     </entry>
     
     <entry>
+      <title><![CDATA[.net爬虫]]></title>
+      <url>/2017/08/16/csharp%E7%88%AC%E8%99%AB/</url>
+      <content type="html"><![CDATA[<h4 id="准备第三方插件"><a href="#准备第三方插件" class="headerlink" title="准备第三方插件"></a>准备第三方插件</h4><p>HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用</p>
+<h4 id="代码步骤"><a href="#代码步骤" class="headerlink" title="代码步骤"></a>代码步骤</h4><p>从指定网站把网页的html获得</p>
+<p><code>WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&quot;);
+            WebResponse response = request.GetResponse();
+            StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(&quot;gb2312&quot;));
+            string s = reader.ReadToEnd();</code></p>
+<p>将获得的html字符串传入 这个插件的具体使用可以参考<a href="http://www.cnblogs.com/GmrBrian/p/6201237.html" target="_blank" rel="external">http://www.cnblogs.com/GmrBrian/p/6201237.html</a></p>
+<p><code>HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(s);
+            HtmlNode div = doc.DocumentNode.SelectSingleNode(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
+            HtmlNodeCollection hrefList = doc.DocumentNode.SelectNodes(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
+            List&lt;string&gt; list = new List&lt;string&gt;();</code></p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 爬虫 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[c#连接oracle数据库]]></title>
       <url>/2017/08/16/csharp%E8%BF%9E%E6%8E%A5oracle%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
       <content type="html"><![CDATA[<p>c#连接oracle数据库</p>
@@ -518,40 +552,6 @@
             <tag> js </tag>
             
             <tag> 时间 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[.net爬虫]]></title>
-      <url>/2017/08/16/csharp%E7%88%AC%E8%99%AB/</url>
-      <content type="html"><![CDATA[<h4 id="准备第三方插件"><a href="#准备第三方插件" class="headerlink" title="准备第三方插件"></a>准备第三方插件</h4><p>HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用</p>
-<h4 id="代码步骤"><a href="#代码步骤" class="headerlink" title="代码步骤"></a>代码步骤</h4><p>从指定网站把网页的html获得</p>
-<p><code>WebRequest request = WebRequest.Create(&quot;http://www.hnzbcg.com.cn/hnzbcg/cgxx/cggg/A080302index_1.htm&quot;);
-            WebResponse response = request.GetResponse();
-            StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(&quot;gb2312&quot;));
-            string s = reader.ReadToEnd();</code></p>
-<p>将获得的html字符串传入 这个插件的具体使用可以参考<a href="http://www.cnblogs.com/GmrBrian/p/6201237.html" target="_blank" rel="external">http://www.cnblogs.com/GmrBrian/p/6201237.html</a></p>
-<p><code>HtmlDocument doc = new HtmlDocument();
-            doc.LoadHtml(s);
-            HtmlNode div = doc.DocumentNode.SelectSingleNode(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
-            HtmlNodeCollection hrefList = doc.DocumentNode.SelectNodes(&quot;//a[@class=&#39;GrayLink12&#39;]&quot;);
-            List&lt;string&gt; list = new List&lt;string&gt;();</code></p>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> 爬虫 </tag>
             
         </tags>
         
