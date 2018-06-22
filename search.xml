@@ -3,6 +3,37 @@
   
     
     <entry>
+      <title><![CDATA[js 截取，循环的一些代码]]></title>
+      <url>/2018/06/22/js%E6%88%AA%E5%8F%96%EF%BC%8C%E5%BE%AA%E7%8E%AF%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BB%A3%E7%A0%81/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>平时在写前端js代码时基本的语句还可以写，但是有时候需要用到一些函数有些不熟练的就需要到网上查找，今天总结了一下，写了一点。</p>
+</blockquote>
+<h4 id="关于截取字符串和数组的一些代码"><a href="#关于截取字符串和数组的一些代码" class="headerlink" title="关于截取字符串和数组的一些代码"></a>关于截取字符串和数组的一些代码</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">      <span class="comment">//----------slice--------splice------------split---------substr------//</span></div><div class="line">      <span class="keyword">var</span> arr = [<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"4"</span>];</div><div class="line">      <span class="comment">//从下标为1的位置取3-1个元素，返回一个新数组</span></div><div class="line">      <span class="keyword">var</span> arr1 = arr.slice(<span class="number">1</span>, <span class="number">3</span>);<span class="comment">//输出2，3</span></div><div class="line"></div><div class="line">      <span class="keyword">var</span> arr2 = [<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"4"</span>];</div><div class="line">      <span class="comment">//从下标为1的位置取2个元素，返回删除后的数组</span></div><div class="line">      <span class="keyword">var</span> arr3 = arr2.splice(<span class="number">1</span>, <span class="number">2</span>);<span class="comment">//输出2,3原数组为1,4</span></div><div class="line"></div><div class="line">      <span class="comment">//分割字符串</span></div><div class="line">      <span class="keyword">var</span> str = <span class="string">"1|2|3|4"</span>;</div><div class="line">      <span class="keyword">var</span> strarr = str.split(<span class="string">'|'</span>);</div><div class="line">      </div><div class="line">      <span class="comment">//截取字符串</span></div><div class="line">      <span class="keyword">var</span> str2=<span class="string">"1234"</span>;</div><div class="line">      <span class="comment">//从下标为0的元素开始截取1个元素</span></div><div class="line">      <span class="keyword">var</span> str3=str2.substr(<span class="number">0</span>,<span class="number">1</span>);<span class="comment">//输出为1</span></div><div class="line">  &lt;<span class="regexp">/script&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="关于循环遍历的一些代码"><a href="#关于循环遍历的一些代码" class="headerlink" title="关于循环遍历的一些代码"></a>关于循环遍历的一些代码</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">    <span class="comment">//用jquery遍历普通数组</span></div><div class="line">    <span class="keyword">var</span> arr = [<span class="string">"1"</span>, <span class="string">"2"</span>, <span class="string">"3"</span>, <span class="string">"4"</span>];</div><div class="line">    $.each(arr, <span class="function"><span class="keyword">function</span> (<span class="params">index, value</span>) </span>&#123;</div><div class="line">        <span class="comment">//alert(index+value);//index是下标 value是对应下标的值</span></div><div class="line">    &#125;);</div><div class="line">    </div><div class="line">    <span class="comment">//用jquery和for in 遍历json对象</span></div><div class="line">    <span class="keyword">var</span> arr2 = &#123; <span class="attr">FirstName</span>: <span class="string">"Chris"</span>, <span class="attr">LastName</span>: <span class="string">"Pearson"</span> &#125;;</div><div class="line">    $.each(arr2, <span class="function"><span class="keyword">function</span> (<span class="params">key, value</span>) </span>&#123;</div><div class="line">        <span class="comment">// alert(key+value);</span></div><div class="line">    &#125;);</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">in</span> arr2) &#123;</div><div class="line">        <span class="comment">//alert(key + arr2[key]);</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//遍历json对象数组</span></div><div class="line">    <span class="keyword">var</span> myList = [</div><div class="line">        &#123; <span class="attr">FirstName</span>: <span class="string">"Chris"</span>, <span class="attr">LastName</span>: <span class="string">"Pearson"</span> &#125;,</div><div class="line">        &#123; <span class="attr">FirstName</span>: <span class="string">"Kate"</span>, <span class="attr">LastName</span>: <span class="string">"Johnson"</span> &#125;,</div><div class="line">        &#123; <span class="attr">FirstName</span>: <span class="string">"Josh"</span>, <span class="attr">LastName</span>: <span class="string">"Sutherland"</span> &#125;,</div><div class="line">        &#123; <span class="attr">FirstName</span>: <span class="string">"John"</span>, <span class="attr">LastName</span>: <span class="string">"Ronald"</span> &#125;,</div><div class="line">        &#123; <span class="attr">FirstName</span>: <span class="string">"Steve"</span>, <span class="attr">LastName</span>: <span class="string">"Pinkerton"</span> &#125;</div><div class="line">    ];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; myList.length; i++) &#123;</div><div class="line">        $.each(myList[i], <span class="function"><span class="keyword">function</span> (<span class="params">key, value</span>) </span>&#123;</div><div class="line">        <span class="comment">//    alert(key+value);</span></div><div class="line">        &#125;)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&lt;<span class="regexp">/script&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="半个神器jslinq"><a href="#半个神器jslinq" class="headerlink" title="半个神器jslinq"></a>半个神器jslinq</h4><blockquote>
+<p>写法非常类似c#中linq 但是函数命名规则和c#一样，写在前台稍有点别扭，关键是没有智能提示，所以肯定没有在后台写着酸爽，并且里面那个箭头函数是es6的语法，浏览器支持也是一个问题。但是实现功能时基本没什么问题的。</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">      <span class="comment">//神器 jslinq</span></div><div class="line">  <span class="keyword">var</span> myList2 = [</div><div class="line">           &#123;<span class="attr">FirstName</span>:<span class="string">"Chris"</span>,<span class="attr">LastName</span>:<span class="string">"Pearson"</span>&#125;,</div><div class="line">           &#123;<span class="attr">FirstName</span>:<span class="string">"Kate"</span>,<span class="attr">LastName</span>:<span class="string">"Johnson"</span>&#125;,</div><div class="line">           &#123;<span class="attr">FirstName</span>:<span class="string">"Josh"</span>,<span class="attr">LastName</span>:<span class="string">"Sutherland"</span>&#125;,</div><div class="line">           &#123;<span class="attr">FirstName</span>:<span class="string">"John"</span>,<span class="attr">LastName</span>:<span class="string">"Ronald"</span>&#125;,</div><div class="line">           &#123;<span class="attr">FirstName</span>:<span class="string">"Steve"</span>,<span class="attr">LastName</span>:<span class="string">"Pinkerton"</span>&#125;</div><div class="line">           ];</div><div class="line">           <span class="keyword">var</span> arrRes0 = $.Enumerable.From(myList2).Select(<span class="function"><span class="params">x</span>=&gt;</span>x.FirstName).ToArray();</div><div class="line">           <span class="keyword">var</span> arrRes00 = $.Enumerable.From(myList2).FirstOrDefault(<span class="function"><span class="params">x</span>=&gt;</span>x.LastName==<span class="string">"Pinkerton"</span>);</div><div class="line">           <span class="keyword">var</span> arrRes = $.Enumerable.From(myList2).Select(<span class="string">"x=&gt;x.FirstName"</span>).ToArray();</div><div class="line">           <span class="keyword">var</span> arrRes2 = $.Enumerable.From(myList2).FirstOrDefault(<span class="string">"x=&gt;x.FirstName=='Chris'"</span>);</div><div class="line">           <span class="keyword">var</span> arrRes3 = $.Enumerable.From(myList2).Select(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;<span class="keyword">return</span> &#123;<span class="attr">name</span>:item.FirstName,<span class="attr">age</span>:item.LastName&#125; &#125;).ToArray();</div><div class="line">  &lt;<span class="regexp">/script&gt;</span></div></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> js </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> js </tag>
+            
+            <tag> 遍历 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[利用反射、泛型处理表单—实体类—关系表之间的转换]]></title>
       <url>/2018/06/21/csharp%E5%88%A9%E7%94%A8%E5%8F%8D%E5%B0%84%E3%80%81%E6%B3%9B%E5%9E%8B%E5%A4%84%E7%90%86%E8%A1%A8%E5%8D%95%E2%80%94%E5%AE%9E%E4%BD%93%E7%B1%BB%E2%80%94%E5%85%B3%E7%B3%BB%E8%A1%A8%E4%B9%8B%E9%97%B4%E7%9A%84%E8%BD%AC%E6%8D%A2/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -133,39 +164,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[.net Socket连接断开判断]]></title>
-      <url>/2017/11/01/csharp%20Socket%E6%96%AD%E7%BA%BF%E5%88%A4%E6%96%AD/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>Socket 编程 里面怎么才能判断其中一方是否断开连接。</p>
-</blockquote>
-<ol>
-<li><p>当断开连接的时候我饿们调用<em>receive()</em>函数从缓冲区里读数据的时候，这个时候会抛出一个异常，我们只需在捕捉这个异常，并在<em>catch</em>里面进行处理就行，然后关闭对应的socket。</p>
-</li>
-<li><p>还有一种方式是通过：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static bool IsSocketConnected(Socket s)</div><div class="line">&#123;</div><div class="line">           return !((s.Poll(1000, SelectMode.SelectRead) &amp;&amp; (s.Available == 0)) || 		             !s.Connected);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>​    这里主要说明<em>socket.Poll()</em>这个函数，第一个参数是超时时间，单位是微秒，第二个参数是判断可以读取的正常的socket。通过这三个条件一起进行判断，如果只判断Available或者Connected是不行的。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> Socket </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[.net 异步委托]]></title>
       <url>/2017/11/01/csharp%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -203,6 +201,39 @@
             <tag> 异步 </tag>
             
             <tag> 委托 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[.net Socket连接断开判断]]></title>
+      <url>/2017/11/01/csharp%20Socket%E6%96%AD%E7%BA%BF%E5%88%A4%E6%96%AD/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>Socket 编程 里面怎么才能判断其中一方是否断开连接。</p>
+</blockquote>
+<ol>
+<li><p>当断开连接的时候我饿们调用<em>receive()</em>函数从缓冲区里读数据的时候，这个时候会抛出一个异常，我们只需在捕捉这个异常，并在<em>catch</em>里面进行处理就行，然后关闭对应的socket。</p>
+</li>
+<li><p>还有一种方式是通过：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static bool IsSocketConnected(Socket s)</div><div class="line">&#123;</div><div class="line">           return !((s.Poll(1000, SelectMode.SelectRead) &amp;&amp; (s.Available == 0)) || 		             !s.Connected);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>​    这里主要说明<em>socket.Poll()</em>这个函数，第一个参数是超时时间，单位是微秒，第二个参数是判断可以读取的正常的socket。通过这三个条件一起进行判断，如果只判断Available或者Connected是不行的。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> Socket </tag>
             
         </tags>
         
@@ -363,19 +394,18 @@
     </entry>
     
     <entry>
-      <title><![CDATA[跨域问题]]></title>
-      <url>/2017/08/21/MVC%E5%92%8CWEBAPI%E7%9A%84%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/</url>
-      <content type="html"><![CDATA[<h3 id="Web-api-的解决方案"><a href="#Web-api-的解决方案" class="headerlink" title="Web api 的解决方案"></a>Web api 的解决方案</h3><ol>
-<li>需要在web.config中的<system.webserver>节点中添加如下的内容</system.webserver></li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;httpProtocol&gt;</div><div class="line">&lt;customHeaders&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Origin&quot; value=&quot;*&quot; /&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Headers&quot; value=&quot;Content-Type&quot; /&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Methods&quot; value=&quot;GET, POST, PUT, DELETE, OPTIONS&quot; /&gt;</div><div class="line">&lt;/customHeaders&gt;</div><div class="line">&lt;/httpProtocol&gt;</div></pre></td></tr></table></figure>
-<ol>
-<li>在App_Start文件夹下的WebApiConfig.cs类中加入下面的函数</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/// &lt;summary&gt;</div><div class="line">      /// 允许跨域调用</div><div class="line">      /// &lt;/summary&gt;</div><div class="line">      /// &lt;param name=&quot;config&quot;&gt;&lt;/param&gt;</div><div class="line">      private static void EnableCrossSiteRequests(HttpConfiguration config)</div><div class="line">      &#123;</div><div class="line">          //对所有的请求来源没有任何限制</div><div class="line">          var cors = new EnableCorsAttribute(</div><div class="line">              origins: &quot;*&quot;,</div><div class="line">              headers: &quot;*&quot;,</div><div class="line">              methods: &quot;*&quot;</div><div class="line">          );</div><div class="line">          config.EnableCors(cors);</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
-<h3 id="asp-net-mvc的解决方案"><a href="#asp-net-mvc的解决方案" class="headerlink" title="asp.net mvc的解决方案"></a>asp.net mvc的解决方案</h3><ol>
-<li>只做上述步骤1即可。</li>
-</ol>
+      <title><![CDATA[程序代码块]]></title>
+      <url>/2017/08/21/%E7%A8%8B%E5%BA%8F%E4%BB%A3%E7%A0%81%E5%9D%97/</url>
+      <content type="html"><![CDATA[<p>一些常见的代码，写下来以后记不清的时候查阅。</p>
+<h4 id="生成guid代码"><a href="#生成guid代码" class="headerlink" title="生成guid代码"></a>生成guid代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var a=Guid.NewGuid().ToString();</div></pre></td></tr></table></figure>
+<h4 id="序列化json字符串"><a href="#序列化json字符串" class="headerlink" title="序列化json字符串"></a>序列化json字符串</h4><p>序列化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">string json = JsonConvert.SerializeObject(s);//s为要序列化的对象</div></pre></td></tr></table></figure>
+<p>反序列化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a = JsonConvert.DeserializeObject(json);</div><div class="line">//第二个参数为要格式化的对象类型</div><div class="line">var objectResult = JsonConvert.DeserializeAnonymousType(result.ToString(), new RootExcle());</div></pre></td></tr></table></figure>
+<h4 id="数组声明方式"><a href="#数组声明方式" class="headerlink" title="数组声明方式"></a>数组声明方式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int[] intArray = new int[] &#123;1,2,3&#125;;</div><div class="line">int[] intArray = new int[10];</div></pre></td></tr></table></figure>
+<h4 id="写入文件代码"><a href="#写入文件代码" class="headerlink" title="写入文件代码"></a>写入文件代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public static void LogFile(string fileName, string info)</div><div class="line">&#123;</div><div class="line">           </div><div class="line">            FileStream file;</div><div class="line">            if (!File.Exists(fileName))</div><div class="line">            &#123;</div><div class="line">                file = File.Create(fileName);</div><div class="line">            &#125;</div><div class="line">            else</div><div class="line">            &#123;</div><div class="line">                file = new FileStream(fileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);</div><div class="line">            &#125;</div><div class="line">            System.Text.Encoding encode = System.Text.UTF8Encoding.UTF8;</div><div class="line">            var bytes = encode.GetBytes(info);</div><div class="line">            file.Position = file.Length;</div><div class="line">            file.Write(bytes, 0, bytes.Length);</div><div class="line">            file.Flush();</div><div class="line">            file.Close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>####查看数据碎片及清理碎片</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">DBCC SHOWCONTIG (Busi_DistributionCenter_Info) WITH ALL_INDEXES</div><div class="line"></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">INDEX</span> all <span class="keyword">ON</span>  [Busi_DistributionCenter_Info] <span class="keyword">REBUILD</span></div><div class="line"></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">INDEX</span> all <span class="keyword">ON</span> [Busi_DistributionCenter_Info] REORGANIZE</div></pre></td></tr></table></figure>
 ]]></content>
       
         <categories>
@@ -396,18 +426,19 @@
     </entry>
     
     <entry>
-      <title><![CDATA[程序代码块]]></title>
-      <url>/2017/08/21/%E7%A8%8B%E5%BA%8F%E4%BB%A3%E7%A0%81%E5%9D%97/</url>
-      <content type="html"><![CDATA[<p>一些常见的代码，写下来以后记不清的时候查阅。</p>
-<h4 id="生成guid代码"><a href="#生成guid代码" class="headerlink" title="生成guid代码"></a>生成guid代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var a=Guid.NewGuid().ToString();</div></pre></td></tr></table></figure>
-<h4 id="序列化json字符串"><a href="#序列化json字符串" class="headerlink" title="序列化json字符串"></a>序列化json字符串</h4><p>序列化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">string json = JsonConvert.SerializeObject(s);//s为要序列化的对象</div></pre></td></tr></table></figure>
-<p>反序列化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a = JsonConvert.DeserializeObject(json);</div><div class="line">//第二个参数为要格式化的对象类型</div><div class="line">var objectResult = JsonConvert.DeserializeAnonymousType(result.ToString(), new RootExcle());</div></pre></td></tr></table></figure>
-<h4 id="数组声明方式"><a href="#数组声明方式" class="headerlink" title="数组声明方式"></a>数组声明方式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int[] intArray = new int[] &#123;1,2,3&#125;;</div><div class="line">int[] intArray = new int[10];</div></pre></td></tr></table></figure>
-<h4 id="写入文件代码"><a href="#写入文件代码" class="headerlink" title="写入文件代码"></a>写入文件代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public static void LogFile(string fileName, string info)</div><div class="line">&#123;</div><div class="line">           </div><div class="line">            FileStream file;</div><div class="line">            if (!File.Exists(fileName))</div><div class="line">            &#123;</div><div class="line">                file = File.Create(fileName);</div><div class="line">            &#125;</div><div class="line">            else</div><div class="line">            &#123;</div><div class="line">                file = new FileStream(fileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);</div><div class="line">            &#125;</div><div class="line">            System.Text.Encoding encode = System.Text.UTF8Encoding.UTF8;</div><div class="line">            var bytes = encode.GetBytes(info);</div><div class="line">            file.Position = file.Length;</div><div class="line">            file.Write(bytes, 0, bytes.Length);</div><div class="line">            file.Flush();</div><div class="line">            file.Close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>####查看数据碎片及清理碎片</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">DBCC SHOWCONTIG (Busi_DistributionCenter_Info) WITH ALL_INDEXES</div><div class="line"></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">INDEX</span> all <span class="keyword">ON</span>  [Busi_DistributionCenter_Info] <span class="keyword">REBUILD</span></div><div class="line"></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">INDEX</span> all <span class="keyword">ON</span> [Busi_DistributionCenter_Info] REORGANIZE</div></pre></td></tr></table></figure>
+      <title><![CDATA[跨域问题]]></title>
+      <url>/2017/08/21/MVC%E5%92%8CWEBAPI%E7%9A%84%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/</url>
+      <content type="html"><![CDATA[<h3 id="Web-api-的解决方案"><a href="#Web-api-的解决方案" class="headerlink" title="Web api 的解决方案"></a>Web api 的解决方案</h3><ol>
+<li>需要在web.config中的<system.webserver>节点中添加如下的内容</system.webserver></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;httpProtocol&gt;</div><div class="line">&lt;customHeaders&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Origin&quot; value=&quot;*&quot; /&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Headers&quot; value=&quot;Content-Type&quot; /&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Methods&quot; value=&quot;GET, POST, PUT, DELETE, OPTIONS&quot; /&gt;</div><div class="line">&lt;/customHeaders&gt;</div><div class="line">&lt;/httpProtocol&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>在App_Start文件夹下的WebApiConfig.cs类中加入下面的函数</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/// &lt;summary&gt;</div><div class="line">      /// 允许跨域调用</div><div class="line">      /// &lt;/summary&gt;</div><div class="line">      /// &lt;param name=&quot;config&quot;&gt;&lt;/param&gt;</div><div class="line">      private static void EnableCrossSiteRequests(HttpConfiguration config)</div><div class="line">      &#123;</div><div class="line">          //对所有的请求来源没有任何限制</div><div class="line">          var cors = new EnableCorsAttribute(</div><div class="line">              origins: &quot;*&quot;,</div><div class="line">              headers: &quot;*&quot;,</div><div class="line">              methods: &quot;*&quot;</div><div class="line">          );</div><div class="line">          config.EnableCors(cors);</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
+<h3 id="asp-net-mvc的解决方案"><a href="#asp-net-mvc的解决方案" class="headerlink" title="asp.net mvc的解决方案"></a>asp.net mvc的解决方案</h3><ol>
+<li>只做上述步骤1即可。</li>
+</ol>
 ]]></content>
       
         <categories>
@@ -500,6 +531,35 @@
     </entry>
     
     <entry>
+      <title><![CDATA[c#连接oracle数据库]]></title>
+      <url>/2017/08/16/csharp%E8%BF%9E%E6%8E%A5oracle%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+      <content type="html"><![CDATA[<p>c#连接oracle数据库</p>
+<blockquote>
+<p>准备工作：</p>
+<p>下载并引用Oracle.ManagedDataAccess.Client </p>
+</blockquote>
+<h4 id="控制台测试程序"><a href="#控制台测试程序" class="headerlink" title="控制台测试程序"></a>控制台测试程序</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">class Program</div><div class="line">   &#123;</div><div class="line">       static void Main(string[] args)</div><div class="line">       &#123;</div><div class="line">           string constr = @&quot;User Id=zftest;Password=123456;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.16.84)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=orcl)))&quot;;</div><div class="line">           DataSet ds = OracleHelper.ExecuteDataset(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line">           DataTable dt = ds.Tables[0];</div><div class="line">           for (int i = 0; i &lt; dt.Rows.Count; i++)</div><div class="line">           &#123;</div><div class="line"></div><div class="line">               for (int j = 0; j &lt; dt.Columns.Count; j++)</div><div class="line">               &#123;</div><div class="line">                   Console.WriteLine(dt.Rows[i][j]);</div><div class="line">               &#125;</div><div class="line">               Console.WriteLine(&quot;\n&quot;);</div><div class="line">           &#125;</div><div class="line">           //int a=  OracleHelper.ExecuteNonQuery(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line"></div><div class="line">           int b = 0;</div><div class="line"></div><div class="line"></div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h4 id="下面是OracleHelper-程序，参数是连接字符串和sql语句。"><a href="#下面是OracleHelper-程序，参数是连接字符串和sql语句。" class="headerlink" title="下面是OracleHelper 程序，参数是连接字符串和sql语句。"></a>下面是OracleHelper 程序，参数是连接字符串和sql语句。</h4><p><a href="http://www.cnblogs.com/jimcsharp/p/5590076.html" target="_blank" rel="external">http://www.cnblogs.com/jimcsharp/p/5590076.html</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> 数据库 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> oracle </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[.net爬虫]]></title>
       <url>/2017/08/16/csharp%E7%88%AC%E8%99%AB/</url>
       <content type="html"><![CDATA[<h4 id="准备第三方插件"><a href="#准备第三方插件" class="headerlink" title="准备第三方插件"></a>准备第三方插件</h4><p>HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用</p>
@@ -528,35 +588,6 @@
             <tag> c# </tag>
             
             <tag> 爬虫 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[c#连接oracle数据库]]></title>
-      <url>/2017/08/16/csharp%E8%BF%9E%E6%8E%A5oracle%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-      <content type="html"><![CDATA[<p>c#连接oracle数据库</p>
-<blockquote>
-<p>准备工作：</p>
-<p>下载并引用Oracle.ManagedDataAccess.Client </p>
-</blockquote>
-<h4 id="控制台测试程序"><a href="#控制台测试程序" class="headerlink" title="控制台测试程序"></a>控制台测试程序</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">class Program</div><div class="line">   &#123;</div><div class="line">       static void Main(string[] args)</div><div class="line">       &#123;</div><div class="line">           string constr = @&quot;User Id=zftest;Password=123456;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.16.84)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=orcl)))&quot;;</div><div class="line">           DataSet ds = OracleHelper.ExecuteDataset(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line">           DataTable dt = ds.Tables[0];</div><div class="line">           for (int i = 0; i &lt; dt.Rows.Count; i++)</div><div class="line">           &#123;</div><div class="line"></div><div class="line">               for (int j = 0; j &lt; dt.Columns.Count; j++)</div><div class="line">               &#123;</div><div class="line">                   Console.WriteLine(dt.Rows[i][j]);</div><div class="line">               &#125;</div><div class="line">               Console.WriteLine(&quot;\n&quot;);</div><div class="line">           &#125;</div><div class="line">           //int a=  OracleHelper.ExecuteNonQuery(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line"></div><div class="line">           int b = 0;</div><div class="line"></div><div class="line"></div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<h4 id="下面是OracleHelper-程序，参数是连接字符串和sql语句。"><a href="#下面是OracleHelper-程序，参数是连接字符串和sql语句。" class="headerlink" title="下面是OracleHelper 程序，参数是连接字符串和sql语句。"></a>下面是OracleHelper 程序，参数是连接字符串和sql语句。</h4><p><a href="http://www.cnblogs.com/jimcsharp/p/5590076.html" target="_blank" rel="external">http://www.cnblogs.com/jimcsharp/p/5590076.html</a></p>
-]]></content>
-      
-        <categories>
-            
-            <category> 数据库 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> oracle </tag>
             
         </tags>
         
