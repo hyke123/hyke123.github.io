@@ -3,6 +3,77 @@
   
     
     <entry>
+      <title><![CDATA[csharp 体系总结篇]]></title>
+      <url>/2019/01/31/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/</url>
+      <content type="html"><![CDATA[<h1 id="体系结构总结"><a href="#体系结构总结" class="headerlink" title="体系结构总结"></a>体系结构总结</h1><h2 id="netframewok"><a href="#netframewok" class="headerlink" title=".netframewok"></a>.netframewok</h2><blockquote>
+<p>.netframewok 是微软推出的一套框架，里面包含CLR，BCL，FCL，CTS，CLS等，下面就从中摘出一部分解释一下。</p>
+</blockquote>
+<h3 id="c"><a href="#c" class="headerlink" title="c"></a>c</h3><p>c# 是一种.netframework上的一种编程语言，该平台上的开发语言还有vb,f#。目前大多数.net程序员用的开发语言为c#。要搞清楚<strong>c#</strong>和<strong>.net</strong>之间的关系。</p>
+<h3 id="BCL"><a href="#BCL" class="headerlink" title="BCL"></a>BCL</h3><p>基础类库，封装了我们常用的一些框架内置类，比如我们常用List集合，File，DateTime等。</p>
+<h3 id="CTS，CLS"><a href="#CTS，CLS" class="headerlink" title="CTS，CLS"></a>CTS，CLS</h3><p>指的是<strong>公共类型系统</strong> 和<strong>公共语言规范</strong> 简明理解就是语法和类型规范</p>
+<h3 id="编译器"><a href="#编译器" class="headerlink" title="编译器"></a>编译器</h3><p>当使用支持.NET的编译器编译之后，生成.dll或.exe文件。这文件称作.NET程序集，包含IL（中间语言）和元数据。也就是我们写完的c#代码通过编译器编译之后并不是直接可以被操作系统执行，这种dll文件称为托管dll。</p>
+<h3 id="运行时（clr）"><a href="#运行时（clr）" class="headerlink" title="运行时（clr）"></a>运行时（clr）</h3><p>当我们通过编译器编译之后生成的dll，需要在clr的环境里才能执行，即CLR的JIT负责将IL编译成机器码。 然后才能被操作系统执行。</p>
+<h3 id="托管和非托管"><a href="#托管和非托管" class="headerlink" title="托管和非托管"></a>托管和非托管</h3><p>这个主要和c++编写的程序进行区别，当我们使用c#调用c++的dll文件时，要明白c++生产的dll文件是直接可以被操作系统执行即非托管，而c#生存的dll则依赖于<strong>运行时</strong> 即托管程序。</p>
+<hr>
+<blockquote>
+<p>补充两张图 第一张是c#程序的执行过程，第二张各个版本之间及其的对应关系。</p>
+</blockquote>
+<p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1548915896108.png" alt="1548915896108"></p>
+<p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1548916045600.png" alt="1548916045600"></p>
+<h2 id="通信"><a href="#通信" class="headerlink" title="通信"></a>通信</h2><blockquote>
+<p>通信涉及很多方面，比方计算机和计算机之间的数据交换，或者同一个计算机内不通程序之间的数据交换，都可以称之为通信。</p>
+</blockquote>
+<h3 id="网口通信"><a href="#网口通信" class="headerlink" title="网口通信"></a>网口通信</h3><p>也就是我们通常说的网络通信，涉及的通信协议主要是tcp/ip和http，我们需要一些基础的知识，比方说ip，端口，进程等。</p>
+<h4 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h4><p>使用socket较多的是桌面端应用程序，基本会和硬件进行对接通信，在开发这种项目的时候我建议大家还是使用一些第三发比较成熟的网络通信的框架，在这里推荐<strong>newlife.net</strong> 和<strong>supersocket</strong> 。第三方库封装的比较完善，我们只需要关心我们收到数据后怎么处理就行，只关注到我们的业务逻辑，至于其他的底层是怎么创建一个服务，怎么开启监听，监听队列设置多大，到底是多线程轮询还是异步通知交给框架来做，我们只需根据自己的场景选择适用的框架。（不建议大家从头使用socket编程的原因是这个东西相对非常复杂，并发以及稳定性不好控制，除非你自己封装的框架经过大量使用测试，保证其稳定性，否则不建议直接在正式项目种使用）。</p>
+<p>下面再说一下在通信种经常遇到的几个问题</p>
+<h5 id="1-粘包"><a href="#1-粘包" class="headerlink" title="1. 粘包"></a>1. 粘包</h5><p>出现这种原因主要是接收速度小于了发送速度，接收对数据没有及时处理造成的，解决方法有很多，我们需要对传输的数据进行<em>协议约定</em>， 常见的有帧固定长度，加上开始结束标记等。编写程序的时候在缓冲区按照协议进行处理即可。（建议使用框架自带粘包功能进行处理）</p>
+<h5 id="2-心跳"><a href="#2-心跳" class="headerlink" title="2. 心跳"></a>2. 心跳</h5><p>心跳主要是为了保持连接，当客户端和服务端之间长时间不通信（windows貌似是2小时），服务端会为了减少资源的占用，从而断开这个连接。心跳是指开启一个线程然后定时的由一段向另一端发送消息。至于心跳是客户端向服务端发送，还是服务端向客户端发送，还是两者都要发送，这个我自己的理解是根据项目场景来定（苦笑脸）</p>
+<h5 id="3-客户端断线重连"><a href="#3-客户端断线重连" class="headerlink" title="3. 客户端断线重连"></a>3. 客户端断线重连</h5><p>因为影响网络稳定性的因素有很多，所以我们的客户端通常要做断线重连功能，第一种是不拔调网线也就是物理链路没问题的情况下，断开连接的时候服务端是会收到一条消息或者抛出一个异常，这个时候一般可以通过框架自带的断线事件进行捕捉然后重连；第二种是拔掉网线这种物理链路断开的，这个时候服务端是检测不到的，我们只能通过心跳来进行实现，当我们默认时间内收不到服务端消息时则进行重连。</p>
+<h4 id="http协议"><a href="#http协议" class="headerlink" title="http协议"></a>http协议</h4><p>现在互联网产业异常繁华，市场上做web开发的很多，其中java占了很大的份额，c#占的比重较小。大部分web开发归根揭底都是在用http。所以我们需要熟悉http，这样才能在程序出错的时候排查出问题所在。（锅到底是前端背还是后端背）</p>
+<h5 id="1-报文格式"><a href="#1-报文格式" class="headerlink" title="1. 报文格式"></a>1. 报文格式</h5><p>http的报文格式主要是由请求头，请求行，以及请求数据组成，至于各个部分都有哪些字段，分别代表什么意思 大家可以分析报文的时候自行百度。</p>
+<h5 id="2-get方法和post方法"><a href="#2-get方法和post方法" class="headerlink" title="2. get方法和post方法"></a>2. get方法和post方法</h5><p>get方法一般指参数在请求头里面，这些参数是明文的并且长度也有限制，而post方法是将参数放置到请求体，相对比较安全，在开发的时候建议大家使用post方法。</p>
+<h5 id="3-状态码"><a href="#3-状态码" class="headerlink" title="3. 状态码"></a>3. 状态码</h5><p>我们需要知道一些常见的状态码代表的含义404 未找到 500服务器内部错误 200正常返回 等。</p>
+<h5 id="4-chrome-调试"><a href="#4-chrome-调试" class="headerlink" title="4. chrome 调试"></a>4. chrome 调试</h5><p>要会使用F12调试，包括查看报文调试js，虽然应该是前端干的活，但是后端这都不会的话又该怎么和前端撕（苦笑脸）</p>
+<h3 id="串口通信"><a href="#串口通信" class="headerlink" title="串口通信"></a>串口通信</h3><p>这个感觉没啥说的，自己也没有遇到过特别复杂的场景，使用framework自带的串口类库即可解决。</p>
+<h3 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h3><p>最后提一下进程间通信，因为这个实现的方式比较多，可以直接用socket，也可以用消息队列，数据库，管道这些东西。其中管道实现只是听过，从来没有去尝试用过（苦笑脸）</p>
+<hr>
+<h2 id="c-语法"><a href="#c-语法" class="headerlink" title="c#语法"></a>c#语法</h2><blockquote>
+<p>语法相对来说算是容易的一部分，c#是一种面向对象的语言，讲究封装，多态，继承。</p>
+</blockquote>
+<p>c# 版本一直也在不断地升级，不断有新的语法出来，下面是1.0版本之后的一些新语法，一些初级小白可能用的比较少的或者不太了解。</p>
+<h3 id="委托事件"><a href="#委托事件" class="headerlink" title="委托事件"></a>委托事件</h3><h3 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h3><h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><h3 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h3><h3 id="IO操作"><a href="#IO操作" class="headerlink" title="IO操作"></a>IO操作</h3><h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><blockquote>
+<p>最后提一下语法糖，c#提供了很多语法糖，让我们写的代码更加简洁，编译器可以识别这些语法糖，生成的中间语言都是一样的，大家不用担心效率问题。</p>
+</blockquote>
+<hr>
+<h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><blockquote>
+<p>加密很常见，下面主要说几种常见的加密算法，具体实现细节可以不去深究，会调用即可。</p>
+</blockquote>
+<h3 id="MD5不可逆"><a href="#MD5不可逆" class="headerlink" title="MD5不可逆"></a>MD5不可逆</h3><h3 id="DES对称性加密"><a href="#DES对称性加密" class="headerlink" title="DES对称性加密"></a>DES对称性加密</h3><h3 id="RSA非对称性加密"><a href="#RSA非对称性加密" class="headerlink" title="RSA非对称性加密"></a>RSA非对称性加密</h3><h3 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h3><h3 id="SSL"><a href="#SSL" class="headerlink" title="SSL"></a>SSL</h3><hr>
+<h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><blockquote>
+<p>数据库的使用很常见，主要说关系型数据库和非关系型数据库，关系型简单点理解通常都是我们那种二维的表，而非关系的数据存储的数据基本上是以键值对的形式存储的。</p>
+</blockquote>
+<h3 id="关系型"><a href="#关系型" class="headerlink" title="关系型"></a>关系型</h3><p>关系型数据库主要有sqlserver,mysql，oracle。平时工作主要用的是微软家的sqlserver。</p>
+<h3 id="NOSQL"><a href="#NOSQL" class="headerlink" title="NOSQL"></a>NOSQL</h3><p>not only sql这种数据库主要指的是内存型数据，数据都存储在内存种，可以高速的进行读写操作，所以在一些高并发或者需要缓存处理的场景种还是比较适用的。说几种常用的数据库，redis memcached monodb 这个东西在自己的开发工作种用的较少，因为自己做的项目很少需要这个场景。</p>
+<h3 id="ado-net"><a href="#ado-net" class="headerlink" title="ado.net"></a>ado.net</h3><h4 id="sqlconnection"><a href="#sqlconnection" class="headerlink" title="sqlconnection"></a>sqlconnection</h4><h4 id="sqlcommond"><a href="#sqlcommond" class="headerlink" title="sqlcommond"></a>sqlcommond</h4><h4 id="sqladapter"><a href="#sqladapter" class="headerlink" title="sqladapter"></a>sqladapter</h4><h4 id="datareader"><a href="#datareader" class="headerlink" title="datareader"></a>datareader</h4><h3 id="orm"><a href="#orm" class="headerlink" title="orm"></a>orm</h3><h4 id="ef"><a href="#ef" class="headerlink" title="ef"></a>ef</h4><h4 id="dapper"><a href="#dapper" class="headerlink" title="dapper"></a>dapper</h4><h4 id="sqlsugar"><a href="#sqlsugar" class="headerlink" title="sqlsugar"></a>sqlsugar</h4><h4 id="上下文"><a href="#上下文" class="headerlink" title="上下文"></a>上下文</h4><h3 id="sql语句"><a href="#sql语句" class="headerlink" title="sql语句"></a>sql语句</h3><h4 id="单表增删改查"><a href="#单表增删改查" class="headerlink" title="单表增删改查"></a>单表增删改查</h4><h4 id="左连接"><a href="#左连接" class="headerlink" title="左连接"></a>左连接</h4><h4 id="等值连接"><a href="#等值连接" class="headerlink" title="等值连接"></a>等值连接</h4><h4 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h4><h3 id="linq"><a href="#linq" class="headerlink" title="linq"></a>linq</h3><h3 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h3><h3 id="分库分表"><a href="#分库分表" class="headerlink" title="分库分表"></a>分库分表</h3><h3 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h3><h3 id="存储过程"><a href="#存储过程" class="headerlink" title="存储过程"></a>存储过程</h3><h2 id="MS框架"><a href="#MS框架" class="headerlink" title="MS框架"></a>MS框架</h2><h3 id="winform"><a href="#winform" class="headerlink" title="winform"></a>winform</h3><h3 id="wpf"><a href="#wpf" class="headerlink" title="wpf"></a>wpf</h3><h3 id="webform"><a href="#webform" class="headerlink" title="webform"></a>webform</h3><h4 id="一般处理程序"><a href="#一般处理程序" class="headerlink" title="一般处理程序"></a>一般处理程序</h4><h4 id="web窗体"><a href="#web窗体" class="headerlink" title="web窗体"></a>web窗体</h4><h3 id="asp-mvc"><a href="#asp-mvc" class="headerlink" title="asp.mvc"></a>asp.mvc</h3><h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><h3 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h3><h3 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h3><h3 id="区域"><a href="#区域" class="headerlink" title="区域"></a>区域</h3><h3 id="razor"><a href="#razor" class="headerlink" title="razor"></a>razor</h3><h3 id="前后端分离"><a href="#前后端分离" class="headerlink" title="前后端分离"></a>前后端分离</h3><h3 id="跨域"><a href="#跨域" class="headerlink" title="跨域"></a>跨域</h3><h3 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h3><h3 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h3><h4 id="log4net"><a href="#log4net" class="headerlink" title="log4net"></a>log4net</h4><h4 id="quartz-net"><a href="#quartz-net" class="headerlink" title="quartz.net"></a>quartz.net</h4><h4 id="autofac"><a href="#autofac" class="headerlink" title="autofac"></a>autofac</h4><h4 id="automapper"><a href="#automapper" class="headerlink" title="automapper"></a>automapper</h4><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><h4 id="aop"><a href="#aop" class="headerlink" title="aop"></a>aop</h4><h4 id="ioc-di"><a href="#ioc-di" class="headerlink" title="ioc di"></a>ioc di</h4><h3 id="core"><a href="#core" class="headerlink" title="core"></a>core</h3><h4 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h4><h4 id="中间件"><a href="#中间件" class="headerlink" title="中间件"></a>中间件</h4><h4 id="拓展方法"><a href="#拓展方法" class="headerlink" title="拓展方法"></a>拓展方法</h4><h3 id="权限5张表"><a href="#权限5张表" class="headerlink" title="权限5张表"></a>权限5张表</h3><h2 id="异步多线程"><a href="#异步多线程" class="headerlink" title="异步多线程"></a>异步多线程</h2><h3 id="eap-apm-tpl"><a href="#eap-apm-tpl" class="headerlink" title="eap  apm tpl"></a>eap  apm tpl</h3><h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><h3 id="回调"><a href="#回调" class="headerlink" title="回调"></a>回调</h3><h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><h3 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h3><h2 id="管道模型"><a href="#管道模型" class="headerlink" title="管道模型"></a>管道模型</h2><h3 id="HttpApplication"><a href="#HttpApplication" class="headerlink" title="HttpApplication"></a>HttpApplication</h3><h3 id="HttpModule"><a href="#HttpModule" class="headerlink" title="HttpModule"></a>HttpModule</h3><h3 id="HttpHandler"><a href="#HttpHandler" class="headerlink" title="HttpHandler"></a>HttpHandler</h3><h3 id="HttpContext"><a href="#HttpContext" class="headerlink" title="HttpContext"></a>HttpContext</h3><h3 id="iis6和7的区别"><a href="#iis6和7的区别" class="headerlink" title="iis6和7的区别"></a>iis6和7的区别</h3><h3 id="应用程序池"><a href="#应用程序池" class="headerlink" title="应用程序池"></a>应用程序池</h3><h2 id="常用工具"><a href="#常用工具" class="headerlink" title="常用工具"></a>常用工具</h2><h3 id="postman"><a href="#postman" class="headerlink" title="postman"></a>postman</h3><h3 id="vscode"><a href="#vscode" class="headerlink" title="vscode"></a>vscode</h3><h3 id="liveload"><a href="#liveload" class="headerlink" title="liveload"></a>liveload</h3><h3 id="resharper"><a href="#resharper" class="headerlink" title="resharper"></a>resharper</h3><h3 id="svn-git"><a href="#svn-git" class="headerlink" title="svn git"></a>svn git</h3><h3 id="通信助手"><a href="#通信助手" class="headerlink" title="通信助手"></a>通信助手</h3><h3 id="navicat"><a href="#navicat" class="headerlink" title="navicat"></a>navicat</h3><h3 id="typora"><a href="#typora" class="headerlink" title="typora"></a>typora</h3><h2 id="框架术语"><a href="#框架术语" class="headerlink" title="框架术语"></a>框架术语</h2><h3 id="soa-面向服务架构"><a href="#soa-面向服务架构" class="headerlink" title="soa 面向服务架构"></a>soa 面向服务架构</h3><h3 id="sop"><a href="#sop" class="headerlink" title="sop"></a>sop</h3><h3 id="oop"><a href="#oop" class="headerlink" title="oop"></a>oop</h3><h3 id="wcf"><a href="#wcf" class="headerlink" title="wcf"></a>wcf</h3><h3 id="webapi"><a href="#webapi" class="headerlink" title="webapi"></a>webapi</h3><h3 id="webservice"><a href="#webservice" class="headerlink" title="webservice"></a>webservice</h3>]]></content>
+      
+        <categories>
+            
+            <category> c# </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> net </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[js 截取，循环的一些代码]]></title>
       <url>/2018/06/22/js%E6%88%AA%E5%8F%96%EF%BC%8C%E5%BE%AA%E7%8E%AF%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BB%A3%E7%A0%81/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -394,18 +465,19 @@
     </entry>
     
     <entry>
-      <title><![CDATA[程序代码块]]></title>
-      <url>/2017/08/21/%E7%A8%8B%E5%BA%8F%E4%BB%A3%E7%A0%81%E5%9D%97/</url>
-      <content type="html"><![CDATA[<p>一些常见的代码，写下来以后记不清的时候查阅。</p>
-<h4 id="生成guid代码"><a href="#生成guid代码" class="headerlink" title="生成guid代码"></a>生成guid代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var a=Guid.NewGuid().ToString();</div></pre></td></tr></table></figure>
-<h4 id="序列化json字符串"><a href="#序列化json字符串" class="headerlink" title="序列化json字符串"></a>序列化json字符串</h4><p>序列化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">string json = JsonConvert.SerializeObject(s);//s为要序列化的对象</div></pre></td></tr></table></figure>
-<p>反序列化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a = JsonConvert.DeserializeObject(json);</div><div class="line">//第二个参数为要格式化的对象类型</div><div class="line">var objectResult = JsonConvert.DeserializeAnonymousType(result.ToString(), new RootExcle());</div></pre></td></tr></table></figure>
-<h4 id="数组声明方式"><a href="#数组声明方式" class="headerlink" title="数组声明方式"></a>数组声明方式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int[] intArray = new int[] &#123;1,2,3&#125;;</div><div class="line">int[] intArray = new int[10];</div></pre></td></tr></table></figure>
-<h4 id="写入文件代码"><a href="#写入文件代码" class="headerlink" title="写入文件代码"></a>写入文件代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public static void LogFile(string fileName, string info)</div><div class="line">&#123;</div><div class="line">           </div><div class="line">            FileStream file;</div><div class="line">            if (!File.Exists(fileName))</div><div class="line">            &#123;</div><div class="line">                file = File.Create(fileName);</div><div class="line">            &#125;</div><div class="line">            else</div><div class="line">            &#123;</div><div class="line">                file = new FileStream(fileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);</div><div class="line">            &#125;</div><div class="line">            System.Text.Encoding encode = System.Text.UTF8Encoding.UTF8;</div><div class="line">            var bytes = encode.GetBytes(info);</div><div class="line">            file.Position = file.Length;</div><div class="line">            file.Write(bytes, 0, bytes.Length);</div><div class="line">            file.Flush();</div><div class="line">            file.Close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>####查看数据碎片及清理碎片</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">DBCC SHOWCONTIG (Busi_DistributionCenter_Info) WITH ALL_INDEXES</div><div class="line"></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">INDEX</span> all <span class="keyword">ON</span>  [Busi_DistributionCenter_Info] <span class="keyword">REBUILD</span></div><div class="line"></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">INDEX</span> all <span class="keyword">ON</span> [Busi_DistributionCenter_Info] REORGANIZE</div></pre></td></tr></table></figure>
+      <title><![CDATA[跨域问题]]></title>
+      <url>/2017/08/21/MVC%E5%92%8CWEBAPI%E7%9A%84%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/</url>
+      <content type="html"><![CDATA[<h3 id="Web-api-的解决方案"><a href="#Web-api-的解决方案" class="headerlink" title="Web api 的解决方案"></a>Web api 的解决方案</h3><ol>
+<li>需要在web.config中的<system.webserver>节点中添加如下的内容</system.webserver></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;httpProtocol&gt;</div><div class="line">&lt;customHeaders&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Origin&quot; value=&quot;*&quot; /&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Headers&quot; value=&quot;Content-Type&quot; /&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Methods&quot; value=&quot;GET, POST, PUT, DELETE, OPTIONS&quot; /&gt;</div><div class="line">&lt;/customHeaders&gt;</div><div class="line">&lt;/httpProtocol&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>在App_Start文件夹下的WebApiConfig.cs类中加入下面的函数</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/// &lt;summary&gt;</div><div class="line">      /// 允许跨域调用</div><div class="line">      /// &lt;/summary&gt;</div><div class="line">      /// &lt;param name=&quot;config&quot;&gt;&lt;/param&gt;</div><div class="line">      private static void EnableCrossSiteRequests(HttpConfiguration config)</div><div class="line">      &#123;</div><div class="line">          //对所有的请求来源没有任何限制</div><div class="line">          var cors = new EnableCorsAttribute(</div><div class="line">              origins: &quot;*&quot;,</div><div class="line">              headers: &quot;*&quot;,</div><div class="line">              methods: &quot;*&quot;</div><div class="line">          );</div><div class="line">          config.EnableCors(cors);</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
+<h3 id="asp-net-mvc的解决方案"><a href="#asp-net-mvc的解决方案" class="headerlink" title="asp.net mvc的解决方案"></a>asp.net mvc的解决方案</h3><ol>
+<li>只做上述步骤1即可。</li>
+</ol>
 ]]></content>
       
         <categories>
@@ -426,19 +498,18 @@
     </entry>
     
     <entry>
-      <title><![CDATA[跨域问题]]></title>
-      <url>/2017/08/21/MVC%E5%92%8CWEBAPI%E7%9A%84%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/</url>
-      <content type="html"><![CDATA[<h3 id="Web-api-的解决方案"><a href="#Web-api-的解决方案" class="headerlink" title="Web api 的解决方案"></a>Web api 的解决方案</h3><ol>
-<li>需要在web.config中的<system.webserver>节点中添加如下的内容</system.webserver></li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;httpProtocol&gt;</div><div class="line">&lt;customHeaders&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Origin&quot; value=&quot;*&quot; /&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Headers&quot; value=&quot;Content-Type&quot; /&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Methods&quot; value=&quot;GET, POST, PUT, DELETE, OPTIONS&quot; /&gt;</div><div class="line">&lt;/customHeaders&gt;</div><div class="line">&lt;/httpProtocol&gt;</div></pre></td></tr></table></figure>
-<ol>
-<li>在App_Start文件夹下的WebApiConfig.cs类中加入下面的函数</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/// &lt;summary&gt;</div><div class="line">      /// 允许跨域调用</div><div class="line">      /// &lt;/summary&gt;</div><div class="line">      /// &lt;param name=&quot;config&quot;&gt;&lt;/param&gt;</div><div class="line">      private static void EnableCrossSiteRequests(HttpConfiguration config)</div><div class="line">      &#123;</div><div class="line">          //对所有的请求来源没有任何限制</div><div class="line">          var cors = new EnableCorsAttribute(</div><div class="line">              origins: &quot;*&quot;,</div><div class="line">              headers: &quot;*&quot;,</div><div class="line">              methods: &quot;*&quot;</div><div class="line">          );</div><div class="line">          config.EnableCors(cors);</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
-<h3 id="asp-net-mvc的解决方案"><a href="#asp-net-mvc的解决方案" class="headerlink" title="asp.net mvc的解决方案"></a>asp.net mvc的解决方案</h3><ol>
-<li>只做上述步骤1即可。</li>
-</ol>
+      <title><![CDATA[程序代码块]]></title>
+      <url>/2017/08/21/%E7%A8%8B%E5%BA%8F%E4%BB%A3%E7%A0%81%E5%9D%97/</url>
+      <content type="html"><![CDATA[<p>一些常见的代码，写下来以后记不清的时候查阅。</p>
+<h4 id="生成guid代码"><a href="#生成guid代码" class="headerlink" title="生成guid代码"></a>生成guid代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var a=Guid.NewGuid().ToString();</div></pre></td></tr></table></figure>
+<h4 id="序列化json字符串"><a href="#序列化json字符串" class="headerlink" title="序列化json字符串"></a>序列化json字符串</h4><p>序列化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">string json = JsonConvert.SerializeObject(s);//s为要序列化的对象</div></pre></td></tr></table></figure>
+<p>反序列化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a = JsonConvert.DeserializeObject(json);</div><div class="line">//第二个参数为要格式化的对象类型</div><div class="line">var objectResult = JsonConvert.DeserializeAnonymousType(result.ToString(), new RootExcle());</div></pre></td></tr></table></figure>
+<h4 id="数组声明方式"><a href="#数组声明方式" class="headerlink" title="数组声明方式"></a>数组声明方式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int[] intArray = new int[] &#123;1,2,3&#125;;</div><div class="line">int[] intArray = new int[10];</div></pre></td></tr></table></figure>
+<h4 id="写入文件代码"><a href="#写入文件代码" class="headerlink" title="写入文件代码"></a>写入文件代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public static void LogFile(string fileName, string info)</div><div class="line">&#123;</div><div class="line">           </div><div class="line">            FileStream file;</div><div class="line">            if (!File.Exists(fileName))</div><div class="line">            &#123;</div><div class="line">                file = File.Create(fileName);</div><div class="line">            &#125;</div><div class="line">            else</div><div class="line">            &#123;</div><div class="line">                file = new FileStream(fileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);</div><div class="line">            &#125;</div><div class="line">            System.Text.Encoding encode = System.Text.UTF8Encoding.UTF8;</div><div class="line">            var bytes = encode.GetBytes(info);</div><div class="line">            file.Position = file.Length;</div><div class="line">            file.Write(bytes, 0, bytes.Length);</div><div class="line">            file.Flush();</div><div class="line">            file.Close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>####查看数据碎片及清理碎片</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">DBCC SHOWCONTIG (Busi_DistributionCenter_Info) WITH ALL_INDEXES</div><div class="line"></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">INDEX</span> all <span class="keyword">ON</span>  [Busi_DistributionCenter_Info] <span class="keyword">REBUILD</span></div><div class="line"></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">INDEX</span> all <span class="keyword">ON</span> [Busi_DistributionCenter_Info] REORGANIZE</div></pre></td></tr></table></figure>
 ]]></content>
       
         <categories>
@@ -531,35 +602,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[c#连接oracle数据库]]></title>
-      <url>/2017/08/16/csharp%E8%BF%9E%E6%8E%A5oracle%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-      <content type="html"><![CDATA[<p>c#连接oracle数据库</p>
-<blockquote>
-<p>准备工作：</p>
-<p>下载并引用Oracle.ManagedDataAccess.Client </p>
-</blockquote>
-<h4 id="控制台测试程序"><a href="#控制台测试程序" class="headerlink" title="控制台测试程序"></a>控制台测试程序</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">class Program</div><div class="line">   &#123;</div><div class="line">       static void Main(string[] args)</div><div class="line">       &#123;</div><div class="line">           string constr = @&quot;User Id=zftest;Password=123456;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.16.84)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=orcl)))&quot;;</div><div class="line">           DataSet ds = OracleHelper.ExecuteDataset(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line">           DataTable dt = ds.Tables[0];</div><div class="line">           for (int i = 0; i &lt; dt.Rows.Count; i++)</div><div class="line">           &#123;</div><div class="line"></div><div class="line">               for (int j = 0; j &lt; dt.Columns.Count; j++)</div><div class="line">               &#123;</div><div class="line">                   Console.WriteLine(dt.Rows[i][j]);</div><div class="line">               &#125;</div><div class="line">               Console.WriteLine(&quot;\n&quot;);</div><div class="line">           &#125;</div><div class="line">           //int a=  OracleHelper.ExecuteNonQuery(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line"></div><div class="line">           int b = 0;</div><div class="line"></div><div class="line"></div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<h4 id="下面是OracleHelper-程序，参数是连接字符串和sql语句。"><a href="#下面是OracleHelper-程序，参数是连接字符串和sql语句。" class="headerlink" title="下面是OracleHelper 程序，参数是连接字符串和sql语句。"></a>下面是OracleHelper 程序，参数是连接字符串和sql语句。</h4><p><a href="http://www.cnblogs.com/jimcsharp/p/5590076.html" target="_blank" rel="external">http://www.cnblogs.com/jimcsharp/p/5590076.html</a></p>
-]]></content>
-      
-        <categories>
-            
-            <category> 数据库 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> oracle </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[.net爬虫]]></title>
       <url>/2017/08/16/csharp%E7%88%AC%E8%99%AB/</url>
       <content type="html"><![CDATA[<h4 id="准备第三方插件"><a href="#准备第三方插件" class="headerlink" title="准备第三方插件"></a>准备第三方插件</h4><p>HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用</p>
@@ -588,6 +630,35 @@
             <tag> c# </tag>
             
             <tag> 爬虫 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[c#连接oracle数据库]]></title>
+      <url>/2017/08/16/csharp%E8%BF%9E%E6%8E%A5oracle%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+      <content type="html"><![CDATA[<p>c#连接oracle数据库</p>
+<blockquote>
+<p>准备工作：</p>
+<p>下载并引用Oracle.ManagedDataAccess.Client </p>
+</blockquote>
+<h4 id="控制台测试程序"><a href="#控制台测试程序" class="headerlink" title="控制台测试程序"></a>控制台测试程序</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">class Program</div><div class="line">   &#123;</div><div class="line">       static void Main(string[] args)</div><div class="line">       &#123;</div><div class="line">           string constr = @&quot;User Id=zftest;Password=123456;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.16.84)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=orcl)))&quot;;</div><div class="line">           DataSet ds = OracleHelper.ExecuteDataset(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line">           DataTable dt = ds.Tables[0];</div><div class="line">           for (int i = 0; i &lt; dt.Rows.Count; i++)</div><div class="line">           &#123;</div><div class="line"></div><div class="line">               for (int j = 0; j &lt; dt.Columns.Count; j++)</div><div class="line">               &#123;</div><div class="line">                   Console.WriteLine(dt.Rows[i][j]);</div><div class="line">               &#125;</div><div class="line">               Console.WriteLine(&quot;\n&quot;);</div><div class="line">           &#125;</div><div class="line">           //int a=  OracleHelper.ExecuteNonQuery(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line"></div><div class="line">           int b = 0;</div><div class="line"></div><div class="line"></div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h4 id="下面是OracleHelper-程序，参数是连接字符串和sql语句。"><a href="#下面是OracleHelper-程序，参数是连接字符串和sql语句。" class="headerlink" title="下面是OracleHelper 程序，参数是连接字符串和sql语句。"></a>下面是OracleHelper 程序，参数是连接字符串和sql语句。</h4><p><a href="http://www.cnblogs.com/jimcsharp/p/5590076.html" target="_blank" rel="external">http://www.cnblogs.com/jimcsharp/p/5590076.html</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> 数据库 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> oracle </tag>
             
         </tags>
         
