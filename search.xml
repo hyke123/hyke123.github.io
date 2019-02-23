@@ -4,6 +4,44 @@
     
     <entry>
       <title><![CDATA[csharp 体系总结篇]]></title>
+      <url>/2019/02/23/%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8log4net%E5%B0%86%E6%97%A5%E5%BF%97%E5%86%99%E5%85%A5%E5%88%B0sqlite%E4%B8%AD/</url>
+      <content type="html"><![CDATA[<h2 id="如何利用log4net将日志写入到sqlite中"><a href="#如何利用log4net将日志写入到sqlite中" class="headerlink" title="如何利用log4net将日志写入到sqlite中"></a>如何利用log4net将日志写入到sqlite中</h2><blockquote>
+<p>用log4net写日志这个相对比较简单，网上也有很多相关文档教程，但大多数教程是将日志写在了文本文件中，一天一个日志文件。这样时间长了之后会有很多日志文件，并且<strong>很不利于我们分析日志</strong>。如果我们能将日志写到一个轻量级的数据库中，我们就可以利用sql预计来进行分析统计日志。</p>
+</blockquote>
+<h3 id="log4net"><a href="#log4net" class="headerlink" title="log4net"></a>log4net</h3><p>为什么要有日志，是因为我们程序一旦运行或者部署后我们就不能够进行断点调试获取运行信息，或者程序出错的时候我们想记录下来，那么这个时候就需要日志。log4net是一个从java移植过来的记录日志的框架组件。</p>
+<p>Log4net强大的地方就是它的多目标输出，可以输出到控制台、文件、数据库、系统事件、Email等，几乎无所不能然后它可以通过配置让日志系统实时生效，比如说在服务运行的过程中修改配置改变输出目标，改变日志等级等，均不用重启程序。</p>
+<p>至于log4net具体如何配置，我想对比较偷懒，一般都是在网上找一个差不多能符合自己需求的场景的配置文件，直接拿来用。具体的配置文档说明可以见<a href="https://blog.csdn.net/binnygoal/article/details/79557746" target="_blank" rel="external">log4net配置文档</a></p>
+<h3 id="sqlite"><a href="#sqlite" class="headerlink" title="sqlite"></a>sqlite</h3><p>SQLite是一个进程内的库，实现了自给自足的、无服务器的、零配置的、事务性的 SQL 数据库引擎。它是一个零配置的数据库，这意味着与其他数据库一样，您不需要在系统中配置。—摘自官方解释:joy:</p>
+<p>自己通俗一点理解：不用装数据库服务程序，使用过程中只有一个单独的文件，用来记录数据。读写速度也很高。</p>
+<h3 id="在c-程序中使用"><a href="#在c-程序中使用" class="headerlink" title="在c#程序中使用"></a>在c#程序中使用</h3><ol>
+<li>使用nuget下载system.data.sqlite,其中要注意的是<strong>下载的dll文件版本和log4net配置文件中的版本要一致</strong></li>
+<li>配置log4net。</li>
+<li>在程序中写入日志。</li>
+</ol>
+<h3 id="附log4net-配置文件"><a href="#附log4net-配置文件" class="headerlink" title="附log4net 配置文件"></a>附log4net 配置文件</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">log4net</span>&gt;</span></div><div class="line">   <span class="comment">&lt;!--&lt;root&gt;</span></div><div class="line"><span class="comment">     &lt;level value="ALL"&gt;&lt;/level&gt;</span></div><div class="line"><span class="comment">     &lt;appender-ref ref="sqlite"/&gt;</span></div><div class="line"><span class="comment">   &lt;/root&gt;--&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">"logsql"</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">level</span> <span class="attr">value</span>=<span class="string">"Info"</span> /&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">"sqlite"</span> /&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">logger</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"sqlite"</span> <span class="attr">type</span>=<span class="string">"log4net.Appender.AdoNetAppender"</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">bufferSize</span> <span class="attr">value</span>=<span class="string">"1"</span> /&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">connectionType</span> <span class="attr">value</span>=<span class="string">"System.Data.SQLite.SQLiteConnection, System.Data.SQLite, Version=1.0.109.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139"</span> /&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">connectionString</span> <span class="attr">value</span>=<span class="string">"data source=F:\gx\湖北项目源码最新\csprogram\02-空白系统框架\WindowsFormsDesktop\bin\MyLogs.db;Synchronous=Off"</span> /&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">commandText</span> <span class="attr">value</span>=<span class="string">"INSERT INTO Log (Location, Level, Message, TimeStamp) VALUES (@Location, @Level, @Message, @TimeStamp)"</span> /&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">parameter</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">parameterName</span> <span class="attr">value</span>=<span class="string">"@Location"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">dbType</span> <span class="attr">value</span>=<span class="string">"String"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">layout</span> <span class="attr">type</span>=<span class="string">"log4net.Layout.PatternLayout"</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">conversionPattern</span> <span class="attr">value</span>=<span class="string">"CHI"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;/<span class="name">layout</span>&gt;</span></div><div class="line">     <span class="tag">&lt;/<span class="name">parameter</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">parameter</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">parameterName</span> <span class="attr">value</span>=<span class="string">"@TimeStamp"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">dbType</span> <span class="attr">value</span>=<span class="string">"DateTime"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">layout</span> <span class="attr">type</span>=<span class="string">"log4net.Layout.RawTimeStampLayout"</span> /&gt;</span></div><div class="line">     <span class="tag">&lt;/<span class="name">parameter</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">parameter</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">parameterName</span> <span class="attr">value</span>=<span class="string">"@Level"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">dbType</span> <span class="attr">value</span>=<span class="string">"String"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">layout</span> <span class="attr">type</span>=<span class="string">"log4net.Layout.PatternLayout"</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">conversionPattern</span> <span class="attr">value</span>=<span class="string">"%level"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;/<span class="name">layout</span>&gt;</span></div><div class="line">     <span class="tag">&lt;/<span class="name">parameter</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">parameter</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">parameterName</span> <span class="attr">value</span>=<span class="string">"@Message"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">dbType</span> <span class="attr">value</span>=<span class="string">"String"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">layout</span> <span class="attr">type</span>=<span class="string">"log4net.Layout.PatternLayout"</span>&gt;</span></div><div class="line">         <span class="tag">&lt;<span class="name">conversionPattern</span> <span class="attr">value</span>=<span class="string">"%message"</span> /&gt;</span></div><div class="line">       <span class="tag">&lt;/<span class="name">layout</span>&gt;</span></div><div class="line">     <span class="tag">&lt;/<span class="name">parameter</span>&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></div><div class="line"> <span class="tag">&lt;/<span class="name">log4net</span>&gt;</span></div></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> c# </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 日志 </tag>
+            
+            <tag> sqlite </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[csharp 体系总结篇]]></title>
       <url>/2019/01/31/%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84%E6%80%BB%E7%BB%93/</url>
       <content type="html"><![CDATA[<h1 id="体系结构总结"><a href="#体系结构总结" class="headerlink" title="体系结构总结"></a>体系结构总结</h1><h2 id="netframewok"><a href="#netframewok" class="headerlink" title=".netframewok"></a>.netframewok</h2><blockquote>
 <p>.netframewok 是微软推出的一套框架，里面包含CLR，BCL，FCL，CTS，CLS等，下面就从中摘出一部分解释一下。</p>
@@ -283,39 +321,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[.net Socket连接断开判断]]></title>
-      <url>/2017/11/01/csharp%20Socket%E6%96%AD%E7%BA%BF%E5%88%A4%E6%96%AD/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>Socket 编程 里面怎么才能判断其中一方是否断开连接。</p>
-</blockquote>
-<ol>
-<li><p>当断开连接的时候我饿们调用<em>receive()</em>函数从缓冲区里读数据的时候，这个时候会抛出一个异常，我们只需在捕捉这个异常，并在<em>catch</em>里面进行处理就行，然后关闭对应的socket。</p>
-</li>
-<li><p>还有一种方式是通过：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static bool IsSocketConnected(Socket s)</div><div class="line">&#123;</div><div class="line">           return !((s.Poll(1000, SelectMode.SelectRead) &amp;&amp; (s.Available == 0)) || 		             !s.Connected);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>​    这里主要说明<em>socket.Poll()</em>这个函数，第一个参数是超时时间，单位是微秒，第二个参数是判断可以读取的正常的socket。通过这三个条件一起进行判断，如果只判断Available或者Connected是不行的。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> Socket </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[.net 异步委托]]></title>
       <url>/2017/11/01/csharp%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -353,6 +358,39 @@
             <tag> 异步 </tag>
             
             <tag> 委托 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[.net Socket连接断开判断]]></title>
+      <url>/2017/11/01/csharp%20Socket%E6%96%AD%E7%BA%BF%E5%88%A4%E6%96%AD/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>Socket 编程 里面怎么才能判断其中一方是否断开连接。</p>
+</blockquote>
+<ol>
+<li><p>当断开连接的时候我饿们调用<em>receive()</em>函数从缓冲区里读数据的时候，这个时候会抛出一个异常，我们只需在捕捉这个异常，并在<em>catch</em>里面进行处理就行，然后关闭对应的socket。</p>
+</li>
+<li><p>还有一种方式是通过：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">static bool IsSocketConnected(Socket s)</div><div class="line">&#123;</div><div class="line">           return !((s.Poll(1000, SelectMode.SelectRead) &amp;&amp; (s.Available == 0)) || 		             !s.Connected);</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>​    这里主要说明<em>socket.Poll()</em>这个函数，第一个参数是超时时间，单位是微秒，第二个参数是判断可以读取的正常的socket。通过这三个条件一起进行判断，如果只判断Available或者Connected是不行的。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> Socket </tag>
             
         </tags>
         
@@ -650,35 +688,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[c#连接oracle数据库]]></title>
-      <url>/2017/08/16/csharp%E8%BF%9E%E6%8E%A5oracle%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
-      <content type="html"><![CDATA[<p>c#连接oracle数据库</p>
-<blockquote>
-<p>准备工作：</p>
-<p>下载并引用Oracle.ManagedDataAccess.Client </p>
-</blockquote>
-<h4 id="控制台测试程序"><a href="#控制台测试程序" class="headerlink" title="控制台测试程序"></a>控制台测试程序</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">class Program</div><div class="line">   &#123;</div><div class="line">       static void Main(string[] args)</div><div class="line">       &#123;</div><div class="line">           string constr = @&quot;User Id=zftest;Password=123456;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.16.84)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=orcl)))&quot;;</div><div class="line">           DataSet ds = OracleHelper.ExecuteDataset(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line">           DataTable dt = ds.Tables[0];</div><div class="line">           for (int i = 0; i &lt; dt.Rows.Count; i++)</div><div class="line">           &#123;</div><div class="line"></div><div class="line">               for (int j = 0; j &lt; dt.Columns.Count; j++)</div><div class="line">               &#123;</div><div class="line">                   Console.WriteLine(dt.Rows[i][j]);</div><div class="line">               &#125;</div><div class="line">               Console.WriteLine(&quot;\n&quot;);</div><div class="line">           &#125;</div><div class="line">           //int a=  OracleHelper.ExecuteNonQuery(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line"></div><div class="line">           int b = 0;</div><div class="line"></div><div class="line"></div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
-<h4 id="下面是OracleHelper-程序，参数是连接字符串和sql语句。"><a href="#下面是OracleHelper-程序，参数是连接字符串和sql语句。" class="headerlink" title="下面是OracleHelper 程序，参数是连接字符串和sql语句。"></a>下面是OracleHelper 程序，参数是连接字符串和sql语句。</h4><p><a href="http://www.cnblogs.com/jimcsharp/p/5590076.html" target="_blank" rel="external">http://www.cnblogs.com/jimcsharp/p/5590076.html</a></p>
-]]></content>
-      
-        <categories>
-            
-            <category> 数据库 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> oracle </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[js 在当前日期往前推N天（除去工作日）]]></title>
       <url>/2017/08/16/js-%E5%9C%A8%E5%BD%93%E5%89%8D%E6%97%A5%E6%9C%9F%E5%BE%80%E5%89%8D%E6%8E%A8N%E5%A4%A9%EF%BC%88%E9%99%A4%E5%8E%BB%E5%B7%A5%E4%BD%9C%E6%97%A5%EF%BC%89/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -734,6 +743,35 @@
             <tag> c# </tag>
             
             <tag> 爬虫 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[c#连接oracle数据库]]></title>
+      <url>/2017/08/16/csharp%E8%BF%9E%E6%8E%A5oracle%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+      <content type="html"><![CDATA[<p>c#连接oracle数据库</p>
+<blockquote>
+<p>准备工作：</p>
+<p>下载并引用Oracle.ManagedDataAccess.Client </p>
+</blockquote>
+<h4 id="控制台测试程序"><a href="#控制台测试程序" class="headerlink" title="控制台测试程序"></a>控制台测试程序</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">class Program</div><div class="line">   &#123;</div><div class="line">       static void Main(string[] args)</div><div class="line">       &#123;</div><div class="line">           string constr = @&quot;User Id=zftest;Password=123456;Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=192.168.16.84)(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=orcl)))&quot;;</div><div class="line">           DataSet ds = OracleHelper.ExecuteDataset(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line">           DataTable dt = ds.Tables[0];</div><div class="line">           for (int i = 0; i &lt; dt.Rows.Count; i++)</div><div class="line">           &#123;</div><div class="line"></div><div class="line">               for (int j = 0; j &lt; dt.Columns.Count; j++)</div><div class="line">               &#123;</div><div class="line">                   Console.WriteLine(dt.Rows[i][j]);</div><div class="line">               &#125;</div><div class="line">               Console.WriteLine(&quot;\n&quot;);</div><div class="line">           &#125;</div><div class="line">           //int a=  OracleHelper.ExecuteNonQuery(constr, CommandType.Text, &quot;select *from dba_users&quot;);</div><div class="line"></div><div class="line">           int b = 0;</div><div class="line"></div><div class="line"></div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure>
+<h4 id="下面是OracleHelper-程序，参数是连接字符串和sql语句。"><a href="#下面是OracleHelper-程序，参数是连接字符串和sql语句。" class="headerlink" title="下面是OracleHelper 程序，参数是连接字符串和sql语句。"></a>下面是OracleHelper 程序，参数是连接字符串和sql语句。</h4><p><a href="http://www.cnblogs.com/jimcsharp/p/5590076.html" target="_blank" rel="external">http://www.cnblogs.com/jimcsharp/p/5590076.html</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> 数据库 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> oracle </tag>
             
         </tags>
         
