@@ -58,40 +58,33 @@
 </blockquote>
 <p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1548915896108.png" alt="1548915896108"></p>
 <p><img src="C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1548916045600.png" alt="1548916045600"></p>
-<h2 id="通信"><a href="#通信" class="headerlink" title="通信"></a>通信</h2><blockquote>
-<p>通信涉及很多方面，比方计算机和计算机之间的数据交换，或者同一个计算机内不通程序之间的数据交换，都可以称之为通信。</p>
-</blockquote>
-<h3 id="网口通信"><a href="#网口通信" class="headerlink" title="网口通信"></a>网口通信</h3><p>也就是我们通常说的网络通信，涉及的通信协议主要是tcp/ip和http，我们需要一些基础的知识，比方说ip，端口，进程等。</p>
-<h4 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h4><p>使用socket较多的是桌面端应用程序，基本会和硬件进行对接通信，在开发这种项目的时候我建议大家还是使用一些第三发比较成熟的网络通信的框架，在这里推荐<strong>newlife.net</strong> 和<strong>supersocket</strong> 。第三方库封装的比较完善，我们只需要关心我们收到数据后怎么处理就行，只关注到我们的业务逻辑，至于其他的底层是怎么创建一个服务，怎么开启监听，监听队列设置多大，到底是多线程轮询还是异步通知交给框架来做，我们只需根据自己的场景选择适用的框架。（不建议大家从头使用socket编程的原因是这个东西相对非常复杂，并发以及稳定性不好控制，除非你自己封装的框架经过大量使用测试，保证其稳定性，否则不建议直接在正式项目种使用）。</p>
-<p>下面再说一下在通信种经常遇到的几个问题</p>
-<h5 id="1-粘包"><a href="#1-粘包" class="headerlink" title="1. 粘包"></a>1. 粘包</h5><p>出现这种原因主要是接收速度小于了发送速度，接收对数据没有及时处理造成的，解决方法有很多，我们需要对传输的数据进行<em>协议约定</em>， 常见的有帧固定长度，加上开始结束标记等。编写程序的时候在缓冲区按照协议进行处理即可。（建议使用框架自带粘包功能进行处理）</p>
-<h5 id="2-心跳"><a href="#2-心跳" class="headerlink" title="2. 心跳"></a>2. 心跳</h5><p>心跳主要是为了保持连接，当客户端和服务端之间长时间不通信（windows貌似是2小时），服务端会为了减少资源的占用，从而断开这个连接。心跳是指开启一个线程然后定时的由一段向另一端发送消息。至于心跳是客户端向服务端发送，还是服务端向客户端发送，还是两者都要发送，这个我自己的理解是根据项目场景来定（苦笑脸）</p>
-<h5 id="3-客户端断线重连"><a href="#3-客户端断线重连" class="headerlink" title="3. 客户端断线重连"></a>3. 客户端断线重连</h5><p>因为影响网络稳定性的因素有很多，所以我们的客户端通常要做断线重连功能，第一种是不拔调网线也就是物理链路没问题的情况下，断开连接的时候服务端是会收到一条消息或者抛出一个异常，这个时候一般可以通过框架自带的断线事件进行捕捉然后重连；第二种是拔掉网线这种物理链路断开的，这个时候服务端是检测不到的，我们只能通过心跳来进行实现，当我们默认时间内收不到服务端消息时则进行重连。</p>
-<h4 id="http协议"><a href="#http协议" class="headerlink" title="http协议"></a>http协议</h4><p>现在互联网产业异常繁华，市场上做web开发的很多，其中java占了很大的份额，c#占的比重较小。大部分web开发归根揭底都是在用http。所以我们需要熟悉http，这样才能在程序出错的时候排查出问题所在。（锅到底是前端背还是后端背）</p>
-<h5 id="1-报文格式"><a href="#1-报文格式" class="headerlink" title="1. 报文格式"></a>1. 报文格式</h5><p>http的报文格式主要是由请求头，请求行，以及请求数据组成，至于各个部分都有哪些字段，分别代表什么意思 大家可以分析报文的时候自行百度。</p>
-<h5 id="2-get方法和post方法"><a href="#2-get方法和post方法" class="headerlink" title="2. get方法和post方法"></a>2. get方法和post方法</h5><p>get方法一般指参数在请求头里面，这些参数是明文的并且长度也有限制，而post方法是将参数放置到请求体，相对比较安全，在开发的时候建议大家使用post方法。</p>
-<h5 id="3-状态码"><a href="#3-状态码" class="headerlink" title="3. 状态码"></a>3. 状态码</h5><p>我们需要知道一些常见的状态码代表的含义404 未找到 500服务器内部错误 200正常返回 等。</p>
-<h5 id="4-chrome-调试"><a href="#4-chrome-调试" class="headerlink" title="4. chrome 调试"></a>4. chrome 调试</h5><p>要会使用F12调试，包括查看报文调试js，虽然应该是前端干的活，但是后端这都不会的话又该怎么和前端撕（苦笑脸）</p>
-<h3 id="串口通信"><a href="#串口通信" class="headerlink" title="串口通信"></a>串口通信</h3><p>这个感觉没啥说的，自己也没有遇到过特别复杂的场景，使用framework自带的串口类库即可解决。</p>
-<h3 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h3><p>最后提一下进程间通信，因为这个实现的方式比较多，可以直接用socket，也可以用消息队列，数据库，管道这些东西。其中管道实现只是听过，从来没有去尝试用过（苦笑脸）</p>
-<hr>
 <h2 id="c-语法"><a href="#c-语法" class="headerlink" title="c#语法"></a>c#语法</h2><blockquote>
 <p>语法相对来说算是容易的一部分，c#是一种面向对象的语言，讲究封装，多态，继承。</p>
 </blockquote>
 <p>c# 版本一直也在不断地升级，不断有新的语法出来，下面是1.0版本之后的一些新语法，一些初级小白可能用的比较少的或者不太了解。</p>
-<h3 id="委托事件"><a href="#委托事件" class="headerlink" title="委托事件"></a>委托事件</h3><h3 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h3><h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><h3 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h3><h3 id="IO操作"><a href="#IO操作" class="headerlink" title="IO操作"></a>IO操作</h3><h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><blockquote>
-<p>最后提一下语法糖，c#提供了很多语法糖，让我们写的代码更加简洁，编译器可以识别这些语法糖，生成的中间语言都是一样的，大家不用担心效率问题。</p>
+<h3 id="委托事件"><a href="#委托事件" class="headerlink" title="委托事件"></a>委托事件</h3><p>是c#五大引用类型的其中之一，表示一组具有相同返回值类型，参数列表的方法引用-通俗理解指向函数的指针。</p>
+<h4 id="委托和事件的区别"><a href="#委托和事件的区别" class="headerlink" title="委托和事件的区别"></a>委托和事件的区别</h4><p>1.委托是一种数据类型，而事件是委托这种数据类型的一个实例。</p>
+<p>2.委托可以在类外部直接赋值调用，而事件不可以。</p>
+<p>3.事件只能使用+=赋值，而事件不是。</p>
+<h3 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h3><p>匿名方法</p>
+<h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><h4 id="元数据"><a href="#元数据" class="headerlink" title="元数据"></a>元数据</h4><p>编译器编译后生成的二进制信息，是对程序集的描述。</p>
+<p>反射可以在程序运行期间动态地创建类型的实例。应用场景体现在三个例子里：<strong>orm</strong> <strong>模型绑定</strong> <strong>aop</strong></p>
+<h3 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h3><p>泛型就是参数化了类型，把类型作为参数抽象出来，从而更好地实现代码的复用。最大的优点<strong>延迟声明</strong></p>
+<h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><p>把内存对象转换为字节序列的过程称为序列化。</p>
+<p>把字节序列恢复为对象的过程称为反序列化。</p>
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><p>是c#种的一种引用类型，用以将元数据或声明信息与代码(程序集、类型、方法、属性等)相关联。自己理解通过中括号的方式给c#程序附加一些额外的信息，从而在程序运行的时候通过反射获得这些添加的信息。</p>
+<h3 id="拓展方法"><a href="#拓展方法" class="headerlink" title="拓展方法"></a>拓展方法</h3><p>在原有类型的基础上增加一个或多个方法，使用时不需要去修改或编译类型本身的代码。</p>
+<p>使用方式在一个静态类里声明一个静态方法，第一个参数应该是this+该类型名称。</p>
+<h3 id="IO操作"><a href="#IO操作" class="headerlink" title="IO操作"></a>IO操作</h3><p>利用.net类库操作io，主要是磁盘读写。</p>
+<blockquote>
+<p>最后提一下语法糖，c#提供了很多语法糖，让我们写的代码更加简洁，编译器可以识别这些语法糖，生成的中间语言都是一样的，效率也是一样的。</p>
 </blockquote>
 <hr>
-<h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><blockquote>
-<p>加密很常见，下面主要说几种常见的加密算法，具体实现细节可以不去深究，明白这种加密算法可以实现社么效果，会调用即可。</p>
-</blockquote>
-<h3 id="MD5不可逆"><a href="#MD5不可逆" class="headerlink" title="MD5不可逆"></a>MD5不可逆</h3><h3 id="DES对称性加密"><a href="#DES对称性加密" class="headerlink" title="DES对称性加密"></a>DES对称性加密</h3><h3 id="RSA非对称性加密"><a href="#RSA非对称性加密" class="headerlink" title="RSA非对称性加密"></a>RSA非对称性加密</h3><h3 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h3><h3 id="SSL"><a href="#SSL" class="headerlink" title="SSL"></a>SSL</h3><hr>
 <h2 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h2><blockquote>
 <p>数据库的使用很常见，主要说关系型数据库和非关系型数据库，关系型简单点理解通常都是我们那种二维的表，而非关系的数据存储的数据基本上是以键值对的形式存储的。</p>
 </blockquote>
 <h3 id="关系型"><a href="#关系型" class="headerlink" title="关系型"></a>关系型</h3><p>关系型数据库主要有sqlserver,mysql，oracle。平时工作主要用的是微软家的sqlserver。</p>
-<h3 id="NOSQL"><a href="#NOSQL" class="headerlink" title="NOSQL"></a>NOSQL</h3><p>not only sql这种数据库主要指的是内存型数据，数据都存储在内存种，可以高速的进行读写操作，所以在一些高并发或者需要缓存处理的场景种还是比较适用的。说几种常用的数据库，redis memcached monodb 这个东西在自己的开发工作种用的较少，因为自己做的项目很少需要这个场景。</p>
+<h3 id="NOSQL"><a href="#NOSQL" class="headerlink" title="NOSQL"></a>NOSQL</h3><p>not only sql这种数据库主要指的是内存型数据，数据都存储在内存中，可以高速的进行读写操作，所以在一些高并发或者需要缓存处理的场景种还是比较适用的。说几种常用的数据库，redis memcached monodb 这个东西在自己的开发工作种用的较少，因为自己做的项目很少需要这个场景。</p>
 <h3 id="ado-net"><a href="#ado-net" class="headerlink" title="ado.net"></a>ado.net</h3><p>微软推出的.net程序访问数据库的技术，也是最高效读写数据库的方式，下面主要说几个里面比较重要的类。</p>
 <h4 id="1-sqlconnection"><a href="#1-sqlconnection" class="headerlink" title="1. sqlconnection"></a>1. sqlconnection</h4><p>数据库连接对象，通过给这个对象传入连接参数进行连接数据库。</p>
 <h4 id="2-sqlcommond"><a href="#2-sqlcommond" class="headerlink" title="2. sqlcommond"></a>2. sqlcommond</h4><p>主要通过这个对象传入要执行的sql语句。</p>
@@ -110,7 +103,24 @@
 <blockquote>
 <p>上面提高的读写分离，分库分表基本都是在数据库系统比较庞大数据量比较大的时候才会去使用。自己在工作中几乎没有遇到过这样的场景，很少去实践，所以并是很了解其中的细节，只是知道概念性东西。</p>
 </blockquote>
-<h2 id="MS框架"><a href="#MS框架" class="headerlink" title="MS框架"></a>MS框架</h2><h3 id="winform"><a href="#winform" class="headerlink" title="winform"></a>winform</h3><h3 id="wpf"><a href="#wpf" class="headerlink" title="wpf"></a>wpf</h3><h3 id="webform"><a href="#webform" class="headerlink" title="webform"></a>webform</h3><h4 id="一般处理程序"><a href="#一般处理程序" class="headerlink" title="一般处理程序"></a>一般处理程序</h4><h4 id="web窗体"><a href="#web窗体" class="headerlink" title="web窗体"></a>web窗体</h4><h3 id="asp-mvc"><a href="#asp-mvc" class="headerlink" title="asp.mvc"></a>asp.mvc</h3><h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><blockquote>
+<h2 id="通信"><a href="#通信" class="headerlink" title="通信"></a>通信</h2><blockquote>
+<p>通信涉及很多方面，比方计算机和计算机之间的数据交换，或者同一个计算机内不通程序之间的数据交换，都可以称之为通信。</p>
+</blockquote>
+<h3 id="网口通信"><a href="#网口通信" class="headerlink" title="网口通信"></a>网口通信</h3><p>也就是我们通常说的网络通信，涉及的通信协议主要是tcp/ip和http，我们需要一些基础的知识，比方说ip，端口，进程等。</p>
+<h4 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h4><p>使用socket较多的是桌面端应用程序，基本会和硬件进行对接通信，在开发这种项目的时候我建议大家还是使用一些第三发比较成熟的网络通信的框架，在这里推荐<strong>newlife.net</strong> 和<strong>supersocket</strong> 。第三方库封装的比较完善，我们只需要关心我们收到数据后怎么处理就行，只关注到我们的业务逻辑，至于其他的底层是怎么创建一个服务，怎么开启监听，监听队列设置多大，到底是多线程轮询还是异步通知交给框架来做，我们只需根据自己的场景选择适用的框架。（不建议大家从头使用socket编程的原因是这个东西相对非常复杂，并发以及稳定性不好控制，除非你自己封装的框架经过大量使用测试，保证其稳定性，否则不建议直接在正式项目种使用）。</p>
+<p>下面再说一下在通信种经常遇到的几个问题</p>
+<h5 id="1-粘包"><a href="#1-粘包" class="headerlink" title="1. 粘包"></a>1. 粘包</h5><p>出现这种原因主要是接收速度小于了发送速度，接收对数据没有及时处理造成的，解决方法有很多，我们需要对传输的数据进行<em>协议约定</em>， 常见的有帧固定长度，加上开始结束标记等。编写程序的时候在缓冲区按照协议进行处理即可。（建议使用框架自带粘包功能进行处理）</p>
+<h5 id="2-心跳"><a href="#2-心跳" class="headerlink" title="2. 心跳"></a>2. 心跳</h5><p>心跳主要是为了保持连接，当客户端和服务端之间长时间不通信（windows貌似是2小时），服务端会为了减少资源的占用，从而断开这个连接。心跳是指开启一个线程然后定时的由一段向另一端发送消息。至于心跳是客户端向服务端发送，还是服务端向客户端发送，还是两者都要发送，这个我自己的理解是根据项目场景来定（苦笑脸）</p>
+<h5 id="3-客户端断线重连"><a href="#3-客户端断线重连" class="headerlink" title="3. 客户端断线重连"></a>3. 客户端断线重连</h5><p>因为影响网络稳定性的因素有很多，所以我们的客户端通常要做断线重连功能，第一种是不拔调网线也就是物理链路没问题的情况下，断开连接的时候服务端是会收到一条消息或者抛出一个异常，这个时候一般可以通过框架自带的断线事件进行捕捉然后重连；第二种是拔掉网线这种物理链路断开的，这个时候服务端是检测不到的，我们只能通过心跳来进行实现，当我们默认时间内收不到服务端消息时则进行重连。</p>
+<h4 id="http协议"><a href="#http协议" class="headerlink" title="http协议"></a>http协议</h4><p>现在互联网产业异常繁华，市场上做web开发的很多，其中java占了很大的份额，c#占的比重较小。大部分web开发归根揭底都是在用http。所以我们需要熟悉http，这样才能在程序出错的时候排查出问题所在。（锅到底是前端背还是后端背）😂</p>
+<h5 id="1-报文格式"><a href="#1-报文格式" class="headerlink" title="1. 报文格式"></a>1. 报文格式</h5><p>http的报文格式主要是由请求头，请求行，以及请求数据组成，至于各个部分都有哪些字段，分别代表什么意思 大家可以分析报文的时候自行百度。</p>
+<h5 id="2-get方法和post方法"><a href="#2-get方法和post方法" class="headerlink" title="2. get方法和post方法"></a>2. get方法和post方法</h5><p>get方法一般指参数在请求头里面，这些参数是明文的并且长度也有限制，而post方法是将参数放置到请求体，相对比较安全，在开发的时候建议大家使用post方法。</p>
+<h5 id="3-状态码"><a href="#3-状态码" class="headerlink" title="3. 状态码"></a>3. 状态码</h5><p>我们需要知道一些常见的状态码代表的含义404 未找到 500服务器内部错误 200正常返回 等。</p>
+<h5 id="4-chrome-调试"><a href="#4-chrome-调试" class="headerlink" title="4. chrome 调试"></a>4. chrome 调试</h5><p>要会使用F12调试，包括查看报文调试js，虽然应该是前端干的活，但是后端这都不会的话又该怎么和前端撕（苦笑脸）</p>
+<h3 id="串口通信"><a href="#串口通信" class="headerlink" title="串口通信"></a>串口通信</h3><p>这个感觉没啥说的，自己也没有遇到过特别复杂的场景，使用framework自带的串口类库即可解决。</p>
+<h3 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h3><p>最后提一下进程间通信，因为这个实现的方式比较多，可以直接用socket，也可以用消息队列，数据库，管道这些东西。其中管道实现只是听过，从来没有去尝试用过（苦笑脸）</p>
+<hr>
+<h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><blockquote>
 <p>其实这一块涉及的东西很多，因为自己工作以来对这个接触的时间比较长，mvc也是现在比较流行的框架，相关的组件和资料都比较多。</p>
 </blockquote>
 <h3 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h3><p>刚开始学mvc的时候并不太理解路由的概念，后来逐渐理解了，就是我们在访问不通页面的时候是如何进行跳转的，这个跳转的约定规则我们可以称之为路由。在mvc框架中除了使用区域的时候会改动一下路由，其他时候基本都是使用框架默认路由，能看懂框架那个默认的路由代表的含义即可。还有就是要学会通过route特性来自定义路由。</p>
@@ -136,7 +146,15 @@
 <h3 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h3><p>对应于tpl里的task，也是开启一个线程去执行一段代码，但是我们可以通过task对这个任务进行有效的控制，比方说task.wait()。因为相对于普通的线程，他返回给我们的是执行线程的状态。</p>
 <h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p>既然是多线程肯定会产生这个问题，当我们两个或者多个线程对同一个变量进行读写的时候，可能会出现数据不一致的问题，因为我们代码里面对变量的操作几乎都不是<strong>原子性</strong>的，可能线程1获取到变量的值，当他要给这个变量赋值的时候，cpu切换到了线程2，当线程1再给变量赋值的时候，这个变量已经不是当时的变量了，他可能被线程2给修改过。解决方法一般是加锁，当拿到锁对象的时候，这个变量只允许当前线程访问。还有我们也可以通过线程安全集合，这个c#内置的也有。自己在工作中一般还是加锁。</p>
 <h3 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h3><p>信号量多用于线程之间的调度，当我们线程阻塞的时候</p>
-<h2 id="管道模型"><a href="#管道模型" class="headerlink" title="管道模型"></a>管道模型</h2><h3 id="HttpApplication"><a href="#HttpApplication" class="headerlink" title="HttpApplication"></a>HttpApplication</h3><h3 id="HttpModule"><a href="#HttpModule" class="headerlink" title="HttpModule"></a>HttpModule</h3><h3 id="HttpHandler"><a href="#HttpHandler" class="headerlink" title="HttpHandler"></a>HttpHandler</h3><h3 id="HttpContext"><a href="#HttpContext" class="headerlink" title="HttpContext"></a>HttpContext</h3><h3 id="iis6和7的区别"><a href="#iis6和7的区别" class="headerlink" title="iis6和7的区别"></a>iis6和7的区别</h3><h3 id="应用程序池"><a href="#应用程序池" class="headerlink" title="应用程序池"></a>应用程序池</h3><h2 id="常用工具"><a href="#常用工具" class="headerlink" title="常用工具"></a>常用工具</h2><h3 id="postman"><a href="#postman" class="headerlink" title="postman"></a>postman</h3><h3 id="vscode"><a href="#vscode" class="headerlink" title="vscode"></a>vscode</h3><h3 id="liveload"><a href="#liveload" class="headerlink" title="liveload"></a>liveload</h3><h3 id="resharper"><a href="#resharper" class="headerlink" title="resharper"></a>resharper</h3><h3 id="svn-git"><a href="#svn-git" class="headerlink" title="svn git"></a>svn git</h3><h3 id="通信助手"><a href="#通信助手" class="headerlink" title="通信助手"></a>通信助手</h3><h3 id="navicat"><a href="#navicat" class="headerlink" title="navicat"></a>navicat</h3><h3 id="typora"><a href="#typora" class="headerlink" title="typora"></a>typora</h3><h2 id="框架术语"><a href="#框架术语" class="headerlink" title="框架术语"></a>框架术语</h2><h3 id="soa-面向服务架构"><a href="#soa-面向服务架构" class="headerlink" title="soa 面向服务架构"></a>soa 面向服务架构</h3><h3 id="sop"><a href="#sop" class="headerlink" title="sop"></a>sop</h3><h3 id="oop"><a href="#oop" class="headerlink" title="oop"></a>oop</h3><h3 id="wcf"><a href="#wcf" class="headerlink" title="wcf"></a>wcf</h3><h3 id="webapi"><a href="#webapi" class="headerlink" title="webapi"></a>webapi</h3><h3 id="webservice"><a href="#webservice" class="headerlink" title="webservice"></a>webservice</h3>]]></content>
+<h2 id="管道模型"><a href="#管道模型" class="headerlink" title="管道模型"></a>管道模型</h2><blockquote>
+<p>管道模型asp.net和.net core是有点不一样的，下面先只说asp.net的管道模型。</p>
+</blockquote>
+<p>是asp.net在处理http请求的一系列流程处理。首先http.sys服务监听所有http请求，收到请求后交给IIS种的<strong>isapi</strong>进行处理，isapi根据后缀进行处理；分为两种一种是静态文件直接返回给客户端，另一种是动态的需要程序进行处理，比方所有的aspx页面都由<strong>aspnet_isapi.dll</strong>进行处理。</p>
+<h3 id="HttpApplication"><a href="#HttpApplication" class="headerlink" title="HttpApplication"></a>HttpApplication</h3><h3 id="HttpModule"><a href="#HttpModule" class="headerlink" title="HttpModule"></a>HttpModule</h3><h3 id="HttpHandler"><a href="#HttpHandler" class="headerlink" title="HttpHandler"></a>HttpHandler</h3><h3 id="HttpContext"><a href="#HttpContext" class="headerlink" title="HttpContext"></a>HttpContext</h3><h3 id="iis6和7的区别"><a href="#iis6和7的区别" class="headerlink" title="iis6和7的区别"></a>iis6和7的区别</h3><h3 id="应用程序池"><a href="#应用程序池" class="headerlink" title="应用程序池"></a>应用程序池</h3><h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><blockquote>
+<p>加密很常见，下面主要说几种常见的加密算法，具体实现细节可以不去深究，明白这种加密算法可以实现社么效果，会调用即可。</p>
+</blockquote>
+<h3 id="MD5不可逆"><a href="#MD5不可逆" class="headerlink" title="MD5不可逆"></a>MD5不可逆</h3><h3 id="DES对称性加密"><a href="#DES对称性加密" class="headerlink" title="DES对称性加密"></a>DES对称性加密</h3><h3 id="RSA非对称性加密"><a href="#RSA非对称性加密" class="headerlink" title="RSA非对称性加密"></a>RSA非对称性加密</h3><h3 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h3><h3 id="SSL"><a href="#SSL" class="headerlink" title="SSL"></a>SSL</h3><hr>
+<h2 id="常用工具"><a href="#常用工具" class="headerlink" title="常用工具"></a>常用工具</h2><h3 id="postman"><a href="#postman" class="headerlink" title="postman"></a>postman</h3><h3 id="vscode"><a href="#vscode" class="headerlink" title="vscode"></a>vscode</h3><h3 id="liveload"><a href="#liveload" class="headerlink" title="liveload"></a>liveload</h3><h3 id="resharper"><a href="#resharper" class="headerlink" title="resharper"></a>resharper</h3><h3 id="svn-git"><a href="#svn-git" class="headerlink" title="svn git"></a>svn git</h3><h3 id="通信助手"><a href="#通信助手" class="headerlink" title="通信助手"></a>通信助手</h3><h3 id="navicat"><a href="#navicat" class="headerlink" title="navicat"></a>navicat</h3><h3 id="typora"><a href="#typora" class="headerlink" title="typora"></a>typora</h3><h2 id="框架术语"><a href="#框架术语" class="headerlink" title="框架术语"></a>框架术语</h2><h3 id="soa-面向服务架构"><a href="#soa-面向服务架构" class="headerlink" title="soa 面向服务架构"></a>soa 面向服务架构</h3><h3 id="sop"><a href="#sop" class="headerlink" title="sop"></a>sop</h3><h3 id="oop"><a href="#oop" class="headerlink" title="oop"></a>oop</h3><h3 id="wcf"><a href="#wcf" class="headerlink" title="wcf"></a>wcf</h3><h3 id="webapi"><a href="#webapi" class="headerlink" title="webapi"></a>webapi</h3><h3 id="webservice"><a href="#webservice" class="headerlink" title="webservice"></a>webservice</h3><h2 id="MS框架"><a href="#MS框架" class="headerlink" title="MS框架"></a>MS框架</h2><h3 id="winform"><a href="#winform" class="headerlink" title="winform"></a>winform</h3><h3 id="wpf"><a href="#wpf" class="headerlink" title="wpf"></a>wpf</h3><h3 id="webform"><a href="#webform" class="headerlink" title="webform"></a>webform</h3><h4 id="一般处理程序"><a href="#一般处理程序" class="headerlink" title="一般处理程序"></a>一般处理程序</h4><h4 id="web窗体"><a href="#web窗体" class="headerlink" title="web窗体"></a>web窗体</h4><h3 id="asp-mvc"><a href="#asp-mvc" class="headerlink" title="asp.mvc"></a>asp.mvc</h3>]]></content>
       
         <categories>
             
@@ -213,65 +231,6 @@
             <tag> 反射 </tag>
             
             <tag> 泛型，orm </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
-      <title><![CDATA[敲代码的小铁匠的简历]]></title>
-      <url>/2018/06/08/csharp%20%E7%AE%80%E5%8E%86/</url>
-      <content type="html"><![CDATA[<hr>
-<h1 id="个人信息"><a href="#个人信息" class="headerlink" title="个人信息"></a>个人信息</h1><ul>
-<li>何玉珂/男/1994 </li>
-<li>本科/洛阳理工学院/计算机科学与技术 </li>
-<li>工作年限：2年</li>
-<li>手机：188489567**</li>
-<li>Email：123@heyuke.cn</li>
-<li>技术博客：<a href="https://hyke123.github.io/" target="_blank" rel="external">https://hyke123.github.io/</a></li>
-<li>期望职位：c# asp.net 开发</li>
-</ul>
-<hr>
-<h1 id="工作经历"><a href="#工作经历" class="headerlink" title="工作经历"></a>工作经历</h1><h2 id="河南中浩科技公司-（-2017年7月-至今-）"><a href="#河南中浩科技公司-（-2017年7月-至今-）" class="headerlink" title="河南中浩科技公司 （ 2017年7月 ~ 至今 ）"></a>河南中浩科技公司 （ 2017年7月 ~ 至今 ）</h2><h3 id="集卡ETC系统"><a href="#集卡ETC系统" class="headerlink" title="集卡ETC系统"></a>集卡ETC系统</h3><p>该系统主要功能类似高速收费站ETC不停车收费，适用车辆为大型集装箱卡车。实现原理是通过安装在车辆上的obu卡片和装在路口的感应天线进行无线通信，上位机读取车辆信息进行相关逻辑判断，然后控制道闸以及led显示屏进行信息提示。该系统的工作原理是通过上位机和下位机的网口通信以及上位机和道闸的串口通信。该系统采用winform进行开发，其中用到socket通信以及UI多线程技术。其中记录扣费信息是通过调用java开发的接口来进行实现。</p>
-<h3 id="智能场站系统"><a href="#智能场站系统" class="headerlink" title="智能场站系统"></a><strong>智能场站系统</strong></h3><p>该系统是为郑州国际陆港拼箱部的堆场管理设计的，主要是完成客户送货的接收，订单入库，订单的分柜管理和装箱方案的设计。整个项目结构依旧采用传统的三层，技术框架采用ASP.NET MVC+EF+SQLSERVER，其中EF采用的是database first，更符合一般的开发思路，前台最初使用jquery+bootstrap，后来用vue.js和element进行了部分页面的改写，其中vue.js通过标签引入直接开发，未使用node.js和webpack进行打包部署。同时对于项目中的接货部分开发了微信小程序来进行辅助扫码接货。目前该系统仍在开发中。</p>
-<h3 id="汽车口岸智能卡口系统"><a href="#汽车口岸智能卡口系统" class="headerlink" title="汽车口岸智能卡口系统"></a>汽车口岸智能卡口系统</h3><p>该系统是用于汽车口岸进出口的卡口，卡口设计为4通道，涉及的硬件有红外对射，箱号识别摄像头，车牌识别摄像头，RFID射频天线，IC卡读写器，语音播报器，led显示屏，道闸等。在这个项目自己主要负责上位机的开发，工作流程为：卡车上的集装箱触发红外对射，然后红外控制箱号识别摄像头抓拍4张图片进行箱号识别，车继续行进，光学车牌抓拍车牌号，射频天线读取卡车上安装的电子标签信息，司机经过道闸时刷IC卡，上位机采取到这一系列信息保存到数据库并和海关数据进行比对，然后控制道闸抬杆放行。软件开发技术采用的winfom，该项目对接硬件较多，和硬件交互主要依靠厂家提供的sdk，其中IC卡，语音播报，led显示屏通过串口服务器和上位机通信，其他硬件设备主要是网口通信。</p>
-<h3 id="智能停车场项目"><a href="#智能停车场项目" class="headerlink" title="智能停车场项目"></a>智能停车场项目</h3><p>该项目为一个智能停车场项目，该停车场是立体车库，车主来停车时plc给车辆分配车位，车主可以通过微信公众号来进行取车操作。这个项目有上位机程序，还有一个web端程序。其中plc和上位机通过socket通信，上位机可以控制车辆的存取，同时将信息同步到web端，web端和上位机通过websocket进行连接通信，web端和公众号服务端通过http协议对接。这个项目我们只负责可上位机程序和web端程序。web端采用mvc+sqlserver+layui，使用前后端分离的模式进行开发。</p>
-<h3 id="郑州国际陆港订舱系统"><a href="#郑州国际陆港订舱系统" class="headerlink" title="郑州国际陆港订舱系统"></a>郑州国际陆港订舱系统</h3><p>该系统是郑州国际陆港的订舱服务平台，主要完成客户订舱下单以及辅助公司各部门同事的日常办公。在这个系统的一些工作主要是配合其他同事完成一些模块的开发，该系统框架采用的是webform,数据访问层对原生的ado.net进行了一层封装，自己在开发的时候封装了一个ajaxBase页面，使其开发时能够类似mvc方式，并在处理Dto传输映射时使用了一些反射技术。</p>
-<hr>
-<h1 id="技能清单"><a href="#技能清单" class="headerlink" title="技能清单"></a>技能清单</h1><ul>
-<li>能够操作C#和.NET Framework开发、熟悉B/S、C/S模式编程，有良好的代码习惯</li>
-<li>能够使用ASP.NET Web Forms 和一般处理程序+静态页进行Web开发</li>
-<li>能够使用ASP.NET Mvc进行开发，了解Mvc中的模型绑定，路由，过滤器等相关技术</li>
-<li>熟悉socket通信，解决过粘包，心跳，断线重连等问题。对异步编程有了解。</li>
-<li>掌握ADO.NET，了解Entity Framework、ORM、 Linq To SQL</li>
-<li>掌握SQL Server数据库，掌握关系型数据库的设计，掌握T-SQL语句</li>
-<li>掌握前端相关技术（HTML、JavaScript、Ajax、Mvvm），能使用JQuery和相关UI插件，了解vue.js。</li>
-<li>对单例、工厂等设计模式有了解。</li>
-</ul>
-<h2 id="参考技能关键字"><a href="#参考技能关键字" class="headerlink" title="参考技能关键字"></a>参考技能关键字</h2><ul>
-<li>ASP.NET MVC</li>
-<li>EF+LINQ </li>
-<li>socket 多线程 异步</li>
-<li>前后端分离、跨域</li>
-<li>VUE.JS、 JQUERY</li>
-<li>SQLSERVER</li>
-</ul>
-<hr>
-<h1 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h1><p>感谢您花时间阅读我的简历，期待能有机会和您共事。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> 求职 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> 求职 </tag>
-            
-            <tag> 工作 </tag>
             
         </tags>
         
@@ -433,57 +392,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[.net委托]]></title>
-      <url>/2017/10/16/csharp%E5%A7%94%E6%89%98/</url>
-      <content type="html"><![CDATA[<h3 id="net委托"><a href="#net委托" class="headerlink" title=".net委托"></a>.net委托</h3><p> 委托可以看成是对方法的封装，即一个指针，指向一个方法。这里主要说编程中用的比较多的三种系统内置委托。</p>
-<ol>
-<li>Action</li>
-</ol>
-<p>​         Action是无返回值的泛型委托。</p>
-<p>　　 Action 表示无参，无返回值的委托</p>
-<p>　　 Action<int,string> 表示有传入参数int,string无返回值的委托</int,string></p>
-<p> 　　Action<int,string,bool> 表示有传入参数int,string,bool无返回值的委托</int,string,bool></p>
-<p>​        Action<int,int,int,int> 表示有传入4个int型参数，无返回值的委托</int,int,int,int></p>
-<p>　　 Action至少0个参数，至多16个参数，无返回值。</p>
-<ol>
-<li>Func</li>
-</ol>
-<p>​         Func是有返回值的泛型委托</p>
-<p>　　 Func<int> 表示无参，返回值为int的委托</int></p>
-<p>　　 Func<object,string,int> 表示传入参数为object, string 返回值为int的委托</object,string,int></p>
-<p>　　 Func<object,string,int> 表示传入参数为object, string 返回值为int的委托</object,string,int></p>
-<p>　　 Func<t1,t2,,t3,int> 表示传入参数为T1,T2,,T3(泛型)返回值为int的委托</t1,t2,,t3,int></p>
-<p>　　 Func至少0个参数，至多16个参数，根据返回值泛型返回。必须有返回值，不可void</p>
-<ol>
-<li>predicate</li>
-</ol>
-<p>​        predicate 是返回bool型的泛型委托</p>
-<p>　　 predicate<int> 表示传入参数为int 返回bool的委托</int></p>
-<p>　　 Predicate有且只有一个参数，返回值固定为bool</p>
-<p>　　 例：public delegate bool Predicate<t> (T obj)</t></p>
-<hr>
-<h4 id="泛型委托相关的一些东西"><a href="#泛型委托相关的一些东西" class="headerlink" title="泛型委托相关的一些东西"></a>泛型委托相关的一些东西</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</div><div class="line">            &#123;</div><div class="line">                //lblCarType.Text = &quot;集卡车&quot;;</div><div class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</div><div class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</div><div class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</div><div class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</div><div class="line">            &#125;), model);</div></pre></td></tr></table></figure>
-<p>兰姆达表达式相当于一个匿名函数 =》之前的是参数，之后的是方法体。泛型委托的那个<t>其实就是函数的参数类型。</t></p>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> 委托 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[.net多线程]]></title>
       <url>/2017/10/16/csharp%20%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
       <content type="html"><![CDATA[<h3 id="net-多线程"><a href="#net-多线程" class="headerlink" title=".net 多线程"></a>.net 多线程</h3><blockquote>
@@ -551,18 +459,70 @@
     </entry>
     
     <entry>
-      <title><![CDATA[程序代码块]]></title>
-      <url>/2017/08/21/%E7%A8%8B%E5%BA%8F%E4%BB%A3%E7%A0%81%E5%9D%97/</url>
-      <content type="html"><![CDATA[<p>一些常见的代码，写下来以后记不清的时候查阅。</p>
-<h4 id="生成guid代码"><a href="#生成guid代码" class="headerlink" title="生成guid代码"></a>生成guid代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var a=Guid.NewGuid().ToString();</div></pre></td></tr></table></figure>
-<h4 id="序列化json字符串"><a href="#序列化json字符串" class="headerlink" title="序列化json字符串"></a>序列化json字符串</h4><p>序列化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">string json = JsonConvert.SerializeObject(s);//s为要序列化的对象</div></pre></td></tr></table></figure>
-<p>反序列化</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a = JsonConvert.DeserializeObject(json);</div><div class="line">//第二个参数为要格式化的对象类型</div><div class="line">var objectResult = JsonConvert.DeserializeAnonymousType(result.ToString(), new RootExcle());</div></pre></td></tr></table></figure>
-<h4 id="数组声明方式"><a href="#数组声明方式" class="headerlink" title="数组声明方式"></a>数组声明方式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int[] intArray = new int[] &#123;1,2,3&#125;;</div><div class="line">int[] intArray = new int[10];</div></pre></td></tr></table></figure>
-<h4 id="写入文件代码"><a href="#写入文件代码" class="headerlink" title="写入文件代码"></a>写入文件代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public static void LogFile(string fileName, string info)</div><div class="line">&#123;</div><div class="line">           </div><div class="line">            FileStream file;</div><div class="line">            if (!File.Exists(fileName))</div><div class="line">            &#123;</div><div class="line">                file = File.Create(fileName);</div><div class="line">            &#125;</div><div class="line">            else</div><div class="line">            &#123;</div><div class="line">                file = new FileStream(fileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);</div><div class="line">            &#125;</div><div class="line">            System.Text.Encoding encode = System.Text.UTF8Encoding.UTF8;</div><div class="line">            var bytes = encode.GetBytes(info);</div><div class="line">            file.Position = file.Length;</div><div class="line">            file.Write(bytes, 0, bytes.Length);</div><div class="line">            file.Flush();</div><div class="line">            file.Close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>####查看数据碎片及清理碎片</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">DBCC SHOWCONTIG (Busi_DistributionCenter_Info) WITH ALL_INDEXES</div><div class="line"></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">INDEX</span> all <span class="keyword">ON</span>  [Busi_DistributionCenter_Info] <span class="keyword">REBUILD</span></div><div class="line"></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">INDEX</span> all <span class="keyword">ON</span> [Busi_DistributionCenter_Info] REORGANIZE</div></pre></td></tr></table></figure>
+      <title><![CDATA[.net委托]]></title>
+      <url>/2017/10/16/csharp%E5%A7%94%E6%89%98/</url>
+      <content type="html"><![CDATA[<h3 id="net委托"><a href="#net委托" class="headerlink" title=".net委托"></a>.net委托</h3><p> 委托可以看成是对方法的封装，即一个指针，指向一个方法。这里主要说编程中用的比较多的三种系统内置委托。</p>
+<ol>
+<li>Action</li>
+</ol>
+<p>​         Action是无返回值的泛型委托。</p>
+<p>　　 Action 表示无参，无返回值的委托</p>
+<p>　　 Action<int,string> 表示有传入参数int,string无返回值的委托</int,string></p>
+<p> 　　Action<int,string,bool> 表示有传入参数int,string,bool无返回值的委托</int,string,bool></p>
+<p>​        Action<int,int,int,int> 表示有传入4个int型参数，无返回值的委托</int,int,int,int></p>
+<p>　　 Action至少0个参数，至多16个参数，无返回值。</p>
+<ol>
+<li>Func</li>
+</ol>
+<p>​         Func是有返回值的泛型委托</p>
+<p>　　 Func<int> 表示无参，返回值为int的委托</int></p>
+<p>　　 Func<object,string,int> 表示传入参数为object, string 返回值为int的委托</object,string,int></p>
+<p>　　 Func<object,string,int> 表示传入参数为object, string 返回值为int的委托</object,string,int></p>
+<p>　　 Func<t1,t2,,t3,int> 表示传入参数为T1,T2,,T3(泛型)返回值为int的委托</t1,t2,,t3,int></p>
+<p>　　 Func至少0个参数，至多16个参数，根据返回值泛型返回。必须有返回值，不可void</p>
+<ol>
+<li>predicate</li>
+</ol>
+<p>​        predicate 是返回bool型的泛型委托</p>
+<p>　　 predicate<int> 表示传入参数为int 返回bool的委托</int></p>
+<p>　　 Predicate有且只有一个参数，返回值固定为bool</p>
+<p>　　 例：public delegate bool Predicate<t> (T obj)</t></p>
+<hr>
+<h4 id="泛型委托相关的一些东西"><a href="#泛型委托相关的一些东西" class="headerlink" title="泛型委托相关的一些东西"></a>泛型委托相关的一些东西</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</div><div class="line">            &#123;</div><div class="line">                //lblCarType.Text = &quot;集卡车&quot;;</div><div class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</div><div class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</div><div class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</div><div class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</div><div class="line">            &#125;), model);</div></pre></td></tr></table></figure>
+<p>兰姆达表达式相当于一个匿名函数 =》之前的是参数，之后的是方法体。泛型委托的那个<t>其实就是函数的参数类型。</t></p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 委托 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[跨域问题]]></title>
+      <url>/2017/08/21/MVC%E5%92%8CWEBAPI%E7%9A%84%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/</url>
+      <content type="html"><![CDATA[<h3 id="Web-api-的解决方案"><a href="#Web-api-的解决方案" class="headerlink" title="Web api 的解决方案"></a>Web api 的解决方案</h3><ol>
+<li>需要在web.config中的<system.webserver>节点中添加如下的内容</system.webserver></li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;httpProtocol&gt;</div><div class="line">&lt;customHeaders&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Origin&quot; value=&quot;*&quot; /&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Headers&quot; value=&quot;Content-Type&quot; /&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Methods&quot; value=&quot;GET, POST, PUT, DELETE, OPTIONS&quot; /&gt;</div><div class="line">&lt;/customHeaders&gt;</div><div class="line">&lt;/httpProtocol&gt;</div></pre></td></tr></table></figure>
+<ol>
+<li>在App_Start文件夹下的WebApiConfig.cs类中加入下面的函数</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/// &lt;summary&gt;</div><div class="line">      /// 允许跨域调用</div><div class="line">      /// &lt;/summary&gt;</div><div class="line">      /// &lt;param name=&quot;config&quot;&gt;&lt;/param&gt;</div><div class="line">      private static void EnableCrossSiteRequests(HttpConfiguration config)</div><div class="line">      &#123;</div><div class="line">          //对所有的请求来源没有任何限制</div><div class="line">          var cors = new EnableCorsAttribute(</div><div class="line">              origins: &quot;*&quot;,</div><div class="line">              headers: &quot;*&quot;,</div><div class="line">              methods: &quot;*&quot;</div><div class="line">          );</div><div class="line">          config.EnableCors(cors);</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
+<h3 id="asp-net-mvc的解决方案"><a href="#asp-net-mvc的解决方案" class="headerlink" title="asp.net mvc的解决方案"></a>asp.net mvc的解决方案</h3><ol>
+<li>只做上述步骤1即可。</li>
+</ol>
 ]]></content>
       
         <categories>
@@ -583,19 +543,18 @@
     </entry>
     
     <entry>
-      <title><![CDATA[跨域问题]]></title>
-      <url>/2017/08/21/MVC%E5%92%8CWEBAPI%E7%9A%84%E8%B7%A8%E5%9F%9F%E9%97%AE%E9%A2%98/</url>
-      <content type="html"><![CDATA[<h3 id="Web-api-的解决方案"><a href="#Web-api-的解决方案" class="headerlink" title="Web api 的解决方案"></a>Web api 的解决方案</h3><ol>
-<li>需要在web.config中的<system.webserver>节点中添加如下的内容</system.webserver></li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;httpProtocol&gt;</div><div class="line">&lt;customHeaders&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Origin&quot; value=&quot;*&quot; /&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Headers&quot; value=&quot;Content-Type&quot; /&gt;</div><div class="line">&lt;add name=&quot;Access-Control-Allow-Methods&quot; value=&quot;GET, POST, PUT, DELETE, OPTIONS&quot; /&gt;</div><div class="line">&lt;/customHeaders&gt;</div><div class="line">&lt;/httpProtocol&gt;</div></pre></td></tr></table></figure>
-<ol>
-<li>在App_Start文件夹下的WebApiConfig.cs类中加入下面的函数</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">/// &lt;summary&gt;</div><div class="line">      /// 允许跨域调用</div><div class="line">      /// &lt;/summary&gt;</div><div class="line">      /// &lt;param name=&quot;config&quot;&gt;&lt;/param&gt;</div><div class="line">      private static void EnableCrossSiteRequests(HttpConfiguration config)</div><div class="line">      &#123;</div><div class="line">          //对所有的请求来源没有任何限制</div><div class="line">          var cors = new EnableCorsAttribute(</div><div class="line">              origins: &quot;*&quot;,</div><div class="line">              headers: &quot;*&quot;,</div><div class="line">              methods: &quot;*&quot;</div><div class="line">          );</div><div class="line">          config.EnableCors(cors);</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
-<h3 id="asp-net-mvc的解决方案"><a href="#asp-net-mvc的解决方案" class="headerlink" title="asp.net mvc的解决方案"></a>asp.net mvc的解决方案</h3><ol>
-<li>只做上述步骤1即可。</li>
-</ol>
+      <title><![CDATA[程序代码块]]></title>
+      <url>/2017/08/21/%E7%A8%8B%E5%BA%8F%E4%BB%A3%E7%A0%81%E5%9D%97/</url>
+      <content type="html"><![CDATA[<p>一些常见的代码，写下来以后记不清的时候查阅。</p>
+<h4 id="生成guid代码"><a href="#生成guid代码" class="headerlink" title="生成guid代码"></a>生成guid代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var a=Guid.NewGuid().ToString();</div></pre></td></tr></table></figure>
+<h4 id="序列化json字符串"><a href="#序列化json字符串" class="headerlink" title="序列化json字符串"></a>序列化json字符串</h4><p>序列化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">string json = JsonConvert.SerializeObject(s);//s为要序列化的对象</div></pre></td></tr></table></figure>
+<p>反序列化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var a = JsonConvert.DeserializeObject(json);</div><div class="line">//第二个参数为要格式化的对象类型</div><div class="line">var objectResult = JsonConvert.DeserializeAnonymousType(result.ToString(), new RootExcle());</div></pre></td></tr></table></figure>
+<h4 id="数组声明方式"><a href="#数组声明方式" class="headerlink" title="数组声明方式"></a>数组声明方式</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">int[] intArray = new int[] &#123;1,2,3&#125;;</div><div class="line">int[] intArray = new int[10];</div></pre></td></tr></table></figure>
+<h4 id="写入文件代码"><a href="#写入文件代码" class="headerlink" title="写入文件代码"></a>写入文件代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public static void LogFile(string fileName, string info)</div><div class="line">&#123;</div><div class="line">           </div><div class="line">            FileStream file;</div><div class="line">            if (!File.Exists(fileName))</div><div class="line">            &#123;</div><div class="line">                file = File.Create(fileName);</div><div class="line">            &#125;</div><div class="line">            else</div><div class="line">            &#123;</div><div class="line">                file = new FileStream(fileName, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);</div><div class="line">            &#125;</div><div class="line">            System.Text.Encoding encode = System.Text.UTF8Encoding.UTF8;</div><div class="line">            var bytes = encode.GetBytes(info);</div><div class="line">            file.Position = file.Length;</div><div class="line">            file.Write(bytes, 0, bytes.Length);</div><div class="line">            file.Flush();</div><div class="line">            file.Close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>####查看数据碎片及清理碎片</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">DBCC SHOWCONTIG (Busi_DistributionCenter_Info) WITH ALL_INDEXES</div><div class="line"></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">INDEX</span> all <span class="keyword">ON</span>  [Busi_DistributionCenter_Info] <span class="keyword">REBUILD</span></div><div class="line"></div><div class="line"><span class="keyword">ALTER</span> <span class="keyword">INDEX</span> all <span class="keyword">ON</span> [Busi_DistributionCenter_Info] REORGANIZE</div></pre></td></tr></table></figure>
 ]]></content>
       
         <categories>
