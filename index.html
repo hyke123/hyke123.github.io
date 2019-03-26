@@ -635,7 +635,7 @@ vs 在调试web程序时，修改代码然后重新启动过程较慢，可以�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/23/如何利用log4net将日志写入到sqlite中/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/02/23/log4net写日志到sqlite和mongodb/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="HE yuke">
@@ -654,7 +654,7 @@ vs 在调试web程序时，修改代码然后重新启动过程较慢，可以�
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2019/02/23/如何利用log4net将日志写入到sqlite中/" itemprop="url">使用log4net将日志写入到sqlite中</a></h1>
+                <a class="post-title-link" href="/2019/02/23/log4net写日志到sqlite和mongodb/" itemprop="url">使用log4net将日志写入到sqlite中</a></h1>
         
 
         <div class="post-meta">
@@ -709,8 +709,8 @@ vs 在调试web程序时，修改代码然后重新启动过程较慢，可以�
                 <i class="fa fa-comment-o"></i>
               </span>
               
-                <a href="/2019/02/23/如何利用log4net将日志写入到sqlite中/#SOHUCS" itemprop="discussionUrl">
-                  <span id="url::http://yoursite.com/2019/02/23/如何利用log4net将日志写入到sqlite中/" class="cy_cmt_count" data-xid="2019/02/23/如何利用log4net将日志写入到sqlite中/" itemprop="commentsCount"></span>
+                <a href="/2019/02/23/log4net写日志到sqlite和mongodb/#SOHUCS" itemprop="discussionUrl">
+                  <span id="url::http://yoursite.com/2019/02/23/log4net写日志到sqlite和mongodb/" class="cy_cmt_count" data-xid="2019/02/23/log4net写日志到sqlite和mongodb/" itemprop="commentsCount"></span>
                 </a>
               
             
@@ -745,7 +745,7 @@ vs 在调试web程序时，修改代码然后重新启动过程较慢，可以�
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2019/02/23/如何利用log4net将日志写入到sqlite中/#more" rel="contents">
+            <a class="btn" href="/2019/02/23/log4net写日志到sqlite和mongodb/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1456,171 +1456,6 @@ Email：123@heyuke.cn
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/01/csharp 异步编程/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="HE yuke">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/0.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="敲代码的小铁匠">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/11/01/csharp 异步编程/" itemprop="url">.net 异步委托</a></h1>
-        
-
-        <div class="post-meta">
-		
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-01T00:00:00+08:00">
-                2017-11-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/net/" itemprop="url" rel="index">
-                    <span itemprop="name">.net</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-comment-o"></i>
-              </span>
-              
-                <a href="/2017/11/01/csharp 异步编程/#SOHUCS" itemprop="discussionUrl">
-                  <span id="url::http://yoursite.com/2017/11/01/csharp 异步编程/" class="cy_cmt_count" data-xid="2017/11/01/csharp 异步编程/" itemprop="commentsCount"></span>
-                </a>
-              
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </span></div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          
-这里讲一下自己对异步的理解，以及相关的实现及应用
-
-什么是异步当按照正常的代码顺序一行一行执行的时候我们可以看作是同步执行，当然有时候并不是按照代码的行数顺序执行，我们可以在这一行调用函数，这样可能从第十行一下跳到第二十行，但是这依旧是符合我们正常的代码逻辑的。
-
-现在比方说：程序要对一台服务器发
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/11/01/csharp 异步编程/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/01/csharp Socket断线判断/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1738,6 +1573,171 @@ Socket 编程 里面怎么才能判断其中一方是否断开连接。
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/11/01/csharp Socket断线判断/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/11/01/csharp 异步编程/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HE yuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/0.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="敲代码的小铁匠">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/11/01/csharp 异步编程/" itemprop="url">.net 异步委托</a></h1>
+        
+
+        <div class="post-meta">
+		
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-01T00:00:00+08:00">
+                2017-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/net/" itemprop="url" rel="index">
+                    <span itemprop="name">.net</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2017/11/01/csharp 异步编程/#SOHUCS" itemprop="discussionUrl">
+                  <span id="url::http://yoursite.com/2017/11/01/csharp 异步编程/" class="cy_cmt_count" data-xid="2017/11/01/csharp 异步编程/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </span></div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+这里讲一下自己对异步的理解，以及相关的实现及应用
+
+什么是异步当按照正常的代码顺序一行一行执行的时候我们可以看作是同步执行，当然有时候并不是按照代码的行数顺序执行，我们可以在这一行调用函数，这样可能从第十行一下跳到第二十行，但是这依旧是符合我们正常的代码逻辑的。
+
+现在比方说：程序要对一台服务器发
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/11/01/csharp 异步编程/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
