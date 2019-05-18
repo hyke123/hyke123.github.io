@@ -3,6 +3,370 @@
   
     
     <entry>
+      <title><![CDATA[加密解密]]></title>
+      <url>/2019/04/26/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86/</url>
+      <content type="html"><![CDATA[<h2 id="加密解密"><a href="#加密解密" class="headerlink" title="加密解密"></a>加密解密</h2><h3 id="1-md5"><a href="#1-md5" class="headerlink" title="1. md5"></a>1. md5</h3><ul>
+<li><p>不可逆加密</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">  </span><br><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// MD5加密,和动网上的16/32位MD5加密结果相同,</span><br><span class="line">/// 使用的UTF8编码</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">/// &lt;param name=&quot;source&quot;&gt;待加密字串&lt;/param&gt;</span><br><span class="line">/// &lt;param name=&quot;length&quot;&gt;16或32值之一,其它则采用.net默认MD5加密算法&lt;/param&gt;</span><br><span class="line">/// &lt;returns&gt;加密后的字串&lt;/returns&gt;</span><br><span class="line">public static string Encrypt(string source, int length = 32)//默认参数</span><br><span class="line">&#123;</span><br><span class="line">    if (string.IsNullOrEmpty(source)) return string.Empty;</span><br><span class="line">    HashAlgorithm provider = CryptoConfig.CreateFromName(&quot;MD5&quot;) as HashAlgorithm;</span><br><span class="line">    byte[] bytes = Encoding.UTF8.GetBytes(source);//这里需要区别编码的</span><br><span class="line">    byte[] hashValue = provider.ComputeHash(bytes);</span><br><span class="line">    StringBuilder sb = new StringBuilder();</span><br><span class="line">    switch (length)</span><br><span class="line">    &#123;</span><br><span class="line">        case 16://16位密文是32位密文的9到24位字符</span><br><span class="line">            for (int i = 4; i &lt; 12; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                sb.Append(hashValue[i].ToString(&quot;x2&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">        case 32:</span><br><span class="line">            for (int i = 0; i &lt; 16; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                sb.Append(hashValue[i].ToString(&quot;x2&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">        default:</span><br><span class="line">            for (int i = 0; i &lt; hashValue.Length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                sb.Append(hashValue[i].ToString(&quot;x2&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">    &#125;</span><br><span class="line">    return sb.ToString();</span><br><span class="line">&#125;</span><br><span class="line">#endregion MD5</span><br><span class="line">  </span><br><span class="line">#region MD5摘要</span><br><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 获取文件的MD5摘要</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">/// &lt;param name=&quot;fileName&quot;&gt;&lt;/param&gt;</span><br><span class="line">/// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">public static string AbstractFile(string fileName)</span><br><span class="line">&#123;</span><br><span class="line">    FileStream file = new FileStream(fileName, FileMode.Open);</span><br><span class="line">    MD5 md5 = new MD5CryptoServiceProvider();</span><br><span class="line">    byte[] retVal = md5.ComputeHash(file);</span><br><span class="line">    file.Close();</span><br><span class="line">  </span><br><span class="line">    StringBuilder sb = new StringBuilder();</span><br><span class="line">    for (int i = 0; i &lt; retVal.Length; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sb.Append(retVal[i].ToString(&quot;x2&quot;));</span><br><span class="line">    &#125;</span><br><span class="line">    return sb.ToString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="2-DES-可逆对称加密"><a href="#2-DES-可逆对称加密" class="headerlink" title="2. DES 可逆对称加密"></a>2. DES 可逆对称加密</h3><ul>
+<li>对称加密算法的优点是速度快</li>
+<li>缺点是密钥管理不方便，要求共享密钥。</li>
+<li>可逆对称加密  密钥长度8</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">public class DesEncrypt</span><br><span class="line">   &#123;</span><br><span class="line">       private static byte[] _rgbKey = ASCIIEncoding.ASCII.GetBytes(Constant.DesKey.Substring(0, 8));</span><br><span class="line">       private static byte[] _rgbIV = ASCIIEncoding.ASCII.GetBytes(Constant.DesKey.Insert(0, &quot;w&quot;).Substring(0, 8));</span><br><span class="line"></span><br><span class="line">       /// &lt;summary&gt;</span><br><span class="line">       /// DES 加密</span><br><span class="line">       /// &lt;/summary&gt;</span><br><span class="line">       /// &lt;param name=&quot;text&quot;&gt;需要加密的值&lt;/param&gt;</span><br><span class="line">       /// &lt;returns&gt;加密后的结果&lt;/returns&gt;</span><br><span class="line">       public static string Encrypt(string text)</span><br><span class="line">       &#123;</span><br><span class="line">           DESCryptoServiceProvider dsp = new DESCryptoServiceProvider();</span><br><span class="line">           using (MemoryStream memStream = new MemoryStream())</span><br><span class="line">           &#123;</span><br><span class="line">               CryptoStream crypStream = new CryptoStream(memStream, dsp.CreateEncryptor(_rgbKey, _rgbIV), CryptoStreamMode.Write);</span><br><span class="line">               StreamWriter sWriter = new StreamWriter(crypStream);</span><br><span class="line">               sWriter.Write(text);</span><br><span class="line">               sWriter.Flush();</span><br><span class="line">               crypStream.FlushFinalBlock();</span><br><span class="line">               memStream.Flush();</span><br><span class="line">               return Convert.ToBase64String(memStream.GetBuffer(), 0, (int)memStream.Length);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       /// &lt;summary&gt;</span><br><span class="line">       /// DES解密</span><br><span class="line">       /// &lt;/summary&gt;</span><br><span class="line">       /// &lt;param name=&quot;encryptText&quot;&gt;&lt;/param&gt;</span><br><span class="line">       /// &lt;returns&gt;解密后的结果&lt;/returns&gt;</span><br><span class="line">       public static string Decrypt(string encryptText)</span><br><span class="line">       &#123;</span><br><span class="line">           DESCryptoServiceProvider dsp = new DESCryptoServiceProvider();</span><br><span class="line">           byte[] buffer = Convert.FromBase64String(encryptText);</span><br><span class="line"></span><br><span class="line">           using (MemoryStream memStream = new MemoryStream())</span><br><span class="line">           &#123;</span><br><span class="line">               CryptoStream crypStream = new CryptoStream(memStream, dsp.CreateDecryptor(_rgbKey, _rgbIV), CryptoStreamMode.Write);</span><br><span class="line">               crypStream.Write(buffer, 0, buffer.Length);</span><br><span class="line">               crypStream.FlushFinalBlock();</span><br><span class="line">               return ASCIIEncoding.UTF8.GetString(memStream.ToArray());</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-RSA-可逆非对称加密"><a href="#3-RSA-可逆非对称加密" class="headerlink" title="3. RSA 可逆非对称加密"></a>3. RSA 可逆非对称加密</h3><ul>
+<li>非对称加密算法的优点是密钥管理很方便，缺点是速度慢。</li>
+<li>加密钥公开，解密钥揣兜里，有什么作用呢？  保证内容只有我看得到，防止外传</li>
+<li>解密钥公开，加密钥揣兜里，有什么作用呢？  保证数据不能篡改，一定来自于我</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">public class RsaEncrypt</span><br><span class="line">  &#123;</span><br><span class="line"></span><br><span class="line">      /// &lt;summary&gt;</span><br><span class="line">      /// 获取加密/解密对</span><br><span class="line">      /// Encrypt   Decrypt</span><br><span class="line">      /// &lt;/summary&gt;</span><br><span class="line">      /// &lt;returns&gt;Encrypt   Decrypt&lt;/returns&gt;</span><br><span class="line">      public static KeyValuePair&lt;string, string&gt; GetKeyPair()</span><br><span class="line">      &#123;</span><br><span class="line">          RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();</span><br><span class="line">          string publicKey = RSA.ToXmlString(false);</span><br><span class="line">          string privateKey = RSA.ToXmlString(true);</span><br><span class="line">          return new KeyValuePair&lt;string, string&gt;(publicKey, privateKey);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      /// &lt;summary&gt;</span><br><span class="line">      /// 加密：内容+加密key</span><br><span class="line">      /// &lt;/summary&gt;</span><br><span class="line">      /// &lt;param name=&quot;content&quot;&gt;&lt;/param&gt;</span><br><span class="line">      /// &lt;param name=&quot;encryptKey&quot;&gt;加密key&lt;/param&gt;</span><br><span class="line">      /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">      public static string Encrypt(string content, string encryptKey)</span><br><span class="line">      &#123;</span><br><span class="line">          RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();</span><br><span class="line">          rsa.FromXmlString(encryptKey);</span><br><span class="line">          UnicodeEncoding ByteConverter = new UnicodeEncoding();</span><br><span class="line">          byte[] DataToEncrypt = ByteConverter.GetBytes(content);</span><br><span class="line">          byte[] resultBytes = rsa.Encrypt(DataToEncrypt, false);</span><br><span class="line">          return Convert.ToBase64String(resultBytes);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      /// &lt;summary&gt;</span><br><span class="line">      /// 解密  内容+解密key</span><br><span class="line">      /// &lt;/summary&gt;</span><br><span class="line">      /// &lt;param name=&quot;content&quot;&gt;&lt;/param&gt;</span><br><span class="line">      /// &lt;param name=&quot;decryptKey&quot;&gt;解密key&lt;/param&gt;</span><br><span class="line">      /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">      public static string Decrypt(string content, string decryptKey)</span><br><span class="line">      &#123;</span><br><span class="line">          byte[] dataToDecrypt = Convert.FromBase64String(content);</span><br><span class="line">          RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();</span><br><span class="line">          RSA.FromXmlString(decryptKey);</span><br><span class="line">          byte[] resultBytes = RSA.Decrypt(dataToDecrypt, false);</span><br><span class="line">          UnicodeEncoding ByteConverter = new UnicodeEncoding();</span><br><span class="line">          return ByteConverter.GetString(resultBytes);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">      /// &lt;summary&gt;</span><br><span class="line">      /// 可以合并在一起的，，每次产生一组新的密钥</span><br><span class="line">      /// &lt;/summary&gt;</span><br><span class="line">      /// &lt;param name=&quot;content&quot;&gt;&lt;/param&gt;</span><br><span class="line">      /// &lt;param name=&quot;encryptKey&quot;&gt;加密key&lt;/param&gt;</span><br><span class="line">      /// &lt;param name=&quot;decryptKey&quot;&gt;解密key&lt;/param&gt;</span><br><span class="line">      /// &lt;returns&gt;加密后结果&lt;/returns&gt;</span><br><span class="line">      private static string Encrypt(string content, out string publicKey, out string privateKey)</span><br><span class="line">      &#123;</span><br><span class="line">          RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider();</span><br><span class="line">          publicKey = rsaProvider.ToXmlString(false);</span><br><span class="line">          privateKey = rsaProvider.ToXmlString(true);</span><br><span class="line"></span><br><span class="line">          UnicodeEncoding ByteConverter = new UnicodeEncoding();</span><br><span class="line">          byte[] DataToEncrypt = ByteConverter.GetBytes(content);</span><br><span class="line">          byte[] resultBytes = rsaProvider.Encrypt(DataToEncrypt, false);</span><br><span class="line">          return Convert.ToBase64String(resultBytes);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-调用方式"><a href="#4-调用方式" class="headerlink" title="4. 调用方式"></a>4. 调用方式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">class Program</span><br><span class="line">   &#123;</span><br><span class="line">       static void Main(string[] args)</span><br><span class="line">       &#123;</span><br><span class="line">           try</span><br><span class="line">           &#123;</span><br><span class="line">               #region MD5</span><br><span class="line">               //用途：</span><br><span class="line">               //1 防止明文：加密后保存比较安全，下次加密检验；密码要复杂一点</span><br><span class="line">               //2 防篡改：文件上传；文件下载防挂马；svn</span><br><span class="line">               //3 防止抵赖：需要一个第三方认证，数字签名</span><br><span class="line">               //Console.WriteLine(MD5Encrypt.Encrypt(&quot;1&quot;));</span><br><span class="line">               //Console.WriteLine(MD5Encrypt.Encrypt(&quot;1&quot;));</span><br><span class="line">               //Console.WriteLine(MD5Encrypt.Encrypt(&quot;123456小李&quot;));</span><br><span class="line">               //Console.WriteLine(MD5Encrypt.Encrypt(&quot;113456小李&quot;));</span><br><span class="line">               //Console.WriteLine(MD5Encrypt.Encrypt(&quot;113456小李113456小李113456小李113456小李113456小李113456小李113456小李&quot;));</span><br><span class="line">               //string md5Abstract1 = MD5Encrypt.AbstractFile(@&quot;D:\ruanmou\online9\homework\1\Advanced9第一次作业优秀合集.rar&quot;);</span><br><span class="line">               //string md5Abstract2 = MD5Encrypt.AbstractFile(@&quot;D:\ruanmou\online9\homework\1\Advanced9第一次作业优秀合集 - 副本.rar&quot;);</span><br><span class="line"></span><br><span class="line">               #endregion</span><br><span class="line"></span><br><span class="line">               #region Des</span><br><span class="line">               //可逆对称加密</span><br><span class="line">               string desEn = DesEncrypt.Encrypt(&quot;王殃殃&quot;);</span><br><span class="line">               string desDe = DesEncrypt.Decrypt(desEn);</span><br><span class="line">               string desEn1 = DesEncrypt.Encrypt(&quot;张三李四&quot;);</span><br><span class="line">               string desDe1 = DesEncrypt.Decrypt(desEn1);</span><br><span class="line">               #endregion</span><br><span class="line"></span><br><span class="line">               #region Rsa</span><br><span class="line">               //可逆非对称加密</span><br><span class="line">               KeyValuePair&lt;string, string&gt; encryptDecrypt = RsaEncrypt.GetKeyPair();</span><br><span class="line">               string rsaEn1 = RsaEncrypt.Encrypt(&quot;net&quot;, encryptDecrypt.Key);</span><br><span class="line">               string rsaDe1 = RsaEncrypt.Decrypt(rsaEn1, encryptDecrypt.Value);</span><br><span class="line">               //加密钥  解密钥  钥匙的功能划分</span><br><span class="line">               //公钥  私钥      公开程度划分</span><br><span class="line"></span><br><span class="line">               //加密钥公开，解密钥揣兜里，有什么作用呢？  保证内容只有我看得到，防止外传</span><br><span class="line">               //解密钥公开，加密钥揣兜里，有什么作用呢？  保证数据不能篡改，一定来自于我</span><br><span class="line"></span><br><span class="line">               #endregion</span><br><span class="line"></span><br><span class="line">           &#125;</span><br><span class="line">           catch (Exception ex)</span><br><span class="line">           &#123;</span><br><span class="line">               Console.WriteLine(ex.Message);</span><br><span class="line">           &#125;</span><br><span class="line">           Console.Read();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 加密解密 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[面向对象]]></title>
+      <url>/2019/04/26/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/</url>
+      <content type="html"><![CDATA[<h2 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h2><ol>
+<li><p>什么是类？什么是对象？类和对象的区别？</p>
+<p>类是具有相同特征和行为的一类事物的抽象，而对象是类的一个具体的实列。</p>
+</li>
+<li><p>继承的好处</p>
+<ul>
+<li>代码重用——子类继承父类的属性和方法，使创建子类变得很简单，实现了代码重用。</li>
+<li>可以实现多态——声明父类类型变量，指向子类类型对象，实际调用的是子类的方法。</li>
+<li>子类的构造函数默认继承父类无参的构造函数 构造函数是不能被继承的 只能子类去调用。</li>
+</ul>
+</li>
+<li><p>访问修饰符</p>
+<ul>
+<li>private protected internal——当前程序集内部可以访问 public </li>
+<li>访问级别约束<ul>
+<li>子类的访问级别不能比父类的高。（会暴露父类的成员）</li>
+<li>类中属性或字段的访问级别不能比所对应的类型访问级别高。</li>
+<li>方法的访问级别不能比方法的参数和返回值的访问级别高。</li>
+</ul>
+</li>
+<li>类中的成员如果不写访问修饰符默认是private。</li>
+<li>类如果不加修饰符默认的是internal。</li>
+</ul>
+</li>
+<li><p>实现多态的方式多态是指同一个类在不同场景下表现出不同的形态</p>
+<ul>
+<li>virtual 子类可以重写父类的虚方法。</li>
+<li>abstract抽象方法。</li>
+<li>接口。</li>
+<li>声明父类类型变量，指向子类类型对象，然后调用相应的方法。</li>
+</ul>
+</li>
+<li><p>接口是一种规范，定义了一组具有各种功能的方法，只有方法的声明，没有具体的实现。</p>
+<ul>
+<li><p>使用接口可以实现<strong>多态</strong>，增强程序的拓展性。</p>
+</li>
+<li><p>使用接口可以解决类的<strong>多继承</strong>问题。</p>
+</li>
+<li><p>接口和抽象类一样，如果子类实现改接口，必须实现里面所有的成员，除非子类为抽象。</p>
+</li>
+</ul>
+</li>
+<li><p>关于异常的一些注意事项</p>
+<ul>
+<li>不管有木有出现异常，finally块中代码都会执行</li>
+<li>当try和catch中有return时，finally仍然会执行</li>
+<li>finally是在return后面的表达式运算后执行的（此时并没有返回运算后的值，而是先把要返回的值保存起来，管finally中的代码怎么样，返回的值都不会改变，任然是之前保存的值），所以函数返回值是在finally执行前确定的</li>
+<li>finally中最好不要包含return，否则程序会提前退出，返回值不是try或catch中保存的返回值。</li>
+</ul>
+</li>
+<li><p>常用的几个关键字</p>
+<ul>
+<li>params 可变参数  无论有几个参数，必须出现在参数列表的最后。可以为可变参数直接传递一个对应类型的数组。</li>
+<li>ref 仅仅是一个地址，引用传递，可以把值传递强制改为引用传递<ul>
+<li>参数在传递之前必须赋值</li>
+<li>在方法中可以不为ref参数赋值，可以直接使用。</li>
+</ul>
+</li>
+<li>out 让函数可以输出多个值<ul>
+<li>在方法中必须为out参数赋值</li>
+<li>out参数的变量在传递之前不需要赋值，即使赋值了也不能在方法中使用</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>关于类型转换</p>
+<ul>
+<li>对于值类型 由低精度到高精度转换叫隐式转换，高精度到低精度叫显示转换。</li>
+<li>对于引用类型 由子类转换成父类隐式转换，父类到子类叫显示转换。</li>
+<li>拆箱装箱只发生在具有继承关系的哪个类型关系之间，int转string没有装箱。</li>
+</ul>
+</li>
+<li><p>垃圾回收</p>
+<ul>
+<li>垃圾回收的目的：提高内存利用率。</li>
+<li>垃圾回收器，只回收托管堆中的内存资源，不回收其他资源（数据库连接、文件句柄、网络端口等）。</li>
+<li>没有变量引用的对象才会被回收。</li>
+<li>回收时间不确定，GC.Collect();//手动调用垃圾回收器</li>
+</ul>
+</li>
+</ol>
+<p>​     </p>
+<p>​     </p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 基础 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[写入日志到mongodb]]></title>
+      <url>/2019/04/25/mongo/</url>
+      <content type="html"><![CDATA[<p>为什么要写入到mongodb中</p>
+<ul>
+<li>sqlite 单线程，多线程下存在安全问题，但是网站天生多线程。</li>
+<li>mongodb并发性能更好。</li>
+<li><strong>sqlite无法远程访问</strong>。</li>
+<li>了解学习nosql中文档型数据库mongodb。</li>
+</ul>
+<p>实现步骤</p>
+<ol>
+<li><p>使用nuget下载MongoDB.Driver。</p>
+</li>
+<li><p>修改log4net的配置文件，mongodb的log4net配置文件放在下面，将原来的替换就行</p>
+</li>
+<li><p>配置文件注意项</p>
+<p><img src="https://i.loli.net/2019/03/26/5c9980a957e4d.png" alt="1BFQQYCIL}H7SX{ZP24ZTO0.png"></p>
+</li>
+</ol>
+<p>连接字符串的ip部署到服务器上要改成localhost，类似数据库的连接字符串。</p>
+<p>collectionName节点中的值 最好自己定义不要和别人一样。如果一样相当于你们两个的数据写到同一张“表”里。</p>
+<ol start="4">
+<li>改完后测试一下 登入42.228.11.184:10094 看是否可以成功写入日志。</li>
+<li>登录界面连接字符串就是配置文件中的字符串，连接名字随便起。</li>
+<li><p>服务器上mongodb的环境已经配置好了，有兴趣可以在自己本地安装配置了解下。</p>
+<p><img src="https://i.loli.net/2019/03/26/5c998768c8cd5.png" alt="BQ~T41~LUC9D3GJGO`ER4~L.png"></p>
+</li>
+</ol>
+<p>mongodb配置文件</p>
+<figure class="highlight xml"><figcaption><span><log4net></log4net></span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">log4net</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">logger</span> <span class="attr">name</span>=<span class="string">"logsql"</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">level</span> <span class="attr">value</span>=<span class="string">"Info"</span> /&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">"MongoDBAppender"</span> /&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">logger</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"MongoDBAppender"</span> <span class="attr">type</span>=<span class="string">"Log4Mongo.MongoDBAppender, Log4Mongo"</span>&gt;</span></span><br><span class="line">     <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">MongoDB database connection in the format:</span></span><br><span class="line"><span class="comment">mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]</span></span><br><span class="line"><span class="comment">See http://www.mongodb.org/display/DOCS/Connections for connectionstring options </span></span><br><span class="line"><span class="comment">If no database specified, default to "log4net"</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">connectionString</span> <span class="attr">value</span>=<span class="string">"mongodb://zhkj:admin@42..228.11.184:10092/first"</span> /&gt;</span></span><br><span class="line">     <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">Name of connectionString defined in web/app.config connectionStrings group, the format is the same as connectionString value.</span></span><br><span class="line"><span class="comment">Optional, If not provided will use connectionString value</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">connectionStringName</span> <span class="attr">value</span>=<span class="string">"mongo-log4net"</span> /&gt;</span></span><br><span class="line">     <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">The Friendly Name of the certificate. This value will be used if SSL is set to true</span></span><br><span class="line"><span class="comment">The default StoreLocation is LocalMachine and StoreName is My</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">certificateFriendlyName</span> <span class="attr">value</span>=<span class="string">"Certificate Friendly Name"</span>/&gt;</span></span><br><span class="line">     <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">If set, a TTL (Time To Live) index will be created on the Timestamp field.  </span></span><br><span class="line"><span class="comment">Records older than this value will be deleted.</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">expireAfterSeconds</span> <span class="attr">value</span>=<span class="string">"3600"</span> /&gt;</span></span><br><span class="line">     <span class="comment">&lt;!-- </span></span><br><span class="line"><span class="comment">Name of the collection in database</span></span><br><span class="line"><span class="comment">Optional, Defaults to "logs"</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">collectionName</span> <span class="attr">value</span>=<span class="string">"mylog"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">     <span class="comment">&lt;!--</span></span><br><span class="line"><span class="comment">Maximum size of newly created collection. Optional, Defaults to creating uncapped collections</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">newCollectionMaxSize</span> <span class="attr">value</span>=<span class="string">'65536'</span> /&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">newCollectionMaxDocs</span> <span class="attr">value</span>=<span class="string">'5000'</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">     <span class="tag">&lt;<span class="name">field</span>&gt;</span></span><br><span class="line">       <span class="comment">&lt;!-- <span class="doctag">Note:</span> this needs to be "timestamp" and NOT "Timestamp"  for the TTL index to work --&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">name</span> <span class="attr">value</span>=<span class="string">"timestamp"</span> /&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">layout</span> <span class="attr">type</span>=<span class="string">"log4net.Layout.RawTimeStampLayout"</span> /&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">field</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">field</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">name</span> <span class="attr">value</span>=<span class="string">"level"</span> /&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">layout</span> <span class="attr">type</span>=<span class="string">"log4net.Layout.PatternLayout"</span> <span class="attr">value</span>=<span class="string">"%level"</span> /&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">field</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">field</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">name</span> <span class="attr">value</span>=<span class="string">"thread"</span> /&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">layout</span> <span class="attr">type</span>=<span class="string">"log4net.Layout.PatternLayout"</span> <span class="attr">value</span>=<span class="string">"%thread"</span> /&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">field</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">field</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">name</span> <span class="attr">value</span>=<span class="string">"logger"</span> /&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">layout</span> <span class="attr">type</span>=<span class="string">"log4net.Layout.PatternLayout"</span> <span class="attr">value</span>=<span class="string">"%logger"</span> /&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">field</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">field</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">name</span> <span class="attr">value</span>=<span class="string">"message"</span> /&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">layout</span> <span class="attr">type</span>=<span class="string">"log4net.Layout.PatternLayout"</span> <span class="attr">value</span>=<span class="string">"%message"</span> /&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">field</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;<span class="name">field</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">name</span> <span class="attr">value</span>=<span class="string">"mycustomproperty"</span> /&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">layout</span> <span class="attr">type</span>=<span class="string">"log4net.Layout.RawPropertyLayout"</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">key</span> <span class="attr">value</span>=<span class="string">"mycustomproperty"</span> /&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">field</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">log4net</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>mongodb一些练习命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">db.auth("root","root123")</span><br><span class="line">mongo</span><br><span class="line">show users</span><br><span class="line">use admin</span><br><span class="line">db.first.insert(&#123;"name":"123"&#125;)</span><br><span class="line">db.createUser(&#123;user: "zhkj", pwd: "admin", roles: [&#123; role: "readWrite", db: "first" &#125;]&#125;)</span><br><span class="line"><span class="meta">#</span> 允许远程连接需要做的工作</span><br><span class="line">net:</span><br><span class="line">  port: 27017</span><br><span class="line">  bindIp: 127.0.0.1,0.0.0.0</span><br><span class="line"></span><br><span class="line">security:</span><br><span class="line">  authorization: enabled</span><br></pre></td></tr></table></figure>
+<p>[添加用户][<a href="https://www.cnblogs.com/jacksoft/p/6916137.html" target="_blank" rel="noopener">https://www.cnblogs.com/jacksoft/p/6916137.html</a></p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 日志 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[多线程lock 锁]]></title>
+      <url>/2019/04/23/lock%E9%94%81/</url>
+      <content type="html"><![CDATA[<h2 id="多线程lock-锁"><a href="#多线程lock-锁" class="headerlink" title="多线程lock 锁"></a>多线程lock 锁</h2><h3 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h3><p>编辑器中编写的c#语句多数不是<strong>原子操作</strong>，例如_count++看似只有一步，但其实是三条原子操作：</p>
+<ol>
+<li>从_count变量中把值取出来；</li>
+<li>将取出来的值++；</li>
+<li>再把新值赋值给_count变量</li>
+</ol>
+<h3 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h3><p>保证同时只能有一个线程操作共享变量。</p>
+<h3 id="要求"><a href="#要求" class="headerlink" title="要求"></a>要求</h3><p>lock锁定的只能是引用类型。如果使用值类型，因为加锁解锁会装箱拆箱，造成锁定时的对象和解锁的对象不是同一个，所以不能用值类型。字符串虽然是引用类型，但是由于<em>拘留池</em>的问题，最好不要使用字符串。</p>
+<h3 id="本质"><a href="#本质" class="headerlink" title="本质"></a>本质</h3><p>类的内存空间里维护了一个<strong>同步索引块</strong>，可以理解为类的一个标记，当加上锁之后这个标记为1，当再有锁来请求的时候先进行判断，如果为1则继续进行等待。</p>
+<h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><p>资源A请求资源B，资源B请求请求A，两者相互等待。</p>
+<p>解决方法是<strong>顺序访问</strong>：无论哪个线程想要执行这个任务，必须先访问资源A再访问资源B</p>
+<p>[^附]: 控件.invoke() 将控制控件的线程回到主线程上去。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 多线程 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[resharper中的相关设置]]></title>
+      <url>/2019/04/23/resharper%E4%B8%AD%E7%9A%84%E7%9B%B8%E5%85%B3%E8%AE%BE%E7%BD%AE/</url>
+      <content type="html"><![CDATA[<h2 id="resharper中的相关设置"><a href="#resharper中的相关设置" class="headerlink" title="resharper中的相关设置"></a>resharper中的相关设置</h2><blockquote>
+<p><a href="https://www.cnblogs.com/Chary/p/No0000B0.html" target="_blank" rel="noopener">https://www.cnblogs.com/Chary/p/No0000B0.html</a>  使用介绍</p>
+</blockquote>
+<ol>
+<li><p>关闭拼写检查(typo in string)</p>
+<ul>
+<li>需要点击 Resharper 选择 Option 在 <code>Code Inspection-&gt;inspection severity</code> 输入 <code>typo</code> 搜索 </li>
+<li>参考网址 <a href="https://cloud.tencent.com/developer/article/1342913" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1342913</a></li>
+</ul>
+</li>
+<li><p>关闭var提示</p>
+<ul>
+<li>需要点击 Resharper 选择 Option 在 <code>Code Inspection-&gt;inspection severity-&gt;code style</code> 输入 <code>var</code> 搜索</li>
+<li>参考网址   <a href="https://www.cnblogs.com/matong/archive/2012/02/15/2353238.html" target="_blank" rel="noopener">https://www.cnblogs.com/matong/archive/2012/02/15/2353238.html</a></li>
+</ul>
+</li>
+<li><p>关闭 localizable string提示</p>
+<ul>
+<li>需要点击 Resharper 选择 Option 在 输入 <code>localizable</code> 搜索</li>
+</ul>
+</li>
+</ol>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 工具 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[git命令学习]]></title>
+      <url>/2019/04/20/git%E5%91%BD%E4%BB%A4/</url>
+      <content type="html"><![CDATA[<h2 id="git命令学习"><a href="#git命令学习" class="headerlink" title="git命令学习"></a>git命令学习</h2><ol>
+<li><p>设置机器名字和邮箱</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git config --global user.name "Your Name"</span><br><span class="line"><span class="meta">$</span> git config --global user.email "email@example.com"</span><br><span class="line">------查看本机全局git配置-----------------</span><br><span class="line"><span class="meta">$</span> git config --list</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建版本库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git init</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>向版本库添加文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git add fileName</span><br><span class="line"><span class="meta">$</span> git commit -m "remark"</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>显示提交日志</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git log --pretty=oneline</span><br><span class="line">--------------版本回退------------------</span><br><span class="line"><span class="meta">$</span> git reset --hard HEAD^(版本id)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>显示<strong>工作区</strong>所做的更改</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git status</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git rm fileName</span><br><span class="line"><span class="meta">$</span> git commit -m "remark"</span><br><span class="line"></span><br><span class="line">-----误删除 从版本库中将文件恢复到工作区------</span><br><span class="line"><span class="meta">$</span> git checkout -- test.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>关联远程仓库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-----------关联远程仓库-------------</span><br><span class="line"><span class="meta">$</span> git remote add origin git@github.com:hyke123/demo.git</span><br><span class="line"></span><br><span class="line">-----------修改关联的远程仓库-------------</span><br><span class="line"><span class="meta">$</span> git remote set-url origin git@github.com:hyke123/first.git</span><br><span class="line">-----------推送到远程仓库-------------</span><br><span class="line"><span class="meta">$</span> git push -u origin master  (第一次全部推送)</span><br><span class="line"><span class="meta">$</span> git push origin master （往后推送简写）</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>本地克隆远程仓库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> git clone git@github.com:hyke123/demo.git</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> git </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[文件操作常用相关类]]></title>
+      <url>/2019/04/16/DotNet%E6%96%87%E4%BB%B6/</url>
+      <content type="html"><![CDATA[<h3 id="常用类"><a href="#常用类" class="headerlink" title="常用类"></a>常用类</h3><ul>
+<li><strong>File</strong>  //操作文件,静态类，对文件整体操作。拷贝、删除、剪切等。</li>
+<li><strong>Directory</strong>  //操作目录（文件夹），静态类。</li>
+<li><strong>DirectoryInfo</strong> //文件夹的一个“类”，用来描述一个文件夹对象（获取指定目录下的所有目录时返回一个DirectoryInfo数组。）</li>
+<li><strong>FileInfo</strong>  //文件类，用来描述一个文件对象。获取指定目录下的所有文件时，返回一个FileInfo数组。</li>
+<li><strong>Path</strong>  //对文件或目录的路径进行操作（很方便）</li>
+<li><strong>Stream</strong> //文件流，抽象类<ul>
+<li>FileStream //文件流,MemoryStream(内存流),NetworkStream(网络流)</li>
+<li>StreamReader //快速读取文本文件</li>
+<li>StreamWriter//快速写入文本文件</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">//Path部分</span><br><span class="line">string ChangeExtension(string path, string extension) ()</span><br><span class="line">修改文件的后缀，“修改”支持字符串层面的，没有真的给文件改名</span><br><span class="line">string s = Path.ChangeExtension(@&quot;C:\temp\F3.png&quot;, &quot;jpg&quot;)</span><br><span class="line">string Combine(string path1, string path2)</span><br><span class="line">将两个路径合成一个路径，比用+好，可以方便解决不加斜线的问题，自动处理路径分隔符的问题</span><br><span class="line">string s = Path.Combine(@&quot;c:\temp&quot;,&quot;a.jpg&quot;) </span><br><span class="line">string GetDirectoryName(string path) ()</span><br><span class="line">得到文件的路径名。Path.GetDirectoryName(@&quot;c:\temp\a.jpg&quot;)</span><br><span class="line">string GetExtension(string path) 得到文件的扩展名</span><br><span class="line">string GetFileName(string path) 得到文件路径的文件名部分</span><br><span class="line">string GetFileNameWithoutExtension(string path) 得到去除扩展名的文件名</span><br><span class="line">string GetFullPath(string path) 得到文件的全路径。可以根据相对路径获得绝对路径。</span><br><span class="line">string GetTempFileName()  得到一个唯一的临时文件名()</span><br><span class="line">string GetTempPath() 得到临时文件夹的路径()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//下面是关于Directory常用的函数，Flie类用法与其相似。 </span><br><span class="line">if (Directory.Exists(@&quot;c\hello&quot;))//判断文件夹是否存在</span><br><span class="line"> &#123;</span><br><span class="line">    Directory.CreateDirectory(@&quot;c\hello\a&quot;);//创建文件夹 可以递归创建</span><br><span class="line"> &#125;</span><br><span class="line"> Directory.Delete(@&quot;c\hello&quot;,true);//删除文件夹 设置为true才可以删除不空文件夹</span><br><span class="line"> var str= Directory.GetFiles(@&quot;c\hello&quot;);//返回改目录下子文件的路径 （不包含后代文件）</span><br><span class="line"> var strd = Directory.GetDirectories(@&quot;c\hello&quot;);//返回改目录下子文件的目录（不包含后代目录）</span><br><span class="line"> var assemblyPath=Assembly.GetExecutingAssembly().Location;//获取当前程序集路径</span><br><span class="line"> var endPath = System.IO.Path.GetDirectoryName(assemblyPath);</span><br><span class="line"> var myPath= Path.Combine(endPath, &quot;1.txt&quot;);</span><br><span class="line"> var path  =Directory.GetCurrentDirectory();//受OpenFileDialog函数的影响 拿到的路径可能不对</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// File类的常用静态方法：(FileInfo*)</span><br><span class="line">void AppendAllText(string path, string contents)，将文本contents附加到文件path中</span><br><span class="line">bool Exists(string path)判断文件path是否存在</span><br><span class="line">string[] ReadAllLines(string path) 读取文本文件到字符串数组中</span><br><span class="line">string ReadAllText(string path) 读取文本文件到字符串中</span><br><span class="line">void WriteAllText(string path, string contents)将文本contents保存到文件path中，会覆盖旧内容。</span><br><span class="line">WriteAllLines(string path,string[] contents)，将字符串数组逐行保存到文件path中，会覆盖旧内容。</span><br><span class="line">File.Copy(&quot;source&quot;, “targetFileName”, true);//文件拷贝,true表示当文件存在时“覆盖”，如果不加true,则文件存在报异常。</span><br><span class="line">File.Move(“source”, “target”);//移动（剪切），思考如何为文件重命名？文件的剪切是可以跨磁盘的。</span><br><span class="line">File.Delete(“path”);//删除。如果文件不存在？不存在，不报错</span><br><span class="line">File.Create(“path”);//创建文件</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 文件 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[vs附加到进程调试]]></title>
       <url>/2019/02/28/vs%E9%99%84%E5%8A%A0%E5%88%B0%E8%BF%9B%E7%A8%8B%E8%B0%83%E8%AF%95/</url>
       <content type="html"><![CDATA[<h3 id="vs附加到进程调试"><a href="#vs附加到进程调试" class="headerlink" title="vs附加到进程调试"></a>vs附加到进程调试</h3><blockquote>
@@ -399,39 +763,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[.net Socket连接断开判断]]></title>
-      <url>/2017/11/01/csharp%20Socket%E6%96%AD%E7%BA%BF%E5%88%A4%E6%96%AD/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>Socket 编程 里面怎么才能判断其中一方是否断开连接。</p>
-</blockquote>
-<ol>
-<li><p>当断开连接的时候我饿们调用<em>receive()</em>函数从缓冲区里读数据的时候，这个时候会抛出一个异常，我们只需在捕捉这个异常，并在<em>catch</em>里面进行处理就行，然后关闭对应的socket。</p>
-</li>
-<li><p>还有一种方式是通过：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">static bool IsSocketConnected(Socket s)</span><br><span class="line">&#123;</span><br><span class="line">           return !((s.Poll(1000, SelectMode.SelectRead) &amp;&amp; (s.Available == 0)) || 		             !s.Connected);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>​    这里主要说明<em>socket.Poll()</em>这个函数，第一个参数是超时时间，单位是微秒，第二个参数是判断可以读取的正常的socket。通过这三个条件一起进行判断，如果只判断Available或者Connected是不行的。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> Socket </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[.net 异步委托]]></title>
       <url>/2017/11/01/csharp%20%E5%BC%82%E6%AD%A5%E7%BC%96%E7%A8%8B/</url>
       <content type="html"><![CDATA[<blockquote>
@@ -441,7 +772,7 @@
 <hr>
 <p>现在比方说：程序要对一台服务器发起请求，我想当请求 成功以后再给服务器发送下一条信息，如果是同步执行，我们可能就是发起请求，然后一直等待，等待服务器响应后我们下面的发送信息代码才能执行，那么在连接服务器的这个过程中，我们的主线程是阻塞了的（cpu也闲置了，只进行IO操作），这样可能造成界面<strong>假死</strong>或者其他不好的影响。</p>
 <p>我们希望是在对服务器发出请求 的同时，cpu可以继续处理其他事物。这就要用到异步。</p>
-<p>异步委托其实就是，当委托异步调用的时候，再创建了一个线程去执行委托执向的方法。下面介绍两种具体实现方法：</p>
+<p>异步委托其实就是，当委托异步调用的时候，再创建了一个线程去执行委托指向的方法。下面介绍两种具体实现方法：</p>
 <p><strong>coding:</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Console.WriteLine(&quot; Main Thread:&quot; + Thread.CurrentThread.ManagedThreadId);//当前线程</span><br><span class="line">//定义委托并用兰姆达实现</span><br><span class="line">Func&lt;int, int, string&gt; delFunc = (a, b) =&gt;</span><br><span class="line"> &#123;</span><br><span class="line">      Console.WriteLine(&quot; Delegate Thread:&quot; + Thread.CurrentThread.ManagedThreadId);</span><br><span class="line">      Thread.Sleep(2000);</span><br><span class="line">      return (a + b).ToString();</span><br><span class="line"> &#125;;</span><br><span class="line">string str = delFunc(3, 4);</span><br></pre></td></tr></table></figure>
 <p>上面是普通的定义委托并调用委托的方式</p>
@@ -469,6 +800,39 @@
             <tag> 异步 </tag>
             
             <tag> 委托 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[.net Socket连接断开判断]]></title>
+      <url>/2017/11/01/csharp%20Socket%E6%96%AD%E7%BA%BF%E5%88%A4%E6%96%AD/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>Socket 编程 里面怎么才能判断其中一方是否断开连接。</p>
+</blockquote>
+<ol>
+<li><p>当断开连接的时候我饿们调用<em>receive()</em>函数从缓冲区里读数据的时候，这个时候会抛出一个异常，我们只需在捕捉这个异常，并在<em>catch</em>里面进行处理就行，然后关闭对应的socket。</p>
+</li>
+<li><p>还有一种方式是通过：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">static bool IsSocketConnected(Socket s)</span><br><span class="line">&#123;</span><br><span class="line">           return !((s.Poll(1000, SelectMode.SelectRead) &amp;&amp; (s.Available == 0)) || 		             !s.Connected);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>​    这里主要说明<em>socket.Poll()</em>这个函数，第一个参数是超时时间，单位是微秒，第二个参数是判断可以读取的正常的socket。通过这三个条件一起进行判断，如果只判断Available或者Connected是不行的。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> Socket </tag>
             
         </tags>
         
@@ -511,57 +875,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[.net委托]]></title>
-      <url>/2017/10/16/csharp%E5%A7%94%E6%89%98/</url>
-      <content type="html"><![CDATA[<h3 id="net委托"><a href="#net委托" class="headerlink" title=".net委托"></a>.net委托</h3><p> 委托可以看成是对方法的封装，即一个指针，指向一个方法。这里主要说编程中用的比较多的三种系统内置委托。</p>
-<ol>
-<li>Action</li>
-</ol>
-<p>​         Action是无返回值的泛型委托。</p>
-<p>　　 Action 表示无参，无返回值的委托</p>
-<p>　　 Action&lt;int,string&gt; 表示有传入参数int,string无返回值的委托</p>
-<p> 　　Action&lt;int,string,bool&gt; 表示有传入参数int,string,bool无返回值的委托</p>
-<p>​        Action&lt;int,int,int,int&gt; 表示有传入4个int型参数，无返回值的委托</p>
-<p>　　 Action至少0个参数，至多16个参数，无返回值。</p>
-<ol start="2">
-<li>Func</li>
-</ol>
-<p>​         Func是有返回值的泛型委托</p>
-<p>　　 Func<int> 表示无参，返回值为int的委托</int></p>
-<p>　　 Func&lt;object,string,int&gt; 表示传入参数为object, string 返回值为int的委托</p>
-<p>　　 Func&lt;object,string,int&gt; 表示传入参数为object, string 返回值为int的委托</p>
-<p>　　 Func&lt;T1,T2,,T3,int&gt; 表示传入参数为T1,T2,,T3(泛型)返回值为int的委托</p>
-<p>　　 Func至少0个参数，至多16个参数，根据返回值泛型返回。必须有返回值，不可void</p>
-<ol start="3">
-<li>predicate</li>
-</ol>
-<p>​        predicate 是返回bool型的泛型委托</p>
-<p>　　 predicate<int> 表示传入参数为int 返回bool的委托</int></p>
-<p>　　 Predicate有且只有一个参数，返回值固定为bool</p>
-<p>　　 例：public delegate bool Predicate<t> (T obj)</t></p>
-<hr>
-<h4 id="泛型委托相关的一些东西"><a href="#泛型委托相关的一些东西" class="headerlink" title="泛型委托相关的一些东西"></a>泛型委托相关的一些东西</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                //lblCarType.Text = &quot;集卡车&quot;;</span><br><span class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</span><br><span class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</span><br><span class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</span><br><span class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</span><br><span class="line">            &#125;), model);</span><br></pre></td></tr></table></figure>
-<p>兰姆达表达式相当于一个匿名函数 =》之前的是参数，之后的是方法体。泛型委托的那个<t>其实就是函数的参数类型。</t></p>
-]]></content>
-      
-        <categories>
-            
-            <category> .net </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> c# </tag>
-            
-            <tag> 委托 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[.net反射]]></title>
       <url>/2017/10/16/csharp%E5%8F%8D%E5%B0%84/</url>
       <content type="html"><![CDATA[<h3 id="net反射"><a href="#net反射" class="headerlink" title=".net反射"></a>.net反射</h3><blockquote>
@@ -590,6 +903,77 @@
             <tag> c# </tag>
             
             <tag> 反射 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[.net委托]]></title>
+      <url>/2017/10/16/csharp%E5%A7%94%E6%89%98/</url>
+      <content type="html"><![CDATA[<h3 id="net委托"><a href="#net委托" class="headerlink" title=".net委托"></a>.net委托</h3><h4 id="委托的概念"><a href="#委托的概念" class="headerlink" title="委托的概念"></a>委托的概念</h4><p>委托是c#一种引用类型，委托可以看成是对方法的封装，即一个指针，指向一个方法。从而使方法作为参数进行传递。换种说法来说，是为了<strong>占位</strong>，在不知道将来要执行的代码的时候，先通过委托来进行占位，在实际调用之前再给委托赋值。</p>
+<h4 id="多播委托"><a href="#多播委托" class="headerlink" title="多播委托"></a>多播委托</h4><p>委托可以通多+=来绑定多个方法。需要注意的是<strong>委托绑定多个方法后，其中一个方法执行发生异常后面的方法不会继续执行</strong>。</p>
+<h4 id="泛型委托"><a href="#泛型委托" class="headerlink" title="泛型委托"></a>泛型委托</h4><p>dotnet为我们方便定义委托，给我们提供一组<strong>内置类</strong> </p>
+<ul>
+<li>Action</li>
+<li>Func </li>
+<li>Predicate</li>
+</ul>
+<h4 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h4><ol>
+<li>事件可以是委托的一个实列。</li>
+<li>事件的本质<ul>
+<li>event会自动生成一个private delegate变量和两个函数: add和remove。</li>
+<li>因为该委托变量是private的，所以在类外部不能触发事件，但是在类内部可以。</li>
+<li>public的方法只有Add和Remove，所以只能+=、-=，其他的操作都是不可以的。</li>
+</ul>
+</li>
+</ol>
+<h4 id="委托和事件的区别"><a href="#委托和事件的区别" class="headerlink" title="委托和事件的区别"></a>委托和事件的区别</h4><ol>
+<li>委托是一种数据类型，事件是一个实列对象。</li>
+<li>事件只能在声明它的类内部调用。</li>
+<li>事件只能使用+= -=不能直接赋值</li>
+<li>委托不受2 3的限制</li>
+</ol>
+<p>这里主要说编程中用的比较多的三种系统内置委托。</p>
+<ol>
+<li>Action</li>
+</ol>
+<p>​         Action是无返回值的泛型委托。</p>
+<p>　　 Action 表示无参，无返回值的委托</p>
+<p>　　 Action&lt;int,string&gt; 表示有传入参数int,string无返回值的委托</p>
+<p> 　　Action&lt;int,string,bool&gt; 表示有传入参数int,string,bool无返回值的委托</p>
+<p>​        Action&lt;int,int,int,int&gt; 表示有传入4个int型参数，无返回值的委托</p>
+<p>　　 Action至少0个参数，至多16个参数，无返回值。</p>
+<ol start="2">
+<li>Func</li>
+</ol>
+<p>​         Func是有返回值的泛型委托</p>
+<p>　　 Func<int> 表示无参，返回值为int的委托</int></p>
+<p>　　 Func&lt;object,string,int&gt; 表示传入参数为object, string 返回值为int的委托</p>
+<p>　　 Func&lt;object,string,int&gt; 表示传入参数为object, string 返回值为int的委托</p>
+<p>　　 Func&lt;T1,T2,,T3,int&gt; 表示传入参数为T1,T2,,T3(泛型)返回值为int的委托</p>
+<p>　　 Func至少0个参数，至多16个参数，根据返回值泛型返回。必须有返回值，不可void</p>
+<ol start="3">
+<li>predicate</li>
+</ol>
+<p>​        predicate 是返回bool型的泛型委托</p>
+<p>　　 predicate<int> 表示传入参数为int 返回bool的委托</int></p>
+<p>　　 Predicate有且只有一个参数，返回值固定为bool</p>
+<p>　　 例：public delegate bool Predicate<t> (T obj)</t></p>
+]]></content>
+      
+        <categories>
+            
+            <category> .net </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> c# </tag>
+            
+            <tag> 委托 </tag>
             
         </tags>
         
@@ -795,33 +1179,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[js 在当前日期往前推N天（除去工作日）]]></title>
-      <url>/2017/08/16/js-%E5%9C%A8%E5%BD%93%E5%89%8D%E6%97%A5%E6%9C%9F%E5%BE%80%E5%89%8D%E6%8E%A8N%E5%A4%A9%EF%BC%88%E9%99%A4%E5%8E%BB%E5%B7%A5%E4%BD%9C%E6%97%A5%EF%BC%89/</url>
-      <content type="html"><![CDATA[<blockquote>
-<p>代码如下：</p>
-</blockquote>
-<p>JavaScript将日期往前推n天，思路是先判断当前的日期是否是工作日，是的话就继续往前推，不是的话就把这一天给过滤掉，用count计数。</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"datePicker/WdatePicker.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"jquery-1.7.1.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">        <span class="comment">//判断是否为工作日</span></span></span><br><span class="line"><span class="javascript">     <span class="function"><span class="keyword">function</span> <span class="title">isWorkday</span>(<span class="params">date</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="comment">//var date = !date ? new Date() : new Date(date);</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> date=<span class="keyword">new</span> <span class="built_in">Date</span>(date);</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> getday = date.getDay();</span></span><br><span class="line"><span class="javascript">    <span class="keyword">if</span> (getday == <span class="number">0</span> || getday == <span class="number">6</span>) &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">//不是返回False</span></span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="literal">true</span>;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//获取Date对象的年月日xxxx-xx-xx</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">dateToyymmdd</span>(<span class="params">d</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> month=d.getMonth()+<span class="number">1</span>;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> day = d.getDate();</span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span>(month&lt;<span class="number">10</span>)&#123;</span></span><br><span class="line"><span class="javascript">        month = <span class="string">"0"</span>+month;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span>(day&lt;<span class="number">10</span>)&#123;</span></span><br><span class="line"><span class="javascript">        day = <span class="string">"0"</span>+day;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> val = d.getFullYear()+<span class="string">"-"</span>+month+<span class="string">"-"</span>+day;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> val;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">      <span class="comment">//往前推5天除去工作日</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">back</span>(<span class="params">date</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> i=<span class="number">0</span>;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> d=<span class="keyword">new</span> <span class="built_in">Date</span>(date);<span class="comment">//获取传入的时间</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span></span><br><span class="line"><span class="undefined">    &#123;</span></span><br><span class="line"><span class="javascript">        d.setDate(d.getDate()<span class="number">-1</span>);<span class="comment">//获取前一天时间</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> val=dateToyymmdd(d);</span></span><br><span class="line"><span class="javascript">        <span class="comment">//alert(isWorkday("2017-7-30")) ;</span></span></span><br><span class="line"><span class="javascript">        <span class="comment">//alert(val+""+isWorkday(val));</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span>(isWorkday(val))</span></span><br><span class="line"><span class="undefined">        &#123;</span></span><br><span class="line"><span class="undefined">            i++;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="javascript">         <span class="keyword">continue</span>;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> val = dateToyymmdd(d);</span></span><br><span class="line"><span class="javascript">    <span class="keyword">return</span> val;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="javascript">  <span class="built_in">window</span>.onload=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">    $(<span class="string">"#btn"</span>).blur(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> v=$(<span class="string">"#btn"</span>).val();</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">            $(<span class="string">"#label1"</span>).html(back(v));</span></span><br><span class="line"><span class="undefined">    &#125;)</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="javascript">   <span class="comment">//alert(back('2017-08-02'));</span></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"btn"</span> <span class="attr">id</span>=<span class="string">"btn"</span> <span class="attr">onclick</span>=<span class="string">"WdatePicker()"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">label</span> <span class="attr">id</span>=<span class="string">"label1"</span> &gt;</span><span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      
-        <categories>
-            
-            <category> js </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> js </tag>
-            
-            <tag> 时间 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[.net爬虫]]></title>
       <url>/2017/08/16/csharp%E7%88%AC%E8%99%AB/</url>
       <content type="html"><![CDATA[<h4 id="准备第三方插件"><a href="#准备第三方插件" class="headerlink" title="准备第三方插件"></a>准备第三方插件</h4><p>HtmlAgilityPack 在nuget中可以找到并下载 然后在项目中引用</p>
@@ -850,6 +1207,33 @@
             <tag> c# </tag>
             
             <tag> 爬虫 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[js 在当前日期往前推N天（除去工作日）]]></title>
+      <url>/2017/08/16/js-%E5%9C%A8%E5%BD%93%E5%89%8D%E6%97%A5%E6%9C%9F%E5%BE%80%E5%89%8D%E6%8E%A8N%E5%A4%A9%EF%BC%88%E9%99%A4%E5%8E%BB%E5%B7%A5%E4%BD%9C%E6%97%A5%EF%BC%89/</url>
+      <content type="html"><![CDATA[<blockquote>
+<p>代码如下：</p>
+</blockquote>
+<p>JavaScript将日期往前推n天，思路是先判断当前的日期是否是工作日，是的话就继续往前推，不是的话就把这一天给过滤掉，用count计数。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span><span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"datePicker/WdatePicker.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"jquery-1.7.1.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">        <span class="comment">//判断是否为工作日</span></span></span><br><span class="line"><span class="javascript">     <span class="function"><span class="keyword">function</span> <span class="title">isWorkday</span>(<span class="params">date</span>) </span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="comment">//var date = !date ? new Date() : new Date(date);</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> date=<span class="keyword">new</span> <span class="built_in">Date</span>(date);</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> getday = date.getDay();</span></span><br><span class="line"><span class="javascript">    <span class="keyword">if</span> (getday == <span class="number">0</span> || getday == <span class="number">6</span>) &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">//不是返回False</span></span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> <span class="literal">true</span>;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined">&#125;</span></span><br><span class="line"><span class="javascript">        <span class="comment">//获取Date对象的年月日xxxx-xx-xx</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">dateToyymmdd</span>(<span class="params">d</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> month=d.getMonth()+<span class="number">1</span>;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> day = d.getDate();</span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span>(month&lt;<span class="number">10</span>)&#123;</span></span><br><span class="line"><span class="javascript">        month = <span class="string">"0"</span>+month;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span>(day&lt;<span class="number">10</span>)&#123;</span></span><br><span class="line"><span class="javascript">        day = <span class="string">"0"</span>+day;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> val = d.getFullYear()+<span class="string">"-"</span>+month+<span class="string">"-"</span>+day;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">return</span> val;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">      <span class="comment">//往前推5天除去工作日</span></span></span><br><span class="line"><span class="javascript">    <span class="function"><span class="keyword">function</span> <span class="title">back</span>(<span class="params">date</span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> i=<span class="number">0</span>;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> d=<span class="keyword">new</span> <span class="built_in">Date</span>(date);<span class="comment">//获取传入的时间</span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span></span><br><span class="line"><span class="undefined">    &#123;</span></span><br><span class="line"><span class="javascript">        d.setDate(d.getDate()<span class="number">-1</span>);<span class="comment">//获取前一天时间</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> val=dateToyymmdd(d);</span></span><br><span class="line"><span class="javascript">        <span class="comment">//alert(isWorkday("2017-7-30")) ;</span></span></span><br><span class="line"><span class="javascript">        <span class="comment">//alert(val+""+isWorkday(val));</span></span></span><br><span class="line"><span class="javascript">        <span class="keyword">if</span>(isWorkday(val))</span></span><br><span class="line"><span class="undefined">        &#123;</span></span><br><span class="line"><span class="undefined">            i++;</span></span><br><span class="line"><span class="undefined">        &#125;</span></span><br><span class="line"><span class="javascript">         <span class="keyword">continue</span>;</span></span><br><span class="line"><span class="undefined">    &#125;</span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> val = dateToyymmdd(d);</span></span><br><span class="line"><span class="javascript">    <span class="keyword">return</span> val;</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="javascript">  <span class="built_in">window</span>.onload=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">    $(<span class="string">"#btn"</span>).blur(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span></span><br><span class="line"><span class="javascript">        <span class="keyword">var</span> v=$(<span class="string">"#btn"</span>).val();</span></span><br><span class="line"><span class="undefined"></span></span><br><span class="line"><span class="javascript">            $(<span class="string">"#label1"</span>).html(back(v));</span></span><br><span class="line"><span class="undefined">    &#125;)</span></span><br><span class="line"><span class="undefined">  &#125;</span></span><br><span class="line"><span class="javascript">   <span class="comment">//alert(back('2017-08-02'));</span></span></span><br><span class="line"><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">name</span>=<span class="string">"btn"</span> <span class="attr">id</span>=<span class="string">"btn"</span> <span class="attr">onclick</span>=<span class="string">"WdatePicker()"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">label</span> <span class="attr">id</span>=<span class="string">"label1"</span> &gt;</span><span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> js </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> js </tag>
+            
+            <tag> 时间 </tag>
             
         </tags>
         

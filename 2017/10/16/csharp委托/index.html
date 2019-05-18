@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content=".net委托 委托可以看成是对方法的封装，即一个指针，指向一个方法。这里主要说编程中用的比较多的三种系统内置委托。  Action  ​         Action是无返回值的泛型委托。 　　 Action 表示无参，无返回值的委托 　　 Action&amp;lt;int,string&amp;gt; 表示有传入参数int,string无返回值的委托  　　Action&amp;lt;int,string,bool&amp;">
+<meta name="description" content=".net委托委托的概念委托是c#一种引用类型，委托可以看成是对方法的封装，即一个指针，指向一个方法。从而使方法作为参数进行传递。换种说法来说，是为了占位，在不知道将来要执行的代码的时候，先通过委托来进行占位，在实际调用之前再给委托赋值。 多播委托委托可以通多+=来绑定多个方法。需要注意的是委托绑定多个方法后，其中一个方法执行发生异常后面的方法不会继续执行。 泛型委托dotnet为我们方便定义委托，">
 <meta name="keywords" content="c#,委托">
 <meta property="og:type" content="article">
 <meta property="og:title" content=".net委托">
 <meta property="og:url" content="http://yoursite.com/2017/10/16/csharp委托/index.html">
 <meta property="og:site_name" content="敲代码的小铁匠">
-<meta property="og:description" content=".net委托 委托可以看成是对方法的封装，即一个指针，指向一个方法。这里主要说编程中用的比较多的三种系统内置委托。  Action  ​         Action是无返回值的泛型委托。 　　 Action 表示无参，无返回值的委托 　　 Action&amp;lt;int,string&amp;gt; 表示有传入参数int,string无返回值的委托  　　Action&amp;lt;int,string,bool&amp;">
+<meta property="og:description" content=".net委托委托的概念委托是c#一种引用类型，委托可以看成是对方法的封装，即一个指针，指向一个方法。从而使方法作为参数进行传递。换种说法来说，是为了占位，在不知道将来要执行的代码的时候，先通过委托来进行占位，在实际调用之前再给委托赋值。 多播委托委托可以通多+=来绑定多个方法。需要注意的是委托绑定多个方法后，其中一个方法执行发生异常后面的方法不会继续执行。 泛型委托dotnet为我们方便定义委托，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-16T01:28:50.724Z">
+<meta property="og:updated_time" content="2019-04-18T07:55:30.516Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content=".net委托">
-<meta name="twitter:description" content=".net委托 委托可以看成是对方法的封装，即一个指针，指向一个方法。这里主要说编程中用的比较多的三种系统内置委托。  Action  ​         Action是无返回值的泛型委托。 　　 Action 表示无参，无返回值的委托 　　 Action&amp;lt;int,string&amp;gt; 表示有传入参数int,string无返回值的委托  　　Action&amp;lt;int,string,bool&amp;">
+<meta name="twitter:description" content=".net委托委托的概念委托是c#一种引用类型，委托可以看成是对方法的封装，即一个指针，指向一个方法。从而使方法作为参数进行传递。换种说法来说，是为了占位，在不知道将来要执行的代码的时候，先通过委托来进行占位，在实际调用之前再给委托赋值。 多播委托委托可以通多+=来绑定多个方法。需要注意的是委托绑定多个方法后，其中一个方法执行发生异常后面的方法不会继续执行。 泛型委托dotnet为我们方便定义委托，">
 
 
 
@@ -398,7 +398,30 @@
       
 
       
-        <h3 id="net委托"><a href="#net委托" class="headerlink" title=".net委托"></a>.net委托</h3><p> 委托可以看成是对方法的封装，即一个指针，指向一个方法。这里主要说编程中用的比较多的三种系统内置委托。</p>
+        <h3 id="net委托"><a href="#net委托" class="headerlink" title=".net委托"></a>.net委托</h3><h4 id="委托的概念"><a href="#委托的概念" class="headerlink" title="委托的概念"></a>委托的概念</h4><p>委托是c#一种引用类型，委托可以看成是对方法的封装，即一个指针，指向一个方法。从而使方法作为参数进行传递。换种说法来说，是为了<strong>占位</strong>，在不知道将来要执行的代码的时候，先通过委托来进行占位，在实际调用之前再给委托赋值。</p>
+<h4 id="多播委托"><a href="#多播委托" class="headerlink" title="多播委托"></a>多播委托</h4><p>委托可以通多+=来绑定多个方法。需要注意的是<strong>委托绑定多个方法后，其中一个方法执行发生异常后面的方法不会继续执行</strong>。</p>
+<h4 id="泛型委托"><a href="#泛型委托" class="headerlink" title="泛型委托"></a>泛型委托</h4><p>dotnet为我们方便定义委托，给我们提供一组<strong>内置类</strong> </p>
+<ul>
+<li>Action</li>
+<li>Func </li>
+<li>Predicate</li>
+</ul>
+<h4 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h4><ol>
+<li>事件可以是委托的一个实列。</li>
+<li>事件的本质<ul>
+<li>event会自动生成一个private delegate变量和两个函数: add和remove。</li>
+<li>因为该委托变量是private的，所以在类外部不能触发事件，但是在类内部可以。</li>
+<li>public的方法只有Add和Remove，所以只能+=、-=，其他的操作都是不可以的。</li>
+</ul>
+</li>
+</ol>
+<h4 id="委托和事件的区别"><a href="#委托和事件的区别" class="headerlink" title="委托和事件的区别"></a>委托和事件的区别</h4><ol>
+<li>委托是一种数据类型，事件是一个实列对象。</li>
+<li>事件只能在声明它的类内部调用。</li>
+<li>事件只能使用+= -=不能直接赋值</li>
+<li>委托不受2 3的限制</li>
+</ol>
+<p>这里主要说编程中用的比较多的三种系统内置委托。</p>
 <ol>
 <li>Action</li>
 </ol>
@@ -424,9 +447,6 @@
 <p>　　 predicate<int> 表示传入参数为int 返回bool的委托</int></p>
 <p>　　 Predicate有且只有一个参数，返回值固定为bool</p>
 <p>　　 例：public delegate bool Predicate<t> (T obj)</t></p>
-<hr>
-<h4 id="泛型委托相关的一些东西"><a href="#泛型委托相关的一些东西" class="headerlink" title="泛型委托相关的一些东西"></a>泛型委托相关的一些东西</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">this.Invoke(new Action&lt;FormMode&gt;(fm =&gt;</span><br><span class="line">            &#123;</span><br><span class="line">                //lblCarType.Text = &quot;集卡车&quot;;</span><br><span class="line">                //lblEntrance.Text = &quot;郑州陆港集卡ETC&quot;;</span><br><span class="line">                lblConsumeTime.Text = DateTime.Now.ToString();</span><br><span class="line">                //lblETCCarNum.Text = &quot;14100531345&quot;;</span><br><span class="line">                lblCarNum.Text = model?.CarNumber ?? &quot;&quot;;</span><br><span class="line">            &#125;), model);</span><br></pre></td></tr></table></figure>
-<p>兰姆达表达式相当于一个匿名函数 =》之前的是参数，之后的是方法体。泛型委托的那个<t>其实就是函数的参数类型。</t></p>
 
       
     </div>
@@ -483,8 +503,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/10/16/csharp反射/" rel="next" title=".net反射">
-                <i class="fa fa-chevron-left"></i> .net反射
+              <a href="/2017/10/16/csharp 多线程/" rel="next" title=".net多线程">
+                <i class="fa fa-chevron-left"></i> .net多线程
               </a>
             
           </div>
@@ -493,8 +513,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/10/27/csharp Socket编程/" rel="prev" title=".net Socket编程（服务端）">
-                .net Socket编程（服务端） <i class="fa fa-chevron-right"></i>
+              <a href="/2017/10/16/csharp反射/" rel="prev" title=".net反射">
+                .net反射 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -598,7 +618,7 @@ var jiathis_config={
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-count">27</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -620,7 +640,7 @@ var jiathis_config={
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">27</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -701,7 +721,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#net委托"><span class="nav-number">1.</span> <span class="nav-text">.net委托</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#泛型委托相关的一些东西"><span class="nav-number">1.1.</span> <span class="nav-text">泛型委托相关的一些东西</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#net委托"><span class="nav-number">1.</span> <span class="nav-text">.net委托</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#委托的概念"><span class="nav-number">1.1.</span> <span class="nav-text">委托的概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多播委托"><span class="nav-number">1.2.</span> <span class="nav-text">多播委托</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#泛型委托"><span class="nav-number">1.3.</span> <span class="nav-text">泛型委托</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#事件"><span class="nav-number">1.4.</span> <span class="nav-text">事件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#委托和事件的区别"><span class="nav-number">1.5.</span> <span class="nav-text">委托和事件的区别</span></a></li></ol></li></ol></div>
             
 
           </div>

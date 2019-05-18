@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="c#,加密解密,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2">
+
+
+
+
+
+
+<meta name="description" content="加密解密1. md5 不可逆加密 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960  /// &amp;lt;summary&amp;gt;/// MD5加密,和动网上的16/32位MD5加密结果相同,/// 使用的UTF8编码/// &amp;lt">
+<meta name="keywords" content="c#,加密解密">
+<meta property="og:type" content="article">
+<meta property="og:title" content="加密解密">
+<meta property="og:url" content="http://yoursite.com/2019/04/26/加密解密/index.html">
+<meta property="og:site_name" content="敲代码的小铁匠">
+<meta property="og:description" content="加密解密1. md5 不可逆加密 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960  /// &amp;lt;summary&amp;gt;/// MD5加密,和动网上的16/32位MD5加密结果相同,/// 使用的UTF8编码/// &amp;lt">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-18T01:29:30.970Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="加密解密">
+<meta name="twitter:description" content="加密解密1. md5 不可逆加密 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960  /// &amp;lt;summary&amp;gt;/// MD5加密,和动网上的16/32位MD5加密结果相同,/// 使用的UTF8编码/// &amp;lt">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/04/26/加密解密/">
+
+
+
+
+
+  <title>加密解密 | 敲代码的小铁匠</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">敲代码的小铁匠</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">点滴</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-message">
+          <a href="/message" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-external-link"></i> <br>
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/26/加密解密/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="HE yuke">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/0.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="敲代码的小铁匠">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">加密解密</h1>
+        
+
+        <div class="post-meta">
+		
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-26T00:00:00+08:00">
+                2019-04-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/net/" itemprop="url" rel="index">
+                    <span itemprop="name">.net</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2019/04/26/加密解密/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2019/04/26/加密解密/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </span></div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="加密解密"><a href="#加密解密" class="headerlink" title="加密解密"></a>加密解密</h2><h3 id="1-md5"><a href="#1-md5" class="headerlink" title="1. md5"></a>1. md5</h3><ul>
+<li><p>不可逆加密</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line">  </span><br><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// MD5加密,和动网上的16/32位MD5加密结果相同,</span><br><span class="line">/// 使用的UTF8编码</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">/// &lt;param name=&quot;source&quot;&gt;待加密字串&lt;/param&gt;</span><br><span class="line">/// &lt;param name=&quot;length&quot;&gt;16或32值之一,其它则采用.net默认MD5加密算法&lt;/param&gt;</span><br><span class="line">/// &lt;returns&gt;加密后的字串&lt;/returns&gt;</span><br><span class="line">public static string Encrypt(string source, int length = 32)//默认参数</span><br><span class="line">&#123;</span><br><span class="line">    if (string.IsNullOrEmpty(source)) return string.Empty;</span><br><span class="line">    HashAlgorithm provider = CryptoConfig.CreateFromName(&quot;MD5&quot;) as HashAlgorithm;</span><br><span class="line">    byte[] bytes = Encoding.UTF8.GetBytes(source);//这里需要区别编码的</span><br><span class="line">    byte[] hashValue = provider.ComputeHash(bytes);</span><br><span class="line">    StringBuilder sb = new StringBuilder();</span><br><span class="line">    switch (length)</span><br><span class="line">    &#123;</span><br><span class="line">        case 16://16位密文是32位密文的9到24位字符</span><br><span class="line">            for (int i = 4; i &lt; 12; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                sb.Append(hashValue[i].ToString(&quot;x2&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">        case 32:</span><br><span class="line">            for (int i = 0; i &lt; 16; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                sb.Append(hashValue[i].ToString(&quot;x2&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">        default:</span><br><span class="line">            for (int i = 0; i &lt; hashValue.Length; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                sb.Append(hashValue[i].ToString(&quot;x2&quot;));</span><br><span class="line">            &#125;</span><br><span class="line">            break;</span><br><span class="line">    &#125;</span><br><span class="line">    return sb.ToString();</span><br><span class="line">&#125;</span><br><span class="line">#endregion MD5</span><br><span class="line">  </span><br><span class="line">#region MD5摘要</span><br><span class="line">/// &lt;summary&gt;</span><br><span class="line">/// 获取文件的MD5摘要</span><br><span class="line">/// &lt;/summary&gt;</span><br><span class="line">/// &lt;param name=&quot;fileName&quot;&gt;&lt;/param&gt;</span><br><span class="line">/// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">public static string AbstractFile(string fileName)</span><br><span class="line">&#123;</span><br><span class="line">    FileStream file = new FileStream(fileName, FileMode.Open);</span><br><span class="line">    MD5 md5 = new MD5CryptoServiceProvider();</span><br><span class="line">    byte[] retVal = md5.ComputeHash(file);</span><br><span class="line">    file.Close();</span><br><span class="line">  </span><br><span class="line">    StringBuilder sb = new StringBuilder();</span><br><span class="line">    for (int i = 0; i &lt; retVal.Length; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        sb.Append(retVal[i].ToString(&quot;x2&quot;));</span><br><span class="line">    &#125;</span><br><span class="line">    return sb.ToString();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="2-DES-可逆对称加密"><a href="#2-DES-可逆对称加密" class="headerlink" title="2. DES 可逆对称加密"></a>2. DES 可逆对称加密</h3><ul>
+<li>对称加密算法的优点是速度快</li>
+<li>缺点是密钥管理不方便，要求共享密钥。</li>
+<li>可逆对称加密  密钥长度8</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">public class DesEncrypt</span><br><span class="line">   &#123;</span><br><span class="line">       private static byte[] _rgbKey = ASCIIEncoding.ASCII.GetBytes(Constant.DesKey.Substring(0, 8));</span><br><span class="line">       private static byte[] _rgbIV = ASCIIEncoding.ASCII.GetBytes(Constant.DesKey.Insert(0, &quot;w&quot;).Substring(0, 8));</span><br><span class="line"></span><br><span class="line">       /// &lt;summary&gt;</span><br><span class="line">       /// DES 加密</span><br><span class="line">       /// &lt;/summary&gt;</span><br><span class="line">       /// &lt;param name=&quot;text&quot;&gt;需要加密的值&lt;/param&gt;</span><br><span class="line">       /// &lt;returns&gt;加密后的结果&lt;/returns&gt;</span><br><span class="line">       public static string Encrypt(string text)</span><br><span class="line">       &#123;</span><br><span class="line">           DESCryptoServiceProvider dsp = new DESCryptoServiceProvider();</span><br><span class="line">           using (MemoryStream memStream = new MemoryStream())</span><br><span class="line">           &#123;</span><br><span class="line">               CryptoStream crypStream = new CryptoStream(memStream, dsp.CreateEncryptor(_rgbKey, _rgbIV), CryptoStreamMode.Write);</span><br><span class="line">               StreamWriter sWriter = new StreamWriter(crypStream);</span><br><span class="line">               sWriter.Write(text);</span><br><span class="line">               sWriter.Flush();</span><br><span class="line">               crypStream.FlushFinalBlock();</span><br><span class="line">               memStream.Flush();</span><br><span class="line">               return Convert.ToBase64String(memStream.GetBuffer(), 0, (int)memStream.Length);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       /// &lt;summary&gt;</span><br><span class="line">       /// DES解密</span><br><span class="line">       /// &lt;/summary&gt;</span><br><span class="line">       /// &lt;param name=&quot;encryptText&quot;&gt;&lt;/param&gt;</span><br><span class="line">       /// &lt;returns&gt;解密后的结果&lt;/returns&gt;</span><br><span class="line">       public static string Decrypt(string encryptText)</span><br><span class="line">       &#123;</span><br><span class="line">           DESCryptoServiceProvider dsp = new DESCryptoServiceProvider();</span><br><span class="line">           byte[] buffer = Convert.FromBase64String(encryptText);</span><br><span class="line"></span><br><span class="line">           using (MemoryStream memStream = new MemoryStream())</span><br><span class="line">           &#123;</span><br><span class="line">               CryptoStream crypStream = new CryptoStream(memStream, dsp.CreateDecryptor(_rgbKey, _rgbIV), CryptoStreamMode.Write);</span><br><span class="line">               crypStream.Write(buffer, 0, buffer.Length);</span><br><span class="line">               crypStream.FlushFinalBlock();</span><br><span class="line">               return ASCIIEncoding.UTF8.GetString(memStream.ToArray());</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-RSA-可逆非对称加密"><a href="#3-RSA-可逆非对称加密" class="headerlink" title="3. RSA 可逆非对称加密"></a>3. RSA 可逆非对称加密</h3><ul>
+<li>非对称加密算法的优点是密钥管理很方便，缺点是速度慢。</li>
+<li>加密钥公开，解密钥揣兜里，有什么作用呢？  保证内容只有我看得到，防止外传</li>
+<li>解密钥公开，加密钥揣兜里，有什么作用呢？  保证数据不能篡改，一定来自于我</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">public class RsaEncrypt</span><br><span class="line">  &#123;</span><br><span class="line"></span><br><span class="line">      /// &lt;summary&gt;</span><br><span class="line">      /// 获取加密/解密对</span><br><span class="line">      /// Encrypt   Decrypt</span><br><span class="line">      /// &lt;/summary&gt;</span><br><span class="line">      /// &lt;returns&gt;Encrypt   Decrypt&lt;/returns&gt;</span><br><span class="line">      public static KeyValuePair&lt;string, string&gt; GetKeyPair()</span><br><span class="line">      &#123;</span><br><span class="line">          RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();</span><br><span class="line">          string publicKey = RSA.ToXmlString(false);</span><br><span class="line">          string privateKey = RSA.ToXmlString(true);</span><br><span class="line">          return new KeyValuePair&lt;string, string&gt;(publicKey, privateKey);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      /// &lt;summary&gt;</span><br><span class="line">      /// 加密：内容+加密key</span><br><span class="line">      /// &lt;/summary&gt;</span><br><span class="line">      /// &lt;param name=&quot;content&quot;&gt;&lt;/param&gt;</span><br><span class="line">      /// &lt;param name=&quot;encryptKey&quot;&gt;加密key&lt;/param&gt;</span><br><span class="line">      /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">      public static string Encrypt(string content, string encryptKey)</span><br><span class="line">      &#123;</span><br><span class="line">          RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();</span><br><span class="line">          rsa.FromXmlString(encryptKey);</span><br><span class="line">          UnicodeEncoding ByteConverter = new UnicodeEncoding();</span><br><span class="line">          byte[] DataToEncrypt = ByteConverter.GetBytes(content);</span><br><span class="line">          byte[] resultBytes = rsa.Encrypt(DataToEncrypt, false);</span><br><span class="line">          return Convert.ToBase64String(resultBytes);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      /// &lt;summary&gt;</span><br><span class="line">      /// 解密  内容+解密key</span><br><span class="line">      /// &lt;/summary&gt;</span><br><span class="line">      /// &lt;param name=&quot;content&quot;&gt;&lt;/param&gt;</span><br><span class="line">      /// &lt;param name=&quot;decryptKey&quot;&gt;解密key&lt;/param&gt;</span><br><span class="line">      /// &lt;returns&gt;&lt;/returns&gt;</span><br><span class="line">      public static string Decrypt(string content, string decryptKey)</span><br><span class="line">      &#123;</span><br><span class="line">          byte[] dataToDecrypt = Convert.FromBase64String(content);</span><br><span class="line">          RSACryptoServiceProvider RSA = new RSACryptoServiceProvider();</span><br><span class="line">          RSA.FromXmlString(decryptKey);</span><br><span class="line">          byte[] resultBytes = RSA.Decrypt(dataToDecrypt, false);</span><br><span class="line">          UnicodeEncoding ByteConverter = new UnicodeEncoding();</span><br><span class="line">          return ByteConverter.GetString(resultBytes);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">      /// &lt;summary&gt;</span><br><span class="line">      /// 可以合并在一起的，，每次产生一组新的密钥</span><br><span class="line">      /// &lt;/summary&gt;</span><br><span class="line">      /// &lt;param name=&quot;content&quot;&gt;&lt;/param&gt;</span><br><span class="line">      /// &lt;param name=&quot;encryptKey&quot;&gt;加密key&lt;/param&gt;</span><br><span class="line">      /// &lt;param name=&quot;decryptKey&quot;&gt;解密key&lt;/param&gt;</span><br><span class="line">      /// &lt;returns&gt;加密后结果&lt;/returns&gt;</span><br><span class="line">      private static string Encrypt(string content, out string publicKey, out string privateKey)</span><br><span class="line">      &#123;</span><br><span class="line">          RSACryptoServiceProvider rsaProvider = new RSACryptoServiceProvider();</span><br><span class="line">          publicKey = rsaProvider.ToXmlString(false);</span><br><span class="line">          privateKey = rsaProvider.ToXmlString(true);</span><br><span class="line"></span><br><span class="line">          UnicodeEncoding ByteConverter = new UnicodeEncoding();</span><br><span class="line">          byte[] DataToEncrypt = ByteConverter.GetBytes(content);</span><br><span class="line">          byte[] resultBytes = rsaProvider.Encrypt(DataToEncrypt, false);</span><br><span class="line">          return Convert.ToBase64String(resultBytes);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4-调用方式"><a href="#4-调用方式" class="headerlink" title="4. 调用方式"></a>4. 调用方式</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">class Program</span><br><span class="line">   &#123;</span><br><span class="line">       static void Main(string[] args)</span><br><span class="line">       &#123;</span><br><span class="line">           try</span><br><span class="line">           &#123;</span><br><span class="line">               #region MD5</span><br><span class="line">               //用途：</span><br><span class="line">               //1 防止明文：加密后保存比较安全，下次加密检验；密码要复杂一点</span><br><span class="line">               //2 防篡改：文件上传；文件下载防挂马；svn</span><br><span class="line">               //3 防止抵赖：需要一个第三方认证，数字签名</span><br><span class="line">               //Console.WriteLine(MD5Encrypt.Encrypt(&quot;1&quot;));</span><br><span class="line">               //Console.WriteLine(MD5Encrypt.Encrypt(&quot;1&quot;));</span><br><span class="line">               //Console.WriteLine(MD5Encrypt.Encrypt(&quot;123456小李&quot;));</span><br><span class="line">               //Console.WriteLine(MD5Encrypt.Encrypt(&quot;113456小李&quot;));</span><br><span class="line">               //Console.WriteLine(MD5Encrypt.Encrypt(&quot;113456小李113456小李113456小李113456小李113456小李113456小李113456小李&quot;));</span><br><span class="line">               //string md5Abstract1 = MD5Encrypt.AbstractFile(@&quot;D:\ruanmou\online9\homework\1\Advanced9第一次作业优秀合集.rar&quot;);</span><br><span class="line">               //string md5Abstract2 = MD5Encrypt.AbstractFile(@&quot;D:\ruanmou\online9\homework\1\Advanced9第一次作业优秀合集 - 副本.rar&quot;);</span><br><span class="line"></span><br><span class="line">               #endregion</span><br><span class="line"></span><br><span class="line">               #region Des</span><br><span class="line">               //可逆对称加密</span><br><span class="line">               string desEn = DesEncrypt.Encrypt(&quot;王殃殃&quot;);</span><br><span class="line">               string desDe = DesEncrypt.Decrypt(desEn);</span><br><span class="line">               string desEn1 = DesEncrypt.Encrypt(&quot;张三李四&quot;);</span><br><span class="line">               string desDe1 = DesEncrypt.Decrypt(desEn1);</span><br><span class="line">               #endregion</span><br><span class="line"></span><br><span class="line">               #region Rsa</span><br><span class="line">               //可逆非对称加密</span><br><span class="line">               KeyValuePair&lt;string, string&gt; encryptDecrypt = RsaEncrypt.GetKeyPair();</span><br><span class="line">               string rsaEn1 = RsaEncrypt.Encrypt(&quot;net&quot;, encryptDecrypt.Key);</span><br><span class="line">               string rsaDe1 = RsaEncrypt.Decrypt(rsaEn1, encryptDecrypt.Value);</span><br><span class="line">               //加密钥  解密钥  钥匙的功能划分</span><br><span class="line">               //公钥  私钥      公开程度划分</span><br><span class="line"></span><br><span class="line">               //加密钥公开，解密钥揣兜里，有什么作用呢？  保证内容只有我看得到，防止外传</span><br><span class="line">               //解密钥公开，加密钥揣兜里，有什么作用呢？  保证数据不能篡改，一定来自于我</span><br><span class="line"></span><br><span class="line">               #endregion</span><br><span class="line"></span><br><span class="line">           &#125;</span><br><span class="line">           catch (Exception ex)</span><br><span class="line">           &#123;</span><br><span class="line">               Console.WriteLine(ex.Message);</span><br><span class="line">           &#125;</span><br><span class="line">           Console.Read();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>666打赏走一波</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/ali.jpg" alt="HE yuke Alipay">
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/c/" rel="tag"># c#</a>
+          
+            <a href="/tags/加密解密/" rel="tag"># 加密解密</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/26/面向对象/" rel="next" title="面向对象">
+                <i class="fa fa-chevron-left"></i> 面向对象
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+<span class="jiathis_txt">分享到：</span>
+<a class="jiathis_button_fav">收藏夹</a>
+<a class="jiathis_button_copy">复制网址</a>
+<a class="jiathis_button_email">邮件</a>
+<a class="jiathis_button_weixin">微信</a>
+<a class="jiathis_button_qzone">QQ空间</a>
+<a class="jiathis_button_tqq">腾讯微薄</a>
+<a class="jiathis_button_douban">豆瓣</a>
+<a class="jiathis_button_share">一键分享</a>
+
+<a href="http://www.jiathis.com/share?uid=2140465" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+var jiathis_config={
+  data_track_clickback:true,
+  summary:"",
+  shortUrl:false,
+  hideMore:false
+}
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=2146613" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="SOHUCS"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/0.png" alt="HE yuke">
+          <p class="site-author-name" itemprop="name">HE yuke</p>
+           
+              <p class="site-description motion-element" itemprop="description">老夫聊发少年狂</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">27</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/your-user-name" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/your-user-name" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                    
+                      Twitter
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/your-user-name" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                    
+                      微博
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.zhihu.com/people/your-user-name" target="_blank" title="知乎">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      知乎
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#加密解密"><span class="nav-number">1.</span> <span class="nav-text">加密解密</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-md5"><span class="nav-number">1.1.</span> <span class="nav-text">1. md5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-DES-可逆对称加密"><span class="nav-number">1.2.</span> <span class="nav-text">2. DES 可逆对称加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-RSA-可逆非对称加密"><span class="nav-number">1.3.</span> <span class="nav-text">3. RSA 可逆非对称加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-调用方式"><span class="nav-number">1.4.</span> <span class="nav-text">4. 调用方式</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HE yuke</span>
+
+  
+</div>
+
+
+  <div class="powered-by">
+    由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+  </div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">
+    主题 &mdash;
+    <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+      NexT.Mist
+    </a>
+	<span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+	<span id="showDays"></span>
+  </div>
+
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div style="margin:-50px;position: absolute;right:265px;">
+<dl style="float:left">
+  <dt style="float:left">
+    <dd style="float:left;width:300px">
+      <span style="float:right">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</span>
+      <span style="float:right">本站总访问量<span><span style="float:right" id="busuanzi_value_site_pv"></span>
+    </span></span></dd>
+  </dt>
+  <dt style="float:left;width:300px">
+    <dd>
+      <span style="float:left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      <span style="float:left">您是第</span>
+      <span style="float:left" id="busuanzi_value_site_uv"></span>
+      <span style="float:left">个小伙伴</span>
+    </dd>
+  </dt>
+</dl>
+</div>
+<script>
+	var birthDay = new Date('08/8/2017');
+	var now = new Date();
+	var duration = now.getTime() - birthDay.getTime();
+	var total= Math.floor(duration / (1000 * 60 * 60 * 24));
+	document.getElementById('showDays').innerHTML='本站已运行' + total + '天';
+</script>
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cytigGSFE';
+      var conf = '255fef046afb5c3eeb56e1386a3a3337';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
